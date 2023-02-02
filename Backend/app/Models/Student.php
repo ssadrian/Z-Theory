@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 class Student extends Model
@@ -32,4 +33,9 @@ class Student extends Model
     protected $hidden = [
         'password',
     ];
+
+    public function encryptPassword()
+    {
+        $this->password = Hash::make($this->password);
+    }
 }
