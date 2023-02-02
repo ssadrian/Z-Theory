@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,8 +18,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::post("/login", [AuthController::class, "login"]);
 
-Route::post("/register/student", [AuthController::class, "registerStudent"]);
-Route::post("/register/teacher", [AuthController::class, "registerTeacher"]);
+Route::prefix("register")->group(function () {
+    Route::post('/student', [AuthController::class, 'registerStudent']);
+    Route::post('/teacher', [AuthController::class, 'registerTeacher']);
+});
+
+Route::prefix("student")->group(function () {
+    Route::get("/all", [StudentController::class, "all"]);
+    Route::get("", [StudentController::class, "get"]);
+
+    Route::post("", [StudentController::class, "create"]);
+    Route::put("", [StudentController::class, "update"]);
+
+    Route::delete("", [StudentController::class, "delete"]);
+});
 
 Route::middleware("auth:sanctum")->group(function () {
     Route::get("/user", fn(Request $request) => $request->user());
