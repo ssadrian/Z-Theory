@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,8 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::post("/login", [AuthController::class, "login"]);
 
 Route::prefix("register")->group(function () {
-    Route::post('/student', [AuthController::class, 'registerStudent']);
-    Route::post('/teacher', [AuthController::class, 'registerTeacher']);
+    Route::post("/student", [AuthController::class, "registerStudent"]);
+    Route::post("/teacher", [AuthController::class, "registerTeacher"]);
 });
 
 Route::prefix("student")->group(function () {
@@ -31,6 +32,16 @@ Route::prefix("student")->group(function () {
     Route::put("", [StudentController::class, "update"]);
 
     Route::delete("", [StudentController::class, "delete"]);
+});
+
+Route::prefix("teacher")->group(function () {
+    Route::get("/all", [TeacherController::class, "all"]);
+    Route::get("", [TeacherController::class, "get"]);
+
+    Route::post("", [TeacherController::class, "create"]);
+    Route::put("", [TeacherController::class, "update"]);
+
+    Route::delete("", [TeacherController::class, "delete"]);
 });
 
 Route::middleware("auth:sanctum")->group(function () {
