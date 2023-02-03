@@ -29,15 +29,6 @@ class Student extends Model
         'birth_date',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-    ];
-
     public static function createFromRequest(Request $request)
     {
         $data = $request->validate([

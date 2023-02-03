@@ -20,7 +20,7 @@ class StudentFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'password' => bcrypt($this->faker->password()),
             'nickname' => $this->faker->word(),
-            'birth_date' => Carbon::now(),
+            'birth_date' => Carbon::now()->format('Y-m-d'),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

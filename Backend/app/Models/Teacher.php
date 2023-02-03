@@ -27,15 +27,6 @@ class Teacher extends Model
         'center',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-    ];
-
     public static function createFromRequest(Request $request)
     {
         $data = $request->validate([
