@@ -30,25 +30,7 @@ class StudentController extends Controller
 
     public function create(Request $request)
     {
-        $data = $request->validate([
-            "nickname" => "required|string",
-            "email" => "required|email",
-            "password" => "required|confirmed",
-            "name" => "required|string",
-            "surnames" => "required|string",
-            "birth_date" => "required|date"
-        ]);
-
-        $student = Student::create([
-            "nickname" => $data["nickname"],
-            "email" => $data["email"],
-            "birth_date" => $data["birth_date"],
-            "name" => $data["name"],
-            "surnames" => $data["surnames"],
-            "password" => $data["password"]
-        ]);
-
-        $student->encryptPassword();
+        $student = Student::createFromRequest($request);
         $student->save();
 
         // Created
@@ -57,33 +39,14 @@ class StudentController extends Controller
 
     public function update(Request $request)
     {
-        $data = $request->validate([
-            "id" => "required|int|gt:0",
-            "nickname" => "required|string",
-            "email" => "required|email",
-            "name" => "required|string",
-            "surnames" => "required|string",
-            "birth_date" => "required|date"
-        ]);
+        $student = Student::updateFromRequest($request);
 
-        $student = Student::find($data["id"]);
-
-        if (!$student) {
+        if (empty($student)) {
             // No Content
             return response(status: 204);
         }
 
-        $oldStudent = $student;
-
-        $student->nickname = $data["nickname"];
-        $student->email = $data["email"];
-        $student->name = $data["name"];
-        $student->surnames = $data["surnames"];
-        $student->birth_date = $data["birth_date"];
-
-        $student->save();
-
-        return response($oldStudent);
+        return response($student);
     }
 
     public function delete(Request $request)
