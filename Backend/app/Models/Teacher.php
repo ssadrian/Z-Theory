@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
-use LaravelIdea\Helper\App\Models\_IH_Teacher_C;
 
 class Teacher extends Model
 {
@@ -27,20 +26,11 @@ class Teacher extends Model
         'center',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-    ];
-
     public static function createFromRequest(Request $request)
     {
         $data = $request->validate([
-            'nickname' => 'required|string',
-            'email' => 'required|email',
+            'nickname' => 'required|string|unique:students|unique:teachers',
+            'email' => 'required|email|unique:students|unique:teachers',
             'password' => 'required|confirmed',
             'name' => 'required|string',
             'surnames' => 'required|string',
@@ -61,8 +51,8 @@ class Teacher extends Model
     {
         $data = $request->validate([
             'id' => 'required|int|gt:0',
-            'nickname' => 'required|string',
-            'email' => 'required|email',
+            'nickname' => 'required|string|unique:students|unique:teachers',
+            'email' => 'required|email|unique:students|unique:teachers',
             'name' => 'required|string',
             'surnames' => 'required|string',
             'center' => 'required|string'
