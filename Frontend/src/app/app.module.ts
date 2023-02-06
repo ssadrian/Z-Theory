@@ -9,6 +9,7 @@ import { FooterComponent } from './footer/footer.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { StudentRegisterFormComponent } from './pages/student-register-form/student-register-form.component';
 import { TeacherRegisterFormComponent } from './pages/teacher-register-form/teacher-register-form.component';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [
@@ -19,11 +20,11 @@ import { TeacherRegisterFormComponent } from './pages/teacher-register-form/teac
     NotfoundComponent,
     StudentRegisterFormComponent,
     TeacherRegisterFormComponent,
-
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]
