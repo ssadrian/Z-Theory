@@ -17,25 +17,32 @@
         >
       </div>
       <div class="relative z-0 w-full mb-6 group">
-        <!-- <input
+        <input
           type="date"
           name="birth_date"
           id="birth_date"
           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
           placeholder=" "
           required
-        /> -->
+        />
 
-        <mat-form-field appearance="fill">
-          <mat-label>Choose a date</mat-label>
-          <input matInput [matDatepicker]="picker" />
+        <!-- <mat-form-field appearance="fill">
+          <mat-label>Fecha Nacimiento</mat-label>
+          <input
+            name="birth_date"
+            id="birth_date"
+            required
+            matInput
+            [matDatepicker]="picker"
+            class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+          />
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle
             matIconSuffix
             [for]="picker"
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        </mat-form-field> -->
 
         <label
           for="birth_date"

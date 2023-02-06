@@ -10,6 +10,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { StudentRegisterFormComponent } from './pages/student-register-form/student-register-form.component';
 import { TeacherRegisterFormComponent } from './pages/teacher-register-form/teacher-register-form.component';
 import { MaterialModule } from './material/material.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,11 +21,13 @@ import { MaterialModule } from './material/material.module';
     NotfoundComponent,
     StudentRegisterFormComponent,
     TeacherRegisterFormComponent,
+   
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

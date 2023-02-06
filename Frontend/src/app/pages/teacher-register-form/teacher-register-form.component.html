@@ -1,8 +1,9 @@
 <div class="bg-gray-900 p-10">
-  <form>
+  <form [formGroup]="teacherForm" (ngSubmit)="submit()">
     <div class="grid md:grid-cols-2 md:gap-6">
       <div class="relative z-0 w-full mb-6 group">
         <input
+          formControlName="nickname"
           type="text"
           name="nickname"
           id="nickname"
@@ -18,6 +19,7 @@
       </div>
       <div class="relative z-0 w-full mb-6 group">
         <input
+          formControlName="center"
           type="text"
           name="center"
           id="center"
@@ -35,6 +37,7 @@
     <div class="grid md:grid-cols-2 md:gap-6">
       <div class="relative z-0 w-full mb-6 group">
         <input
+          formControlName="name"
           type="text"
           name="name"
           id="name"
@@ -50,6 +53,7 @@
       </div>
       <div class="relative z-0 w-full mb-6 group">
         <input
+          formControlName="surnames"
           type="text"
           name="surnames"
           id="surnames"
@@ -65,6 +69,7 @@
       </div>
       <div class="relative z-0 w-full mb-6 group">
         <input
+          formControlName="password"
           type="password"
           name="password"
           id="password"
@@ -80,7 +85,8 @@
       </div>
       <div class="relative z-0 w-full mb-6 group">
         <input
-          type="text"
+          formControlName="password_confirmation"
+          type="password"
           name="password_confirmation"
           id="password_confirmation"
           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
@@ -96,6 +102,7 @@
     </div>
     <div class="relative z-0 w-full mb-6 group">
       <input
+        formControlName="email"
         type="text"
         name="email"
         id="email"
@@ -111,19 +118,19 @@
     </div>
 
     <div class="flex items-center mb-4">
-        <input
-          id="default-checkbox"
-          type="checkbox"
-          value=""
-          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-        />
-        <label
-          for="default-checkbox"
-          class="ml-2 text-sm font-medium text-gray-300"
-          >Acepto los términos de servicio</label
-        >
-      </div>
-  
+      <input
+        formControlName="tos"
+        id="default-checkbox"
+        type="checkbox"
+        value=""
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label
+        for="default-checkbox"
+        class="ml-2 text-sm font-medium text-gray-300"
+        >Acepto los términos de servicio</label
+      >
+    </div>
 
     <button
       type="submit"
