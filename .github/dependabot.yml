@@ -1,0 +1,14 @@
+version: 2
+
+updates:
+
+  - package-ecosystem: "npm"
+    directory: "/Frontend"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "composer"
+    directory: "/Backend"
+    schedule:
+      interval: "weekly"
+
