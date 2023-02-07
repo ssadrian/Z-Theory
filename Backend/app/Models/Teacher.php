@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
-use LaravelIdea\Helper\App\Models\_IH_Teacher_C;
 
 class Teacher extends Model
 {
