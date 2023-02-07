@@ -16,10 +16,10 @@ class AuthController extends Controller
             "password" => "required"
         ]);
 
-        $token = $request->user()->createToken("token");
-
         $student = Student::all()
             ->firstWhere("email", $data["email"]);
+
+        $token = $request->user()->createToken('token');
 
         if ($student && Hash::check($data["password"], $student->password)) {
             return $token;
@@ -39,23 +39,7 @@ class AuthController extends Controller
 
     public function registerStudent(Request $request)
     {
-        $data = $request->validate([
-            "name" => "required|string",
-            "surnames" => "required|string",
-            "nickname" => "required|string",
-            "email" => "required|email",
-            "password" => "required|confirmed",
-            "birth_date" => "required|date"
-        ]);
-
-        $newStudent = Student::create([
-            "name" => $data["name"],
-            "surnames" => $data["surnames"],
-            "nickname" => $data["nickname"],
-            "email" => $data["email"],
-            "password" => $data["password"],
-            "birth_date" => $data["birth_date"]
-        ]);
+        $newStudent = Student::createFromRequest($request);
 
         if (empty($newStudent)) {
             return response()->json([
@@ -72,23 +56,7 @@ class AuthController extends Controller
 
     public function registerTeacher(Request $request)
     {
-        $data = $request->validate([
-            "name" => "required|string",
-            "surnames" => "required|string",
-            "nickname" => "required|string",
-            "email" => "required|email",
-            "password" => "required|confirmed",
-            "center" => "required|string"
-        ]);
-
-        $newTeacher = Teacher::create([
-            "name" => $data["name"],
-            "surnames" => $data["surnames"],
-            "nickname" => $data["nickname"],
-            "email" => $data["email"],
-            "password" => $data["password"],
-            "center" => $data["center"]
-        ]);
+        $newTeacher = Teacher::createFromRequest($request);
 
         if (empty($newTeacher)) {
             return response()->json([
