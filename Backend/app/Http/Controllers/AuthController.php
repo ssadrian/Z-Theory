@@ -19,15 +19,17 @@ class AuthController extends Controller
         $student = Student::all()
             ->firstWhere("email", $data["email"]);
 
+        $token = $request->user()->createToken('token');
+
         if ($student && Hash::check($data["password"], $student->password)) {
-            return $request->user()->createToken('token');
+            return $token;
         }
 
         $teacher = Teacher::all()
             ->firstWhere("email", $data["email"]);
 
         if ($teacher && Hash::check($data["password"], $teacher->password)) {
-            return $request->user()->createToken('token');
+            return $token;
         }
 
         return response()->json([

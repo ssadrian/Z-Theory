@@ -29,13 +29,22 @@ class Student extends Model
         'birth_date',
     ];
 
-    public static function createFromRequest(Request $request): Student
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+    ];
+
+    public static function createFromRequest(Request $request)
     {
         $data = $request->validate([
-            "nickname" => "required|string|unique:students|unique:teachers",
+            "nickname" => "required|string",
             "name" => "required|string",
             "surnames" => "required|string",
-            "email" => "required|email|unique:students|unique:teachers",
+            "email" => "required|email",
             "password" => "required|confirmed",
             "birth_date" => "required|date"
         ]);
@@ -54,10 +63,10 @@ class Student extends Model
     {
         $data = $request->validate([
             "id" => "required|int",
-            "nickname" => "required|string|unique:students|unique:teachers",
+            "nickname" => "required|string",
             "name" => "required|string",
             "surnames" => "required|string",
-            "email" => "required|email|unique:students|unique:teachers",
+            "email" => "required|email",
             "birth_date" => "required|date"
         ]);
 
