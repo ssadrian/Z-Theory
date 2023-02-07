@@ -29,13 +29,13 @@ class Student extends Model
         'birth_date',
     ];
 
-    public static function createFromRequest(Request $request)
+    public static function createFromRequest(Request $request): Student
     {
         $data = $request->validate([
-            "nickname" => "required|string",
+            "nickname" => "required|string|unique:students|unique:teachers",
             "name" => "required|string",
             "surnames" => "required|string",
-            "email" => "required|email",
+            "email" => "required|email|unique:students|unique:teachers",
             "password" => "required|confirmed",
             "birth_date" => "required|date"
         ]);
@@ -54,10 +54,10 @@ class Student extends Model
     {
         $data = $request->validate([
             "id" => "required|int",
-            "nickname" => "required|string",
+            "nickname" => "required|string|unique:students|unique:teachers",
             "name" => "required|string",
             "surnames" => "required|string",
-            "email" => "required|email",
+            "email" => "required|email|unique:students|unique:teachers",
             "birth_date" => "required|date"
         ]);
 

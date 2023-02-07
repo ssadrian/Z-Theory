@@ -29,8 +29,8 @@ class Teacher extends Model
     public static function createFromRequest(Request $request)
     {
         $data = $request->validate([
-            'nickname' => 'required|string',
-            'email' => 'required|email',
+            'nickname' => 'required|string|unique:students|unique:teachers',
+            'email' => 'required|email|unique:students|unique:teachers',
             'password' => 'required|confirmed',
             'name' => 'required|string',
             'surnames' => 'required|string',
@@ -51,8 +51,8 @@ class Teacher extends Model
     {
         $data = $request->validate([
             'id' => 'required|int|gt:0',
-            'nickname' => 'required|string',
-            'email' => 'required|email',
+            'nickname' => 'required|string|unique:students|unique:teachers',
+            'email' => 'required|email|unique:students|unique:teachers',
             'name' => 'required|string',
             'surnames' => 'required|string',
             'center' => 'required|string'
