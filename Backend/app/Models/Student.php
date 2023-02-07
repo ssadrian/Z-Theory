@@ -29,45 +29,36 @@ class Student extends Model
         'birth_date',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-    ];
-
-    public static function createFromRequest(Request $request)
+    public static function createFromRequest(Request $request): Student
     {
         $data = $request->validate([
-            "nickname" => "required|string",
-            "name" => "required|string",
-            "surnames" => "required|string",
-            "email" => "required|email",
-            "password" => "required|confirmed",
-            "birth_date" => "required|date"
+            'nickname' => 'required|string|unique:students|unique:teachers',
+            'name' => 'required|string',
+            'surnames' => 'required|string',
+            'email' => 'required|email|unique:students|unique:teachers',
+            'password' => 'required|confirmed',
+            'birth_date' => 'required|date'
         ]);
 
         return Student::create([
-            "nickname" => $data["nickname"],
-            "name" => $data["name"],
-            "surnames" => $data["surnames"],
-            "email" => $data["email"],
-            "password" => Hash::make($data["password"]),
-            "birth_date" => $data["birth_date"]
+            'nickname' => $data['nickname'],
+            'name' => $data['name'],
+            'surnames' => $data['surnames'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'birth_date' => $data['birth_date']
         ]);
     }
 
     public static function updateFromRequest(Request $request): Student|null
     {
         $data = $request->validate([
-            "id" => "required|int",
-            "nickname" => "required|string",
-            "name" => "required|string",
-            "surnames" => "required|string",
-            "email" => "required|email",
-            "birth_date" => "required|date"
+            'id' => 'required|int',
+            'nickname' => 'required|string|unique:students|unique:teachers',
+            'name' => 'required|string',
+            'surnames' => 'required|string',
+            'email' => 'required|email|unique:students|unique:teachers',
+            'birth_date' => 'required|date'
         ]);
 
         $student = Student::find($data['id']);
