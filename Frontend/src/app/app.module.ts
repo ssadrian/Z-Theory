@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LogoComponent } from './logo/logo.component';
 import { FooterComponent } from './footer/footer.component';
-import { NotfoundComponent } from './notfound/notfound.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 import { StudentRegisterFormComponent } from './pages/student-register-form/student-register-form.component';
 import { TeacherRegisterFormComponent } from './pages/teacher-register-form/teacher-register-form.component';
 import { MaterialModule } from './material/material.module';
@@ -18,10 +18,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     NavbarComponent,
     LogoComponent,
     FooterComponent,
-    NotfoundComponent,
+    NotFoundComponent,
     StudentRegisterFormComponent,
     TeacherRegisterFormComponent,
-   
+
   ],
   imports: [
     BrowserModule,
