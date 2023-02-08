@@ -11,6 +11,7 @@ import { StudentRegisterFormComponent } from './pages/student-register-form/stud
 import { TeacherRegisterFormComponent } from './pages/teacher-register-form/teacher-register-form.component';
 import { MaterialModule } from './modules/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LandPageComponent } from './pages/land-page/land-page.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NotFoundComponent,
     StudentRegisterFormComponent,
     TeacherRegisterFormComponent,
-
+    LandPageComponent,
   ],
   imports: [
     BrowserModule,

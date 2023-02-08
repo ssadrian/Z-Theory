@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { StudentRegisterFormComponent } from './student-register-form/student-register-form.component';
 import { TeacherRegisterFormComponent } from './teacher-register-form/teacher-register-form.component';
