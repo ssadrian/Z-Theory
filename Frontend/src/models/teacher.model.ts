@@ -1,4 +1,4 @@
-export interface Teacher {
+export interface ITeacher {
   nickname: string;
   email: string;
   password: string;

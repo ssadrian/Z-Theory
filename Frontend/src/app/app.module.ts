@@ -12,6 +12,8 @@ import { TeacherRegisterFormComponent } from './pages/teacher-register-form/teac
 import { MaterialModule } from './modules/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LandPageComponent } from './pages/land-page/land-page.component';
+import {RegistrationService} from "./services/registration.service";
+import {HttpClient} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -30,7 +32,7 @@ import { LandPageComponent } from './pages/land-page/land-page.component';
     MaterialModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [RegistrationService, HttpClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
