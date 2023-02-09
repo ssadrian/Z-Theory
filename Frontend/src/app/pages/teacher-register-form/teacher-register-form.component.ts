@@ -1,48 +1,54 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import {Component} from "@angular/core";
+import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
+import {RegistrationService} from "../../services/registration.service";
+import {IFormTeacher} from "../../../models/form/form-teacher";
 
 @Component({
-  selector: 'app-teacher-register-form',
-  templateUrl: './teacher-register-form.component.html',
-  styleUrls: ['./teacher-register-form.component.scss'],
+  selector: "app-teacher-register-form",
+  templateUrl: "./teacher-register-form.component.html",
+  styleUrls: ["./teacher-register-form.component.scss"],
 })
-export class TeacherRegisterFormComponent implements OnInit {
+export class TeacherRegisterFormComponent {
+  constructor(private fb: FormBuilder, private register: RegistrationService) {
+  }
+
   isSubmit: boolean = false;
 
-  constructor() {}
-
-  ngOnInit(): void {}
-
-  teacherForm = new FormGroup({
-    nickname: new FormControl('', [Validators.required]),
-    center: new FormControl('', [Validators.required]),
-    name: new FormControl('', [Validators.required]),
-    surnames: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
-    password_confirmation: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    tos: new FormControl(false, [Validators.requiredTrue]), //Terms Of Service
+  teacherForm = this.fb.group({
+    nickname: ["", [Validators.required]],
+    center: ["", [Validators.required]],
+    name: ["", [Validators.required]],
+    surnames: ["", [Validators.required]],
+    password: ["", [Validators.required]],
+    password_confirmation: ["", [Validators.required]],
+    email: ["", [Validators.required, Validators.email]],
+    tos: [false, [Validators.requiredTrue]],
   });
 
-  //Con este get creamos una key para controlar los errores del formulario
-
+  // Con este get creamos una key para controlar los errores del formulario
   get formControl(): { [key: string]: AbstractControl } {
     return this.teacherForm.controls;
   }
 
-  submit() {
+  submit(): void {
     this.isSubmit = true;
+
     if (!this.teacherForm.valid) {
-    } else {
-      console.log(
-        'El formulario es válido! Estos son los datos: ' +
-          JSON.stringify(this.teacherForm.value)
-      );
+      return;
     }
+
+    let formValue = this.teacherForm.value;
+    let teacher: IFormTeacher = {
+      name: formValue.name!,
+      surnames: formValue.surnames!,
+      nickname: formValue.nickname!,
+      email: formValue.email!,
+      password: formValue.password!,
+      password_confirmation: formValue.password_confirmation!,
+      center: formValue.center!,
+    };
+
+    console.log(JSON.stringify(formValue));
+    console.log(this.register.registerTeacher(teacher));
   }
 }

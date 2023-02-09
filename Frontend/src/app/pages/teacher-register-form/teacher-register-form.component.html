@@ -4,7 +4,6 @@
       <div class="relative z-0 w-full mb-6 group">
         <input
           formControlName="nickname"
-          type="text"
           name="nickname"
           id="nickname"
           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
@@ -35,7 +34,6 @@
       <div class="relative z-0 w-full mb-6 group">
         <input
           formControlName="center"
-          type="text"
           name="center"
           id="center"
           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
@@ -67,7 +65,6 @@
       <div class="relative z-0 w-full mb-6 group">
         <input
           formControlName="name"
-          type="text"
           name="name"
           id="name"
           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
@@ -96,7 +93,6 @@
       <div class="relative z-0 w-full mb-6 group">
         <input
           formControlName="surnames"
-          type="text"
           name="surnames"
           id="surnames"
           class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
@@ -123,6 +119,7 @@
           >Apellidos</label
         >
       </div>
+
       <div class="relative z-0 w-full mb-6 group">
         <input
           formControlName="password"
@@ -153,6 +150,7 @@
           >Contraseña</label
         >
       </div>
+
       <div class="relative z-0 w-full mb-6 group">
         <input
           formControlName="password_confirmation"
@@ -184,10 +182,11 @@
         >
       </div>
     </div>
+
     <div class="relative z-0 w-full mb-6 group">
       <input
         formControlName="email"
-        type="text"
+        type="email"
         name="email"
         id="email"
         class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
@@ -234,9 +233,9 @@
       <div>
         <label
           for="default-checkbox"
-          class="ml-2 text-sm font-medium text-gray-300"
-          >Acepto los términos de servicio</label
-        >
+          class="ml-2 text-sm font-medium text-gray-300">
+          Acepto los términos de servicio
+        </label>
 
         <div
           *ngIf="isSubmit && formControl['tos'].errors"
