@@ -1,4 +1,4 @@
-export interface Student {
+export interface IStudent {
     nickname: string;
     email: string;
     password: string;
