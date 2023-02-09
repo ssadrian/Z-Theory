@@ -9,18 +9,26 @@ import {IFormStudent} from "../../models/form/form-student";
   providedIn: "root",
 })
 export class RegistrationService {
-  #apiRegistrationUrl: string = `${ environment.apiUrl }/registration`;
+  #apiRegistrationUrl: string = `${environment.apiUrl}/register`;
 
   constructor(private _http: HttpClient) {
   }
 
-  registerStudent(student: IFormStudent): Observable<Object> {
-    const url: string = this.#apiRegistrationUrl + "/student";
-    return this._http.post(url, student);
+  registerStudent(student: IFormStudent): Observable<any> {
+    return this.#register("/student", student);
   }
 
-  registerTeacher(teacher: IFormTeacher) {
-    const url: string = this.#apiRegistrationUrl + "/teacher";
-    return this._http.post(url, teacher);
+  registerTeacher(teacher: IFormTeacher): Observable<any> {
+    return this.#register("/teacher", teacher);
+  }
+
+  #register(endpoint: string, formUser: IFormStudent | IFormTeacher): Observable<any> {
+    const url: string = this.#apiRegistrationUrl + endpoint;
+
+    return this._http.post(url, JSON.stringify(formUser), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 }

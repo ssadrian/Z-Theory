@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
 import {RegistrationService} from "../../services/registration.service";
 import {IFormTeacher} from "../../../models/form/form-teacher";
+import {Router} from "@angular/router";
 
 @Component({
   selector: "app-teacher-register-form",
@@ -9,7 +10,7 @@ import {IFormTeacher} from "../../../models/form/form-teacher";
   styleUrls: ["./teacher-register-form.component.scss"],
 })
 export class TeacherRegisterFormComponent {
-  constructor(private fb: FormBuilder, private register: RegistrationService) {
+  constructor(private fb: FormBuilder, private register: RegistrationService, private router: Router) {
   }
 
   isSubmit: boolean = false;
@@ -48,7 +49,9 @@ export class TeacherRegisterFormComponent {
       center: formValue.center!,
     };
 
-    console.log(JSON.stringify(formValue));
-    console.log(this.register.registerTeacher(teacher));
+    this.register.registerTeacher(teacher)
+      .subscribe(response => {
+        this.router.navigate(['/login']);
+      });
   }
 }
