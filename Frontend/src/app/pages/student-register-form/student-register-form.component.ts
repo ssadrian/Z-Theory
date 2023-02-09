@@ -15,7 +15,7 @@ export class StudentRegisterFormComponent {
 
   studentForm = this.fb.group({
     nickname: ["", [Validators.required]],
-    birth_date: [new Date, [Validators.required]],
+    birth_date: [<Date|null>null, [Validators.required]],
     name: ["", [Validators.required]],
     surnames: ["", [Validators.required]],
     password: ["", [Validators.required]],
