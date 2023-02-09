@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { IFormStudent } from 'src/models/form/form-student';
-import { RegistrationService } from "../../services/registration.service";
+import {Component} from '@angular/core';
+import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import {IFormStudent} from 'src/models/form/form-student';
+import {RegistrationService} from "../../services/registration.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-student-register-form',
@@ -9,7 +10,8 @@ import { RegistrationService } from "../../services/registration.service";
   styleUrls: ['./student-register-form.component.scss']
 })
 export class StudentRegisterFormComponent {
-  constructor(private register: RegistrationService, private fb: FormBuilder) { }
+  constructor(private register: RegistrationService, private fb: FormBuilder, private router: Router) {
+  }
 
   isSubmit: boolean = false
 
@@ -46,10 +48,9 @@ export class StudentRegisterFormComponent {
       birth_date: formValue.birth_date!,
     };
 
-    console.log(JSON.stringify(formValue));
-    console.log(this.register.registerStudent(student));
+    this.register.registerStudent(student)
+      .subscribe(response => {
+        this.router.navigate(['/login']);
+      });
   }
-
-
-
 }
