@@ -17,33 +17,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post("/login", [AuthController::class, "login"]);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::prefix("register")->group(function () {
-    Route::post("/student", [AuthController::class, "registerStudent"]);
-    Route::post("/teacher", [AuthController::class, "registerTeacher"]);
+Route::prefix('register')->group(function () {
+    Route::post('/student', [StudentController::class, 'create']);
+    Route::post('/teacher', [TeacherController::class, 'create']);
 });
 
-Route::prefix("student")->group(function () {
-    Route::get("/all", [StudentController::class, "all"]);
-    Route::get("", [StudentController::class, "get"]);
+Route::prefix('student')->group(function () {
+    Route::get('/all', [StudentController::class, 'all']);
+    Route::get('', [StudentController::class, 'get']);
 
-    Route::post("", [StudentController::class, "create"]);
-    Route::put("", [StudentController::class, "update"]);
+    Route::post('', [StudentController::class, 'create']);
+    Route::put('', [StudentController::class, 'update']);
 
-    Route::delete("", [StudentController::class, "delete"]);
+    Route::delete('', [StudentController::class, 'delete']);
 });
 
-Route::prefix("teacher")->group(function () {
-    Route::get("/all", [TeacherController::class, "all"]);
-    Route::get("", [TeacherController::class, "get"]);
+Route::prefix('teacher')->group(function () {
+    Route::get('/all', [TeacherController::class, 'all']);
+    Route::get('', [TeacherController::class, 'get']);
 
-    Route::post("", [TeacherController::class, "create"]);
-    Route::put("", [TeacherController::class, "update"]);
+    Route::post('', [TeacherController::class, 'create']);
+    Route::put('', [TeacherController::class, 'update']);
 
-    Route::delete("", [TeacherController::class, "delete"]);
+    Route::delete('', [TeacherController::class, 'delete']);
 });
 
-Route::middleware("auth:sanctum")->group(function () {
-    Route::get("/user", fn(Request $request) => $request->user());
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', fn(Request $request) => $request->user());
 });
