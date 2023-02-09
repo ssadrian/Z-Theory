@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LandPageComponent } from './pages/land-page/land-page.component';
 import { RegistrationService } from "./services/registration.service";
 import { HttpClientModule } from "@angular/common/http";
+import { LoginFormComponent } from './pages/login-form/login-form.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { HttpClientModule } from "@angular/common/http";
     StudentRegisterFormComponent,
     TeacherRegisterFormComponent,
     LandPageComponent,
+    LoginFormComponent,
   ],
   imports: [
     BrowserModule,
