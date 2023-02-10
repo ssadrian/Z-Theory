@@ -1,15 +1,10 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-import {LandPageComponent} from "./pages/land-page/land-page.component";
-import { TeacherProfileComponent } from './pages/teacher/teacher-profile/teacher-profile.component';
-import { StudentProfileComponent } from './pages/student/student-profile/student-profile.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {LandPageComponent} from './pages/land-page/land-page.component';
+import {NotFoundComponent} from './pages/not-found/not-found.component';
 
 const routes: Routes = [
-  // { path: '', component: StudentProfileComponent },
-  { path: '', component: TeacherProfileComponent },  
-  // {path:'', component: LandPageComponent},
-
+  { path: '', component: LandPageComponent },
   {
     path: '',
     loadChildren: () =>
