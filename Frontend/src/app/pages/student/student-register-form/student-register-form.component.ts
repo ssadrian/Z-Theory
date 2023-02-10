@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import {IFormStudent} from 'src/models/form/form-student';
-import {RegistrationService} from "../../services/registration.service";
+import {RegistrationService} from "../../../services/registration.service";
 import {Router} from "@angular/router";
 
 @Component({
