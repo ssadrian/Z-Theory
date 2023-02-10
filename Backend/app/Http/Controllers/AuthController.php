@@ -18,17 +18,17 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $studentLogin = $this->loginStudent($request, $data);
-        if ($studentLogin) {
+        $studentToken = $this->loginStudent($request, $data);
+        if ($studentToken) {
             return response()->json([
-                'token' => $studentLogin
+                'token' => $studentToken->plainTextToken
             ]);
         }
 
-        $teacherLogin = $this->loginTeacher($request, $data);
-        if ($teacherLogin) {
+        $teacherToken = $this->loginTeacher($request, $data);
+        if ($teacherToken) {
             return response()->json([
-                'token' => $teacherLogin
+                'token' => $teacherToken->plainTextToken
             ]);
         }
 
@@ -43,7 +43,7 @@ class AuthController extends Controller
             ->firstWhere("email", $data["email"]);
 
         if ($student && Hash::check($data["password"], $student->password)) {
-            return $request->user()->createToken('token');
+            return $student->createToken('token');
         }
 
         return false;
@@ -55,7 +55,7 @@ class AuthController extends Controller
             ->firstWhere('email', $data['email']);
 
         if ($teacher && Hash::check($data['password'], $teacher->password)) {
-            return $request->user()->createToken('token');
+            return $teacher->createToken('token');
         }
 
         return false;
