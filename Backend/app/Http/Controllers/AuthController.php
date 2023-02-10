@@ -4,18 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Teacher;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\NewAccessToken;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $data = $request->validate([
-            "email" => "required|email",
-            "password" => "required"
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
 
+        $studentLogin = $this->loginStudent($request, $data);
+        if ($studentLogin) {
+            return response()->json([
+                'token' => $studentLogin
+            ]);
+        }
+
+        $teacherLogin = $this->loginTeacher($request, $data);
+        if ($teacherLogin) {
+            return response()->json([
+                'token' => $teacherLogin
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Invalid credentials'
+        ]);
+    }
+
+    public function loginStudent(Request $request, array $data): NewAccessToken|bool
+    {
         $student = Student::all()
             ->firstWhere("email", $data["email"]);
 
@@ -23,15 +46,18 @@ class AuthController extends Controller
             return $request->user()->createToken('token');
         }
 
-        $teacher = Teacher::all()
-            ->firstWhere("email", $data["email"]);
+        return false;
+    }
 
-        if ($teacher && Hash::check($data["password"], $teacher->password)) {
+    public function loginTeacher(Request $request, array $data): NewAccessToken|bool
+    {
+        $teacher = Teacher::all()
+            ->firstWhere('email', $data['email']);
+
+        if ($teacher && Hash::check($data['password'], $teacher->password)) {
             return $request->user()->createToken('token');
         }
 
-        return response()->json([
-            "msg" => "Invalid email or password"
-        ]);
+        return false;
     }
 }
