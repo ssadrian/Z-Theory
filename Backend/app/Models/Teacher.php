@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Hash;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\HasApiTokens;
 
-class Teacher extends Model
+class Teacher extends Authenticatable
 {
     use HasFactory, HasApiTokens;
 
