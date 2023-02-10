@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { Validators, AbstractControl, FormBuilder } from '@angular/forms';
+import {Component} from '@angular/core';
+import {Validators, AbstractControl, FormBuilder} from '@angular/forms';
+import {LoginService} from '../../services/login.service';
 
 @Component({
   selector: 'app-login-form',
@@ -7,7 +8,9 @@ import { Validators, AbstractControl, FormBuilder } from '@angular/forms';
   styleUrls: ['./login-form.component.scss'],
 })
 export class LoginFormComponent {
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private loginService: LoginService) {
+  }
+
   isSubmit: boolean = false;
 
   loginForm = this.fb.group({
@@ -21,5 +24,13 @@ export class LoginFormComponent {
 
   submit(): void {
     this.isSubmit = true;
+
+    const formValue = this.loginForm.value;
+    this.loginService.login({
+      email: formValue.email!,
+      password: formValue.password!,
+    }).subscribe((response): void => {
+      console.log(response);
+    });
   }
 }
