@@ -11,24 +11,19 @@ use Laravel\Sanctum\NewAccessToken;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): JsonResponse
+    public function loginStudent(Request $request): JsonResponse
     {
         $data = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        $studentToken = $this->loginStudent($request, $data);
-        if ($studentToken) {
-            return response()->json([
-                'token' => $studentToken->plainTextToken
-            ]);
-        }
+        $student = Student::all()
+            ->firstWhere("email", $data["email"]);
 
-        $teacherToken = $this->loginTeacher($request, $data);
-        if ($teacherToken) {
+        if ($student && Hash::check($data["password"], $student->password)) {
             return response()->json([
-                'token' => $teacherToken->plainTextToken
+                'token' => $student->createToken('token')->plainTextToken
             ]);
         }
 
@@ -37,27 +32,24 @@ class AuthController extends Controller
         ]);
     }
 
-    public function loginStudent(Request $request, array $data): NewAccessToken|bool
+    public function loginTeacher(Request $request): JsonResponse
     {
-        $student = Student::all()
-            ->firstWhere("email", $data["email"]);
+        $data = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
-        if ($student && Hash::check($data["password"], $student->password)) {
-            return $student->createToken('token');
-        }
-
-        return false;
-    }
-
-    public function loginTeacher(Request $request, array $data): NewAccessToken|bool
-    {
         $teacher = Teacher::all()
             ->firstWhere('email', $data['email']);
 
         if ($teacher && Hash::check($data['password'], $teacher->password)) {
-            return $teacher->createToken('token');
+            return response()->json([
+                'token' => $teacher->createToken('token')->plainTextToken
+            ]);
         }
 
-        return false;
+        return response()->json([
+            'message' => 'Invalid credentials'
+        ]);
     }
 }
