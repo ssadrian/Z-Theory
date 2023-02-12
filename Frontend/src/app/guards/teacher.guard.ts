@@ -21,7 +21,7 @@ export class TeacherGuard implements CanMatch {
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (this.credentials.currentUser) {
-      return this.credentials.role === "student";
+      return this.credentials.role === "teacher";
     }
 
     return this._http.post<ILoginResponse>(this.#loginUrl, JSON.stringify({
