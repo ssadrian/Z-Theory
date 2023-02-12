@@ -35,28 +35,28 @@
       <ul
         class="flex flex-col mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-transparent bg-gray-800 md:dark:bg-transparent border-gray-700"
       >
-        <li>
+        <li *ngIf="!isLogged">
           <a
             [routerLink]="['/register-student']"
             class="block py-2 pl-3 pr-4 text-gray-700 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
           >Registro Alumno</a>
         </li>
 
-        <li>
+        <li *ngIf="!isLogged">
           <a
             [routerLink]="['/register-teacher']"
             class="block py-2 pl-3 pr-4 text-gray-700 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
           >Registro Profesor</a>
         </li>
 
-        <li>
+        <li *ngIf="!isLogged">
           <a
             [routerLink]="['/login']"
             class="block py-2 pl-3 pr-4 text-gray-700 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
           >Iniciar sesión</a>
         </li>
 
-        <li>
+        <li *ngIf="isLogged">
           <a
             (click)="logOut()"
             class="block py-2 pl-3 pr-4 text-gray-700 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
