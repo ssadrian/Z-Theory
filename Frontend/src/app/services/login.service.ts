@@ -1,22 +1,23 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {environment} from '../environments/environment';
+import {Injectable} from "@angular/core";
+import {Router} from "@angular/router";
+import {CredentialService} from "./credential.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class LoginService {
-  constructor(private _http: HttpClient) {
+  constructor(private router: Router, private credentials: CredentialService) {
   }
 
-  #loginUrl: string = `${environment.apiUrl}/login`;
+  login(creds: { email: string, password: string }): void {
+    this.credentials.email = creds.email;
+    this.credentials.password = creds.password;
 
-  login(credentials: { email: string, password: string }): Observable<any> {
-    return this._http.post(this.#loginUrl, JSON.stringify(credentials), {
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
+    this.router.navigate(["/profile"]);
+  }
+
+  logout(): void {
+    this.credentials.clear();
+    this.router.navigate(["/"]);
   }
 }
