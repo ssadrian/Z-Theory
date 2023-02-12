@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::prefix('login')->group(function () {
+    Route::post('/student', [AuthController::class, 'loginStudent']);
+    Route::post('/teacher', [AuthController::class, 'loginTeacher']);
+});
 
 Route::prefix('register')->group(function () {
     Route::post('/student', [StudentController::class, 'create']);

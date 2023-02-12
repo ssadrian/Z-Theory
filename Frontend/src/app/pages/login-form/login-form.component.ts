@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {Validators, AbstractControl, FormBuilder} from '@angular/forms';
+import {CredentialService} from '../../services/credential.service';
 import {LoginService} from '../../services/login.service';
 
 @Component({
@@ -8,7 +9,10 @@ import {LoginService} from '../../services/login.service';
   styleUrls: ['./login-form.component.scss'],
 })
 export class LoginFormComponent {
-  constructor(private fb: FormBuilder, private loginService: LoginService) {
+  constructor(
+    private fb: FormBuilder,
+    private loginService: LoginService,
+    private credentials: CredentialService) {
   }
 
   isSubmit: boolean = false;
@@ -29,8 +33,6 @@ export class LoginFormComponent {
     this.loginService.login({
       email: formValue.email!,
       password: formValue.password!,
-    }).subscribe((response): void => {
-      console.log(response);
     });
   }
 }

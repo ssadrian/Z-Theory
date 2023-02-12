@@ -12,10 +12,12 @@ import {MaterialModule} from './modules/material.module';
 import {LandPageComponent} from './pages/land-page/land-page.component';
 import {LoginFormComponent} from './pages/login-form/login-form.component';
 import {NotFoundComponent} from './pages/not-found/not-found.component';
-import {StudentRegisterFormComponent} from './pages/student-register-form/student-register-form.component';
-import {TeacherRegisterFormComponent} from './pages/teacher-register-form/teacher-register-form.component';
+import {StudentRegisterFormComponent} from './pages/student/student-register-form/student-register-form.component';
+import {TeacherRegisterFormComponent} from './pages/teacher/teacher-register-form/teacher-register-form.component';
 import {LoginService} from './services/login.service';
 import {RegistrationService} from './services/registration.service';
+import { StudentProfileComponent } from './pages/student/student-profile/student-profile.component';
+import { TeacherProfileComponent } from './pages/teacher/teacher-profile/teacher-profile.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import {RegistrationService} from './services/registration.service';
     TeacherRegisterFormComponent,
     LandPageComponent,
     LoginFormComponent,
+    StudentProfileComponent,
+    TeacherProfileComponent,
   ],
   imports: [
     BrowserModule,
