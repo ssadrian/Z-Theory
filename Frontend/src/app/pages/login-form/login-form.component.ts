@@ -1,7 +1,6 @@
-import {Component} from '@angular/core';
-import {Validators, AbstractControl, FormBuilder} from '@angular/forms';
-import {CredentialService} from '../../services/credential.service';
-import {LoginService} from '../../services/login.service';
+import {Component} from "@angular/core";
+import {AbstractControl, FormBuilder, Validators} from "@angular/forms";
+import {LoginService} from "../../services/login.service";
 
 @Component({
   selector: 'app-login-form',
@@ -11,8 +10,7 @@ import {LoginService} from '../../services/login.service';
 export class LoginFormComponent {
   constructor(
     private fb: FormBuilder,
-    private loginService: LoginService,
-    private credentials: CredentialService) {
+    private loginService: LoginService) {
   }
 
   isSubmit: boolean = false;
