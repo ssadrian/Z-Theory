@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +26,11 @@ class Student extends Authenticatable
         'surnames',
         'birth_date',
     ];
+
+    public function rankings(): HasMany
+    {
+        return $this->hasMany(Ranking::class);
+    }
 
     public static function createFromRequest(Request $request): Student
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Http;
+namespace Tests\Feature\Http;
 
 use App\Models\Teacher;
 use Illuminate\Foundation\Testing\DatabaseTransactions;

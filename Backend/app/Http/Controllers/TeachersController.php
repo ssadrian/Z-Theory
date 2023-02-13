@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 
-class TeacherController extends Controller
+class TeachersController extends Controller
 {
-    public function all()
+    public function all(): \Illuminate\Database\Eloquent\Collection|\LaravelIdea\Helper\App\Models\_IH_Teacher_C|array
     {
         return Teacher::all();
     }
 
-    public function get(Request $request)
+    public function get(Request $request): \Illuminate\Http\Response|Teacher|\LaravelIdea\Helper\App\Models\_IH_Teacher_C|array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
         $data = $request->validate([
             'id' => 'required|int|gt:0',
@@ -28,7 +28,7 @@ class TeacherController extends Controller
         return $teacher;
     }
 
-    public function create(Request $request)
+    public function create(Request $request): \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
         $teacher = Teacher::createFromRequest($request);
         $teacher->save();
@@ -37,7 +37,7 @@ class TeacherController extends Controller
         return response(status: 201);
     }
 
-    public function update(Request $request)
+    public function update(Request $request): \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
         $teacher = Teacher::updateFromRequest($request);
 
@@ -49,7 +49,7 @@ class TeacherController extends Controller
         return response($teacher);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request): \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
         $data = $request->validate([
             'id' => 'required|int|gt:0'

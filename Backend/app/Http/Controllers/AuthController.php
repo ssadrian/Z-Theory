@@ -7,7 +7,6 @@ use App\Models\Teacher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\NewAccessToken;
 
 class AuthController extends Controller
 {
