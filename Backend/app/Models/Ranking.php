@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -28,7 +27,9 @@ class Ranking extends Model
     {
         $data = $request->validate([
             'code' => 'required|uuid',
-            'student_id' => 'required|int|exists:students,id',
+            'student_id' => ['required', 'exists:students,id',
+                Rule::unique('rankings')->where(fn($query) => $query->where('code', $request->code))
+            ],
             'rank' => ['required', 'int', 'gt:0',
                 Rule::unique('rankings')->where(fn($query) => $query->where('code', $request->code))
             ],
@@ -44,9 +45,9 @@ class Ranking extends Model
     public static function updateFromRequest(Request $request): array|Ranking|null
     {
         $data = $request->validate([
-            'id' => 'required|exists:students',
+            'id' => 'required|exists:rankings',
             'code' => 'required|uuid',
-            'student_id' => 'required|int|exists:students,id',
+            'student_id' => 'required|exists:students,id',
             'rank' => ['required', 'int', 'gt:0',
                 Rule::unique('rankings')->where(fn($query) => $query->where('code', $request->code))
             ],
