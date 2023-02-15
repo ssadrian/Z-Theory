@@ -1,10 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\TeacherController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RankingsController;
+use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\TeachersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,28 +22,38 @@ Route::prefix('login')->group(function () {
 });
 
 Route::prefix('register')->group(function () {
-    Route::post('/student', [StudentController::class, 'create']);
-    Route::post('/teacher', [TeacherController::class, 'create']);
+    Route::post('/student', [StudentsController::class, 'create']);
+    Route::post('/teacher', [TeachersController::class, 'create']);
 });
 
 Route::prefix('student')->group(function () {
-    Route::get('/all', [StudentController::class, 'all']);
-    Route::get('', [StudentController::class, 'get']);
+    Route::get('/all', [StudentsController::class, 'all']);
+    Route::get('', [StudentsController::class, 'get']);
 
-    Route::post('', [StudentController::class, 'create']);
-    Route::put('', [StudentController::class, 'update']);
+    Route::post('', [StudentsController::class, 'create']);
+    Route::put('', [StudentsController::class, 'update']);
 
-    Route::delete('', [StudentController::class, 'delete']);
+    Route::delete('', [StudentsController::class, 'delete']);
 });
 
 Route::prefix('teacher')->group(function () {
-    Route::get('/all', [TeacherController::class, 'all']);
-    Route::get('', [TeacherController::class, 'get']);
+    Route::get('/all', [TeachersController::class, 'all']);
+    Route::get('', [TeachersController::class, 'get']);
 
-    Route::post('', [TeacherController::class, 'create']);
-    Route::put('', [TeacherController::class, 'update']);
+    Route::post('', [TeachersController::class, 'create']);
+    Route::put('', [TeachersController::class, 'update']);
 
-    Route::delete('', [TeacherController::class, 'delete']);
+    Route::delete('', [TeachersController::class, 'delete']);
+});
+
+Route::prefix('ranking')->group(function () {
+    Route::get('/all', [RankingsController::class, 'all']);
+    Route::get('', [RankingsController::class, 'get']);
+
+    Route::post('', [RankingsController::class, 'create']);
+    Route::put('', [RankingsController::class, 'update']);
+
+    Route::delete('', [RankingsController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
