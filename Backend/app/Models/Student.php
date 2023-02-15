@@ -20,6 +20,7 @@ class Student extends Authenticatable
      */
     protected $fillable = [
         'nickname',
+        'picture',
         'email',
         'password',
         'name',

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['code', 'rank']);
+            $table->unique(['code', 'student_id']);
             $table->unique(['code', 'student_id', 'rank']);
         });
     }
