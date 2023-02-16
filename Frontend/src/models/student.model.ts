@@ -1,8 +1,5 @@
-export interface IStudent {
-    nickname: string;
-    email: string;
-    password: string;
-    name: string;
-    surnames: string;
-    birth_date: Date;
+import {IUser} from './user.model';
+
+export interface IStudent extends IUser {
+  birth_date: Date;
 }
