@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('default_profile_pictures', function (Blueprint $table) {
+        Schema::create('default_avatars', function (Blueprint $table) {
             $table->id();
-            $table->binary('picture');
+            $table->binary('avatar');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('default_profile_pictures');
+        Schema::dropIfExists('default_avatars');
     }
 };

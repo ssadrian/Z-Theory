@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @extends Factory<Model>
  */
-class DefaultProfilePictureFactory extends Factory
+class DefaultAvatarFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +18,7 @@ class DefaultProfilePictureFactory extends Factory
     public function definition(): array
     {
         return [
-            'picture' => fake()->image('public/images')
+            'avatar' => fake()->image('public/images')
         ];
     }
 }
