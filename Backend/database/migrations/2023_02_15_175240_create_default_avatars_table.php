@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('default_avatars', function (Blueprint $table) {
             $table->id();
-            $table->binary('avatar');
+            $table->string('avatar');
             $table->timestamps();
         });
     }

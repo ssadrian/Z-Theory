@@ -12,12 +12,13 @@ import {MaterialModule} from './modules/material.module';
 import {LandPageComponent} from './pages/land-page/land-page.component';
 import {LoginFormComponent} from './pages/login-form/login-form.component';
 import {NotFoundComponent} from './pages/not-found/not-found.component';
+import {StudentProfileComponent} from './pages/student/student-profile/student-profile.component';
 import {StudentRegisterFormComponent} from './pages/student/student-register-form/student-register-form.component';
+import {TeacherProfileComponent} from './pages/teacher/teacher-profile/teacher-profile.component';
 import {TeacherRegisterFormComponent} from './pages/teacher/teacher-register-form/teacher-register-form.component';
+import {Base64Service} from './services/base64.service';
 import {LoginService} from './services/login.service';
 import {RegistrationService} from './services/registration.service';
-import { StudentProfileComponent } from './pages/student/student-profile/student-profile.component';
-import { TeacherProfileComponent } from './pages/teacher/teacher-profile/teacher-profile.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,7 @@ import { TeacherProfileComponent } from './pages/teacher/teacher-profile/teacher
     HttpClientModule,
     ReactiveFormsModule,
   ],
-  providers: [LoginService, RegistrationService],
+  providers: [LoginService, RegistrationService, Base64Service],
   bootstrap: [AppComponent],
 })
 export class AppModule {

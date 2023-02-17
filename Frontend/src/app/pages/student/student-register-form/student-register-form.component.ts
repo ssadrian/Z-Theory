@@ -1,33 +1,43 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 import {IFormStudent} from 'src/models/form/form-student';
-import {RegistrationService} from "../../../services/registration.service";
-import {Router} from "@angular/router";
+import {Base64Service} from '../../../services/base64.service';
+import {RegistrationService} from '../../../services/registration.service';
 
 @Component({
   selector: 'app-student-register-form',
   templateUrl: './student-register-form.component.html',
-  styleUrls: ['./student-register-form.component.scss']
+  styleUrls: ['./student-register-form.component.scss'],
 })
 export class StudentRegisterFormComponent {
-  constructor(private register: RegistrationService, private fb: FormBuilder, private router: Router) {
+  constructor(
+    private register: RegistrationService,
+    private fb: FormBuilder,
+    private router: Router,
+    public b64: Base64Service) {
   }
 
   isSubmit: boolean = false
 
   studentForm = this.fb.group({
-    nickname: ["", [Validators.required]],
-    birth_date: [<Date|null>null, [Validators.required]],
-    name: ["", [Validators.required]],
-    surnames: ["", [Validators.required]],
-    password: ["", [Validators.required]],
-    password_confirmation: ["", [Validators.required]],
-    email: ["", [Validators.required, Validators.email]],
-    tos: [false, [Validators.requiredTrue]]
+    nickname: ['', [Validators.required]],
+    birth_date: [<Date | null>null, [Validators.required]],
+    name: ['', [Validators.required]],
+    surnames: ['', [Validators.required]],
+    password: ['', [Validators.required]],
+    password_confirmation: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    avatar: [''],
+    tos: [false, [Validators.requiredTrue]],
   })
 
   get formControl(): { [key: string]: AbstractControl } {
     return this.studentForm.controls;
+  }
+
+  encodeAvatar(event: Event): void {
+    this.b64.setToBase64(event, this.studentForm.value.avatar);
   }
 
   submit(): void {
@@ -39,6 +49,7 @@ export class StudentRegisterFormComponent {
 
     let formValue = this.studentForm.value;
     let student: IFormStudent = {
+      avatar: formValue.avatar!,
       name: formValue.name!,
       surnames: formValue.surnames!,
       nickname: formValue.nickname!,
@@ -50,7 +61,9 @@ export class StudentRegisterFormComponent {
 
     this.register.registerStudent(student)
       .subscribe(response => {
-        this.router.navigate(['/login']);
+        if (response.ok) {
+          this.router.navigate(['/login']);
+        }
       });
   }
 }

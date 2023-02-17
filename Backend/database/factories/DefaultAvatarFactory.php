@@ -18,7 +18,7 @@ class DefaultAvatarFactory extends Factory
     public function definition(): array
     {
         return [
-            'avatar' => fake()->image('public/images')
+            'avatar' => fake()->text()
         ];
     }
 }

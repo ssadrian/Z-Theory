@@ -20,7 +20,7 @@ class TeacherFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt(fake()->password()),
             'nickname' => fake()->word(),
-            'avatar' => fake()->image('public/images'),
+            'avatar' => fake()->text(),
             'center' => fake()->word(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

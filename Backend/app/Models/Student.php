@@ -42,7 +42,7 @@ class Student extends Authenticatable
             'email' => 'required|email|unique:students|unique:teachers',
             'password' => 'required|confirmed',
             'birth_date' => 'required|date',
-            'avatar' => 'sometimes|image'
+            'avatar' => 'sometimes|string'
         ]);
 
         return Student::create([
@@ -65,7 +65,7 @@ class Student extends Authenticatable
             'surnames' => 'required|string',
             'email' => 'required|email|unique:students|unique:teachers',
             'birth_date' => 'required|date',
-            'avatar' => 'required|image',
+            'avatar' => 'required|string',
         ]);
 
         $student = Student::find($data['id']);

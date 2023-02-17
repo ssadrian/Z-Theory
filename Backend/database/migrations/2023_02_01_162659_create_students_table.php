@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('nickname')->unique();
-            $table->binary('avatar')->nullable();
+            $table->longText('avatar')->nullable();
             $table->date('birth_date');
             $table->timestamps();
         });

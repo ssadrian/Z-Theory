@@ -21,7 +21,7 @@ class StudentFactory extends Factory
             'password' => bcrypt(fake()->password()),
             'nickname' => fake()->word(),
             'birth_date' => Carbon::now()->format('Y-m-d'),
-            'avatar' => fake()->image('public/images'),
+            'avatar' => fake()->text(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
