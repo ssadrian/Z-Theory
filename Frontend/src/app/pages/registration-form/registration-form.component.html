@@ -1,5 +1,19 @@
 <div class="bg-gray-900 p-20">
   <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid md:grid-cols-2 md:gap-6 left-0">
+      <div class="relative z-0 w-full mb-6 group">
+        <label for="avatar"
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+          Avatar
+        </label>
+
+        <input id="avatar" type="file" accept="image/png" formControlName="avatar" required
+               (change)="encodeAvatar($event)"
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
+      </div>
+    </div>
+
     <div class="relative z-0 w-full mb-6 group">
       <input type="text" name="nickname" id="nickname"
              class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"

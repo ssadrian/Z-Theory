@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {IFormStudent} from '../../../models/form/form-student';
 import {IFormTeacher} from '../../../models/form/form-teacher';
 import {RegistrationService} from '../../services/registration.service';
+import {Base64Service} from '../../services/base64.service';
 
 @Component({
   selector: 'app-registration-form',
@@ -11,7 +12,10 @@ import {RegistrationService} from '../../services/registration.service';
   styleUrls: ['./registration-form.component.scss'],
 })
 export class RegistrationFormComponent {
-  constructor(private register: RegistrationService, private fb: FormBuilder, private router: Router) {
+  constructor(
+    private register: RegistrationService,
+    private fb: FormBuilder,
+    private router: Router, private b64: Base64Service) {
   }
 
   isSubmit: boolean = false;
@@ -30,12 +34,20 @@ export class RegistrationFormComponent {
     center: [''],
   });
 
+  #b64Avatar: string = '';
+
   get formControl(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
 
+  encodeAvatar(event: Event): void {
+    this.b64.toBase64(event)
+      .then((b64: string): void => {
+        this.#b64Avatar = b64;
+      });
+  }
+
   submit(): void {
-    debugger;
     this.isSubmit = true;
 
     if (!this.form.valid) {
@@ -53,6 +65,7 @@ export class RegistrationFormComponent {
   #registerStudent(): void {
     const formValue = this.form.value;
     let student: IFormStudent = {
+      avatar: this.#b64Avatar,
       name: formValue.name!,
       surnames: formValue.surnames!,
       nickname: formValue.nickname!,
@@ -71,6 +84,7 @@ export class RegistrationFormComponent {
   #registerTeacher(): void {
     const formValue = this.form.value;
     let teacher: IFormTeacher = {
+      avatar: this.#b64Avatar,
       name: formValue.name!,
       surnames: formValue.surnames!,
       nickname: formValue.nickname!,
