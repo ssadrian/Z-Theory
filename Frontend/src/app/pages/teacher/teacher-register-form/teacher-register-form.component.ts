@@ -32,13 +32,18 @@ export class TeacherRegisterFormComponent {
     tos: [false, [Validators.requiredTrue]],
   });
 
+  b64Avatar: string = "";
+
   // Con este get creamos una key para controlar los errores del formulario
   get formControl(): { [key: string]: AbstractControl } {
     return this.teacherForm.controls;
   }
 
   encodeAvatar(event: Event): void {
-    this.b64.setToBase64(event, this.teacherForm.value.avatar);
+    this.b64.toBase64(event)
+      .then((b64: string): void => {
+        this.b64Avatar = b64;
+      });
   }
 
   submit(): void {
@@ -50,7 +55,7 @@ export class TeacherRegisterFormComponent {
 
     let formValue = this.teacherForm.value;
     let teacher: IFormTeacher = {
-      avatar: formValue.avatar!,
+      avatar: this.b64Avatar,
       name: formValue.name!,
       surnames: formValue.surnames!,
       nickname: formValue.nickname!,
