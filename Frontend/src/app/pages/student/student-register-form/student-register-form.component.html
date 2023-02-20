@@ -1,105 +1,124 @@
 <div class="bg-gray-900 p-20">
   <form [formGroup]="studentForm" (ngSubmit)="submit()">
+    <div class="grid md:grid-cols-2 md:gap-6 left-0">
+      <div class="relative z-0 w-full mb-6 group">
+        <label for="avatar"
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+          Avatar
+        </label>
+
+        <input id="avatar" type="file" accept="image/png" formControlName="avatar" required
+               (change)="encodeAvatar($event)"
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
+      </div>
+    </div>
+
     <div class="grid md:grid-cols-2 md:gap-6">
       <div class="relative z-0 w-full mb-6 group">
-        <input type="text" name="nickname" id="nickname"
-          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
-          placeholder=" " formControlName="nickname" required />
+        <input type="text" name="nickname" id="nickname" formControlName="nickname" required
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
 
-        <div *ngIf="isSubmit && formControl['nickname'].errors" class="mt-2 text-sm text-red-600">
+        <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['nickname'].errors">
           <div *ngIf="formControl['nickname'].errors['required']">
             Debes poner tu nickname.
           </div>
         </div>
 
-
         <label for="nickname"
-          class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nickname</label>
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+          Nickname
+        </label>
       </div>
-      <div class="relative z-0 w-full mb-6 group">
-        <input type="date" name="birth_date" id="birth_date"
-          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
-          placeholder=" " formControlName="birth_date" required />
 
-        <div *ngIf="isSubmit && formControl['birth_date'].errors" class="mt-2 text-sm text-red-600">
+      <div class="relative z-0 w-full mb-6 group">
+        <input type="date" name="birth_date" id="birth_date" formControlName="birth_date" required
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
+
+        <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['birth_date'].errors">
           <div *ngIf="formControl['birth_date'].errors['required']">
             Debes poner tu fecha de nacimiento.
           </div>
         </div>
 
-
-
         <label for="birth_date"
-          class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Fecha
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Fecha
           Nacimiento</label>
       </div>
     </div>
+
     <div class="grid md:grid-cols-2 md:gap-6">
       <div class="relative z-0 w-full mb-6 group">
-        <input type="text" name="name" id="name"
-          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
-          placeholder=" " formControlName="name" required />
+        <input type="text" name="name" id="name" formControlName="name" required
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
 
-        <div *ngIf="isSubmit && formControl['name'].errors" class="mt-2 text-sm text-red-600">
+        <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['name'].errors">
           <div *ngIf="formControl['name'].errors['required']">
             Debes poner tu nombre.
           </div>
         </div>
 
-
         <label for="name"
-          class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nombre</label>
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nombre</label>
       </div>
-      <div class="relative z-0 w-full mb-6 group">
-        <input type="text" name="surnames" id="surnames"
-          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
-          placeholder=" " formControlName="surnames" required />
 
-        <div *ngIf="isSubmit && formControl['surnames'].errors" class="mt-2 text-sm text-red-600">
+      <div class="relative z-0 w-full mb-6 group">
+        <input type="text" name="surnames" id="surnames" formControlName="surnames" required
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
+
+        <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['surnames'].errors">
           <div *ngIf="formControl['surnames'].errors['required']">
             Debes poner tus apellidos.
           </div>
         </div>
 
         <label for="surnames"
-          class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Apellidos</label>
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Apellidos</label>
       </div>
-      <div class="relative z-0 w-full mb-6 group">
-        <input type="password" name="password" id="password"
-          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
-          placeholder=" " formControlName="password" required />
 
-        <div *ngIf="isSubmit && formControl['password'].errors" class="mt-2 text-sm text-red-600">
+      <div class="relative z-0 w-full mb-6 group">
+        <input type="password" name="password" id="password" formControlName="password" required
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
+
+        <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['password'].errors">
           <div *ngIf="formControl['password'].errors['required']">
             Debes poner la contraseña.
           </div>
         </div>
 
         <label for="password"
-          class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
       </div>
+
       <div class="relative z-0 w-full mb-6 group">
         <input type="password" name="password_confirmation" id="password_confirmation"
-          class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
-          placeholder=" " formControlName="password_confirmation" required />
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+               formControlName="password_confirmation" required/>
 
-        <div *ngIf="isSubmit && formControl['password_confirmation'].errors" class="mt-2 text-sm text-red-600">
+        <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['password_confirmation'].errors">
           <div *ngIf="formControl['password_confirmation'].errors['required']">
             Debes poner la contraseña de nuevo.
           </div>
         </div>
 
         <label for="password_confirmation"
-          class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirmar
-          contraseña</label>
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+          Confirmar contraseña
+        </label>
       </div>
     </div>
-    <div class="relative z-0 w-full mb-6 group">
-      <input type="text" name="email" id="email"
-        class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
-        placeholder=" " formControlName="email" required />
 
-      <div *ngIf="isSubmit && formControl['email'].errors" class="mt-2 text-sm text-red-600">
+    <div class="relative z-0 w-full mb-6 group">
+      <input type="text" name="email" id="email" formControlName="email" required
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+      />
+
+      <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['email'].errors">
         <div *ngIf="formControl['email'].errors['required']">
           Debes poner tu email.
         </div>
@@ -110,30 +129,30 @@
       </div>
 
       <label for="email"
-        class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+        Email
+      </label>
     </div>
 
     <div class="flex items-center mb-4">
-      <input id="default-checkbox" type="checkbox" value="" formControlName="tos"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+      <input id="tos" type="checkbox" formControlName="tos"
+             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
 
       <div>
-        <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-300">Acepto los términos de
-          servicio</label>
-  
-        <div *ngIf="isSubmit && formControl['tos'].errors" class="mt-2 text-sm text-red-600">
+        <label for="tos" class="ml-2 text-sm font-medium text-gray-300">
+          Acepto los términos de servicio
+        </label>
+
+        <div class="mt-2 text-sm text-red-600" *ngIf="isSubmit && formControl['tos'].errors">
           <label class="ml-2" *ngIf="isSubmit && formControl['tos'].errors['required']">
             Debes aceptar los términos de servicio
           </label>
         </div>
       </div>
-      
-
-
     </div>
 
     <button type="submit"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
       Registrarse
     </button>
   </form>

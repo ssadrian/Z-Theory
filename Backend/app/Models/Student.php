@@ -20,6 +20,7 @@ class Student extends Authenticatable
      */
     protected $fillable = [
         'nickname',
+        'avatar',
         'email',
         'password',
         'name',
@@ -40,7 +41,8 @@ class Student extends Authenticatable
             'surnames' => 'required|string',
             'email' => 'required|email|unique:students|unique:teachers',
             'password' => 'required|confirmed',
-            'birth_date' => 'required|date'
+            'birth_date' => 'required|date',
+            'avatar' => 'sometimes|string'
         ]);
 
         return Student::create([
@@ -49,27 +51,24 @@ class Student extends Authenticatable
             'surnames' => $data['surnames'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'birth_date' => $data['birth_date']
+            'avatar' => $data['avatar'] ?? null,
+            'birth_date' => $data['birth_date'],
         ]);
     }
 
     public static function updateFromRequest(Request $request): Student|null
     {
         $data = $request->validate([
-            'id' => 'required|int',
+            'id' => 'required|exists:students',
             'nickname' => 'required|string|unique:students|unique:teachers',
             'name' => 'required|string',
             'surnames' => 'required|string',
             'email' => 'required|email|unique:students|unique:teachers',
-            'birth_date' => 'required|date'
+            'birth_date' => 'required|date',
+            'avatar' => 'required|string',
         ]);
 
         $student = Student::find($data['id']);
-
-        if (!$student) {
-            return null;
-        }
-
         $oldStudent = $student;
 
         $student->nickname = $data['nickname'];
@@ -77,6 +76,7 @@ class Student extends Authenticatable
         $student->name = $data['name'];
         $student->surnames = $data['surnames'];
         $student->birth_date = $data['birth_date'];
+        $student->avatar = $data['avatar'];
 
         $student->save();
 

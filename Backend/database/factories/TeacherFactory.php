@@ -15,12 +15,13 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'surnames' => $this->faker->word(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt($this->faker->password()),
-            'nickname' => $this->faker->word(),
-            'center' => $this->faker->word(),
+            'name' => fake()->name(),
+            'surnames' => fake()->word(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => bcrypt(fake()->password()),
+            'nickname' => fake()->word(),
+            'avatar' => fake()->text(),
+            'center' => fake()->word(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

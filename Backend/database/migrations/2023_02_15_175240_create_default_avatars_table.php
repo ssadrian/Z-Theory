@@ -13,16 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rankings', function (Blueprint $table) {
+        Schema::create('default_avatars', function (Blueprint $table) {
             $table->id();
-            $table->uuid('code');
-            $table->foreignId('student_id')->constrained();
-            $table->unsignedInteger('rank');
+            $table->string('avatar');
             $table->timestamps();
-
-            $table->unique(['code', 'rank']);
-            $table->unique(['code', 'student_id']);
-            $table->unique(['code', 'student_id', 'rank']);
         });
     }
 
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rankings');
+        Schema::dropIfExists('default_avatars');
     }
 };

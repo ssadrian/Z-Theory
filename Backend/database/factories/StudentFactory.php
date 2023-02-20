@@ -15,12 +15,13 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'surnames' => $this->faker->word(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt($this->faker->password()),
-            'nickname' => $this->faker->word(),
+            'name' => fake()->name(),
+            'surnames' => fake()->word(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => bcrypt(fake()->password()),
+            'nickname' => fake()->word(),
             'birth_date' => Carbon::now()->format('Y-m-d'),
+            'avatar' => fake()->text(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

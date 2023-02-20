@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TeachersController extends Controller
 {
-    public function all(): \Illuminate\Database\Eloquent\Collection|\LaravelIdea\Helper\App\Models\_IH_Teacher_C|array
+    public function all(): Collection|array
     {
         return Teacher::all();
     }
 
-    public function get(Request $request): \Illuminate\Http\Response|Teacher|\LaravelIdea\Helper\App\Models\_IH_Teacher_C|array|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
+    public function get(Request $request): Response|Teacher|array|Application|ResponseFactory
     {
         $data = $request->validate([
             'id' => 'required|int|gt:0',
@@ -28,7 +32,7 @@ class TeachersController extends Controller
         return $teacher;
     }
 
-    public function create(Request $request): \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
+    public function create(Request $request): Response|Application|ResponseFactory
     {
         $teacher = Teacher::createFromRequest($request);
         $teacher->save();
@@ -37,7 +41,7 @@ class TeachersController extends Controller
         return response(status: 201);
     }
 
-    public function update(Request $request): \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
+    public function update(Request $request): Response|Application|ResponseFactory
     {
         $teacher = Teacher::updateFromRequest($request);
 
@@ -49,7 +53,7 @@ class TeachersController extends Controller
         return response($teacher);
     }
 
-    public function delete(Request $request): \Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
+    public function delete(Request $request): Response|Application|ResponseFactory
     {
         $data = $request->validate([
             'id' => 'required|int|gt:0'

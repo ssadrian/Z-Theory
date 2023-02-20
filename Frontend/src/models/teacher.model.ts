@@ -1,8 +1,5 @@
-export interface ITeacher {
-  nickname: string;
-  email: string;
-  password: string;
-  name: string;
-  surnames: string;
+import {IUser} from './user.model';
+
+export interface ITeacher extends IUser {
   center: string;
 }
