@@ -1,0 +1,193 @@
+<div class="bg-gray-900 p-20">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="grid md:grid-cols-2 md:gap-6 left-0">
+      <div class="relative z-0 w-full mb-6 group">
+        <label for="avatar"
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+          Avatar
+        </label>
+
+        <input id="avatar" type="file" accept="image/png" formControlName="avatar" required
+               (change)="encodeAvatar($event)"
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+        />
+      </div>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <input type="text" name="nickname" id="nickname"
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+             formControlName="nickname" required/>
+
+      <div *ngIf="isSubmit && formControl['nickname'].errors" class="mt-2 text-sm text-red-600">
+        <div *ngIf="formControl['nickname'].errors['required']">
+          Debes poner tu nickname.
+        </div>
+      </div>
+
+      <label for="nickname"
+             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nickname</label>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <input type="text" name="name" id="name"
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+             formControlName="name" required/>
+
+      <div *ngIf="isSubmit && formControl['name'].errors" class="mt-2 text-sm text-red-600">
+        <div *ngIf="formControl['name'].errors['required']">
+          Debes poner tu nombre.
+        </div>
+      </div>
+
+      <label for="name"
+             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Nombre</label>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <input type="text" name="surnames" id="surnames"
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+             formControlName="surnames" required/>
+
+      <div *ngIf="isSubmit && formControl['surnames'].errors" class="mt-2 text-sm text-red-600">
+        <div *ngIf="formControl['surnames'].errors['required']">
+          Debes poner tus apellidos.
+        </div>
+      </div>
+
+      <label for="surnames"
+             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Apellidos</label>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <input type="password" name="password" id="password"
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+             formControlName="password" required/>
+
+      <div *ngIf="isSubmit && formControl['password'].errors" class="mt-2 text-sm text-red-600">
+        <div *ngIf="formControl['password'].errors['required']">
+          Debes poner la contraseña.
+        </div>
+      </div>
+
+      <label for="password"
+             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contraseña</label>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <input type="password" name="password_confirmation" id="password_confirmation"
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+             formControlName="password_confirmation" required/>
+
+      <div *ngIf="isSubmit && formControl['password_confirmation'].errors" class="mt-2 text-sm text-red-600">
+        <div *ngIf="formControl['password_confirmation'].errors['required']">
+          Debes poner la contraseña de nuevo.
+        </div>
+      </div>
+
+      <label for="password_confirmation"
+             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+        Confirmar contraseña
+      </label>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <input type="text" name="email" id="email"
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+             formControlName="email" required/>
+
+      <div *ngIf="isSubmit && formControl['email'].errors" class="mt-2 text-sm text-red-600">
+        <div *ngIf="formControl['email'].errors['required']">
+          Debes poner tu email.
+        </div>
+
+        <div *ngIf="formControl['email'].errors['email']">
+          Debes poner un correo electrónico válido.
+        </div>
+      </div>
+
+      <label for="email"
+             class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <div class="flex shadow-sm" role="group">
+        <button type="button" (click)="isTeacherRegistering = false"
+                class="w-1/2 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+          Soy un estudiante
+        </button>
+
+        <button type="button" (click)="isTeacherRegistering = true"
+                class="w-1/2 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+          Soy un profesor
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="isTeacherRegistering">
+      <div class="relative z-0 w-full mb-6 group">
+        <input formControlName="center" name="center" id="center"
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+               required/>
+
+        <div *ngIf="isSubmit && formControl['center'].errors" class="mt-2 text-sm text-red-600">
+          <div *ngIf="formControl['center'].errors['required']">
+            Debes poner el centro.
+          </div>
+        </div>
+
+        <label for="center"
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Centro</label>
+      </div>
+    </div>
+
+    <div *ngIf="isTeacherRegistering === false">
+      <div class="relative z-0 w-full mb-6 group">
+        <input type="date" name="birth_date" id="birth_date"
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none text-white focus:outline-none focus:ring-0 focus:border-red-400 peer"
+               formControlName="birth_date" required/>
+
+        <div *ngIf="isSubmit && formControl['birth_date'].errors" class="mt-2 text-sm text-red-600">
+          <div *ngIf="formControl['birth_date'].errors['required']">
+            Debes poner tu fecha de nacimiento.
+          </div>
+        </div>
+
+        <label for="birth_date"
+               class="peer-focus:font-medium absolute text-sm text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-red-400 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Fecha
+          Nacimiento</label>
+      </div>
+    </div>
+
+    <div class="flex items-center mb-4">
+      <input id="default-checkbox" type="checkbox" formControlName="tos"
+             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+
+      <div>
+        <label for="default-checkbox" class="ml-2 text-sm font-medium text-gray-300">
+          Acepto los términos de servicio
+        </label>
+
+        <div *ngIf="isSubmit && formControl['tos'].errors" class="mt-2 text-sm text-red-600">
+          <label class="ml-2" *ngIf="isSubmit && formControl['tos'].errors['required']">
+            Debes aceptar los términos de servicio
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative z-0 w-full mb-6 group">
+      <div class="shadow-sm" role="group">
+        <button type="submit"
+                class="w-1/2 px-4 py-2 text-sm font-medium text-white-900 bg-blue-700 rounded-l-lg hover:bg-blue-600 hover:text-white-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-white-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:focus:ring-blue-500 dark:focus:text-white">
+          Registrar
+        </button>
+
+        <button type="button" routerLink="/login"
+                class="w-1/2 px-4 py-2 text-sm font-medium text-white-900 bg-blue-700 rounded-r-md hover:bg-blue-600 hover:text-white-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-white-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:focus:ring-blue-500 dark:focus:text-white">
+          Ya tienes una cuenta?
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
