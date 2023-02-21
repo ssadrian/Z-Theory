@@ -35,7 +35,7 @@ class Teacher extends Authenticatable
             'password' => 'required|confirmed',
             'name' => 'required|string',
             'surnames' => 'required|string',
-            'avatar' => 'sometimes|string',
+            'avatar' => 'sometimes|nullable|string',
             'center' => 'required|string'
         ]);
 

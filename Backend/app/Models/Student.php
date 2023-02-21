@@ -42,7 +42,7 @@ class Student extends Authenticatable
             'email' => 'required|email|unique:students|unique:teachers',
             'password' => 'required|confirmed',
             'birth_date' => 'required|date',
-            'avatar' => 'sometimes|string'
+            'avatar' => 'sometimes|nullable|string'
         ]);
 
         return Student::create([
