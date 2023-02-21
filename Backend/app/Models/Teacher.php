@@ -35,7 +35,7 @@ class Teacher extends Authenticatable
             'password' => 'required|confirmed',
             'name' => 'required|string',
             'surnames' => 'required|string',
-            'avatar' => 'sometimes|string',
+            'avatar' => 'sometimes|nullable|string',
             'center' => 'required|string'
         ]);
 
@@ -55,7 +55,6 @@ class Teacher extends Authenticatable
         $data = $request->validate([
             'id' => 'required|exists:teachers',
             'nickname' => 'required|string|unique:students|unique:teachers',
-            'email' => 'required|email|unique:students|unique:teachers',
             'name' => 'required|string',
             'surnames' => 'required|string',
             'avatar' => 'required|string',
@@ -66,7 +65,6 @@ class Teacher extends Authenticatable
         $oldTeacher = $teacher;
 
         $teacher->nickname = $data['nickname'];
-        $teacher->email = $data['email'];
         $teacher->name = $data['name'];
         $teacher->surnames = $data['surnames'];
         $teacher->center = $data['center'];

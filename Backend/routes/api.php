@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RankingsController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,46 +18,56 @@ use App\Http\Controllers\TeachersController;
 |
 */
 
-Route::prefix('login')->group(function () {
-    Route::post('/student', [AuthController::class, 'loginStudent']);
-    Route::post('/teacher', [AuthController::class, 'loginTeacher']);
-});
+Route::prefix('register')
+    ->group(function () {
+        Route::post('/student', [StudentsController::class, 'create']);
+        Route::post('/teacher', [TeachersController::class, 'create']);
+    });
 
-Route::prefix('register')->group(function () {
-    Route::post('/student', [StudentsController::class, 'create']);
-    Route::post('/teacher', [TeachersController::class, 'create']);
-});
+Route::prefix('login')
+    ->group(function () {
+        Route::post('/student', [AuthController::class, 'loginStudent']);
+        Route::post('/teacher', [AuthController::class, 'loginTeacher']);
+    });
 
-Route::prefix('student')->group(function () {
-    Route::get('/all', [StudentsController::class, 'all']);
-    Route::get('', [StudentsController::class, 'get']);
+Route::middleware('auth:sanctum')
+    ->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/user', fn(Request $request) => $request->user());
+    });
 
-    Route::post('', [StudentsController::class, 'create']);
-    Route::put('', [StudentsController::class, 'update']);
+Route::prefix('student')
+    ->middleware(['auth:sanctum', 'abilities:handle-students'])
+    ->group(function () {
+        Route::get('/all', [StudentsController::class, 'all']);
+        Route::get('', [StudentsController::class, 'get']);
 
-    Route::delete('', [StudentsController::class, 'delete']);
-});
+        Route::post('', [StudentsController::class, 'create']);
+        Route::put('', [StudentsController::class, 'update']);
 
-Route::prefix('teacher')->group(function () {
-    Route::get('/all', [TeachersController::class, 'all']);
-    Route::get('', [TeachersController::class, 'get']);
+        Route::delete('', [StudentsController::class, 'delete']);
+    });
 
-    Route::post('', [TeachersController::class, 'create']);
-    Route::put('', [TeachersController::class, 'update']);
+Route::prefix('teacher')
+    ->middleware(['auth:sanctum', 'abilities:handle-teachers'])
+    ->group(function () {
+        Route::get('/all', [TeachersController::class, 'all']);
+        Route::get('', [TeachersController::class, 'get']);
 
-    Route::delete('', [TeachersController::class, 'delete']);
-});
+        Route::post('', [TeachersController::class, 'create']);
+        Route::put('', [TeachersController::class, 'update']);
 
-Route::prefix('ranking')->group(function () {
-    Route::get('/all', [RankingsController::class, 'all']);
-    Route::get('', [RankingsController::class, 'get']);
+        Route::delete('', [TeachersController::class, 'delete']);
+    });
 
-    Route::post('', [RankingsController::class, 'create']);
-    Route::put('', [RankingsController::class, 'update']);
+Route::prefix('ranking')
+    ->middleware(['auth:sanctum', 'abilities:handle-ranks'])
+    ->group(function () {
+        Route::get('/all', [RankingsController::class, 'all']);
+        Route::get('', [RankingsController::class, 'get']);
 
-    Route::delete('', [RankingsController::class, 'delete']);
-});
+        Route::post('', [RankingsController::class, 'create']);
+        Route::put('', [RankingsController::class, 'update']);
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', fn(Request $request) => $request->user());
-});
+        Route::delete('', [RankingsController::class, 'delete']);
+    });

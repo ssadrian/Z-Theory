@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function loginStudent(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|exists:students',
             'password' => 'required'
         ]);
 
@@ -24,7 +24,10 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $student,
                 'role' => 'student',
-                'token' => $student->createToken('token')->plainTextToken
+                'token' => $student->createToken('token', [
+                    'get-all',
+                    'get',
+                ])->plainTextToken
             ]);
         }
 
@@ -36,7 +39,7 @@ class AuthController extends Controller
     public function loginTeacher(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|exists:teachers',
             'password' => 'required'
         ]);
 
@@ -47,12 +50,23 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $teacher,
                 'role' => 'teacher',
-                'token' => $teacher->createToken('token')->plainTextToken
+                'token' => $teacher->createToken('token', [
+                    'handle-students',
+                    'handle-teachers',
+                    'handle-rankings'
+                ])->plainTextToken
             ]);
         }
 
         return response()->json([
             'message' => 'Invalid credentials'
         ]);
+    }
+
+    public function logout(): void
+    {
+        auth()->user()->tokens()->each(
+            fn ($token, $key) => $token->delete()
+        );
     }
 }
