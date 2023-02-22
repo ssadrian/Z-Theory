@@ -4,7 +4,8 @@
       <app-logo></app-logo>
       <span
         class="self-center text-xl font-semibold whitespace-nowrap text-white"
-      >Z-Theory</span>
+        >Z-Theory</span
+      >
     </a>
 
     <button
@@ -37,23 +38,26 @@
       >
         <li *ngIf="!isLogged">
           <a
-            [routerLink]="['/register']"
-            class="block py-2 pl-3 pr-4 text-gray-700 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
-          >Registro</a>
+            [routerLink]="['/register']" [routerLinkActive]="['text-white']"
+            class="text-base block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
+            >Registro</a
+          >
         </li>
 
         <li *ngIf="!isLogged">
           <a
-            [routerLink]="['/login']"
-            class="block py-2 pl-3 pr-4 text-gray-700 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
-          >Iniciar sesión</a>
+            [routerLink]="['/login']" [routerLinkActive]="['text-white']"
+            class="text-base block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
+            >Iniciar sesión</a
+          >
         </li>
 
         <li *ngIf="isLogged">
           <a
-            (click)="logOut()"
-            class="block py-2 pl-3 pr-4 text-gray-700 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
-          >Cerrar sesión</a>
+            (click)="logOut()" 
+            class="text-base block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 dark:text-gray-400 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
+            >Cerrar sesión</a
+          >
         </li>
       </ul>
     </div>
