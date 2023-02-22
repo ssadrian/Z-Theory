@@ -14,10 +14,13 @@ import {LoginFormComponent} from './pages/login-form/login-form.component';
 import {NotFoundComponent} from './pages/not-found/not-found.component';
 import {Base64Service} from './services/base64.service';
 import {LoginService} from './services/login.service';
+import {RankingService} from './services/repository/ranking.service';
 import {RegistrationService} from './services/registration.service';
 import {RegistrationFormComponent} from './pages/registration-form/registration-form.component';
 import {StudentProfileComponent} from './pages/student/student-profile/student-profile.component';
 import {TeacherProfileComponent} from './pages/teacher/teacher-profile/teacher-profile.component';
+import {StudentService} from './services/repository/student.service';
+import {TeacherService} from './services/repository/teacher.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,7 @@ import {TeacherProfileComponent} from './pages/teacher/teacher-profile/teacher-p
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [LoginService, RegistrationService, Base64Service],
+  providers: [LoginService, RegistrationService, Base64Service, StudentService, TeacherService, RankingService],
   bootstrap: [AppComponent],
 })
 export class AppModule {

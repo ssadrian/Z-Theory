@@ -42,10 +42,9 @@ class Ranking extends Model
         ]);
     }
 
-    public static function updateFromRequest(Request $request): array|Ranking|null
+    public static function updateFromRequest($id, Request $request): array|Ranking|null
     {
         $data = $request->validate([
-            'id' => 'required|exists:rankings',
             'code' => 'required|uuid',
             'student_id' => 'required|exists:students,id',
             'rank' => ['required', 'int', 'gt:0',
@@ -53,7 +52,12 @@ class Ranking extends Model
             ],
         ]);
 
-        $ranking = Ranking::find($data['id']);
+        $ranking = Ranking::find($id);
+
+        if (!$ranking) {
+            return null;
+        }
+
         $oldRanking = $ranking;
 
         $ranking->student_id = $data['student_id'];

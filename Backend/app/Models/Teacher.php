@@ -50,23 +50,24 @@ class Teacher extends Authenticatable
         ]);
     }
 
-    public static function updateFromRequest(Request $request): Teacher|null
+    public static function updateFromRequest($id, Request $request): Teacher|null
     {
         $data = $request->validate([
-            'id' => 'required|exists:teachers',
             'nickname' => 'required|string|unique:students|unique:teachers',
-            'email' => 'required|email|unique:students|unique:teachers',
             'name' => 'required|string',
             'surnames' => 'required|string',
             'avatar' => 'required|string',
             'center' => 'required|string',
         ]);
 
-        $teacher = Teacher::find($data['id']);
+        $teacher = Teacher::find($id);
+        if (!$teacher) {
+            return null;
+        }
+
         $oldTeacher = $teacher;
 
         $teacher->nickname = $data['nickname'];
-        $teacher->email = $data['email'];
         $teacher->name = $data['name'];
         $teacher->surnames = $data['surnames'];
         $teacher->center = $data['center'];

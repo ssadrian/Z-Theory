@@ -21,6 +21,10 @@ export class CredentialService {
     this.#token = value.split('|')[1];
   }
 
+  get token(): string {
+    return this.#token;
+  }
+
   clear(): void {
     this.email = '';
     this.password = '';

@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {IFormStudent} from '../../../models/form/form-student';
-import {IFormTeacher} from '../../../models/form/form-teacher';
 import {RegistrationService} from '../../services/registration.service';
 import {Base64Service} from '../../services/base64.service';
+import {ICreateStudent} from '../../../models/create/create-student';
+import {ICreateTeacher} from '../../../models/create/create-teacher';
 
 @Component({
   selector: 'app-registration-form',
@@ -30,7 +30,7 @@ export class RegistrationFormComponent {
     password_confirmation: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     tos: [false, [Validators.requiredTrue]],
-    birth_date: [<Date | null>null],
+    birth_date: [''],
     center: [''],
   });
 
@@ -64,7 +64,7 @@ export class RegistrationFormComponent {
 
   #registerStudent(): void {
     const formValue = this.form.value;
-    let student: IFormStudent = {
+    let student: ICreateStudent = {
       avatar: this.#b64Avatar,
       name: formValue.name!,
       surnames: formValue.surnames!,
@@ -72,7 +72,7 @@ export class RegistrationFormComponent {
       email: formValue.email!,
       password: formValue.password!,
       password_confirmation: formValue.password_confirmation!,
-      birth_date: formValue.birth_date!,
+      birth_date: formValue.birth_date!
     };
 
     this.register.registerStudent(student)
@@ -83,7 +83,7 @@ export class RegistrationFormComponent {
 
   #registerTeacher(): void {
     const formValue = this.form.value;
-    let teacher: IFormTeacher = {
+    let teacher: ICreateTeacher = {
       avatar: this.#b64Avatar,
       name: formValue.name!,
       surnames: formValue.surnames!,

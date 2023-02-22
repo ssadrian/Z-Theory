@@ -56,23 +56,24 @@ class Student extends Authenticatable
         ]);
     }
 
-    public static function updateFromRequest(Request $request): Student|null
+    public static function updateFromRequest($id, Request $request): Student|null
     {
         $data = $request->validate([
-            'id' => 'required|exists:students',
             'nickname' => 'required|string|unique:students|unique:teachers',
             'name' => 'required|string',
             'surnames' => 'required|string',
-            'email' => 'required|email|unique:students|unique:teachers',
             'birth_date' => 'required|date',
             'avatar' => 'required|string',
         ]);
 
-        $student = Student::find($data['id']);
+        $student = Student::find($id);
+        if (!$student) {
+            return null;
+        }
+
         $oldStudent = $student;
 
         $student->nickname = $data['nickname'];
-        $student->email = $data['email'];
         $student->name = $data['name'];
         $student->surnames = $data['surnames'];
         $student->birth_date = $data['birth_date'];

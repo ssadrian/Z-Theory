@@ -17,7 +17,7 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $student = Student::all()
+        $student = Student::with("rankings")
             ->firstWhere("email", $data["email"]);
 
         if ($student && Hash::check($data["password"], $student->password)) {
