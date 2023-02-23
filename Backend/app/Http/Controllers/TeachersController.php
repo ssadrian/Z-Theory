@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Teacher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -16,13 +18,9 @@ class TeachersController extends Controller
         return Teacher::all();
     }
 
-    public function get(Request $request): Response|Teacher|array|Application|ResponseFactory
+    public function get($id): Model|Response|Builder|Application|ResponseFactory
     {
-        $data = $request->validate([
-            'id' => 'required|int|gt:0',
-        ]);
-
-        $teacher = Teacher::find($data['id']);
+        $teacher = Teacher::firstWhere('id', $id);
 
         if (!$teacher) {
             // No Content
@@ -41,9 +39,9 @@ class TeachersController extends Controller
         return response(status: 201);
     }
 
-    public function update(Request $request): Response|Application|ResponseFactory
+    public function update($id, Request $request): Response|Application|ResponseFactory
     {
-        $teacher = Teacher::updateFromRequest($request);
+        $teacher = Teacher::updateFromRequest($id, $request);
 
         if (empty($teacher)) {
             // No Content
@@ -53,13 +51,9 @@ class TeachersController extends Controller
         return response($teacher);
     }
 
-    public function delete(Request $request): Response|Application|ResponseFactory
+    public function delete($id): Response
     {
-        $data = $request->validate([
-            'id' => 'required|int|gt:0'
-        ]);
-
-        $teacher = Teacher::find($data['id']);
+        $teacher = Teacher::find($id);
 
         if (!$teacher) {
             // No Content

@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RankingsController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,33 +29,33 @@ Route::prefix('register')->group(function () {
 });
 
 Route::prefix('student')->group(function () {
-    Route::get('/all', [StudentsController::class, 'all']);
-    Route::get('', [StudentsController::class, 'get']);
+    Route::get('', [StudentsController::class, 'all']);
+    Route::get('{id?}', [StudentsController::class, 'get']);
 
     Route::post('', [StudentsController::class, 'create']);
-    Route::put('', [StudentsController::class, 'update']);
+    Route::put('{id}', [StudentsController::class, 'update']);
 
-    Route::delete('', [StudentsController::class, 'delete']);
+    Route::delete('{id}', [StudentsController::class, 'delete']);
 });
 
 Route::prefix('teacher')->group(function () {
-    Route::get('/all', [TeachersController::class, 'all']);
-    Route::get('', [TeachersController::class, 'get']);
+    Route::get('', [TeachersController::class, 'all']);
+    Route::get('{id?}', [TeachersController::class, 'get']);
 
     Route::post('', [TeachersController::class, 'create']);
-    Route::put('', [TeachersController::class, 'update']);
+    Route::put('{id}', [TeachersController::class, 'update']);
 
-    Route::delete('', [TeachersController::class, 'delete']);
+    Route::delete('{id}', [TeachersController::class, 'delete']);
 });
 
 Route::prefix('ranking')->group(function () {
-    Route::get('/all', [RankingsController::class, 'all']);
-    Route::get('', [RankingsController::class, 'get']);
+    Route::get('', [RankingsController::class, 'all']);
+    Route::get('{id}', [RankingsController::class, 'get']);
 
     Route::post('', [RankingsController::class, 'create']);
-    Route::put('', [RankingsController::class, 'update']);
+    Route::put('{id}', [RankingsController::class, 'update']);
 
-    Route::delete('', [RankingsController::class, 'delete']);
+    Route::delete('{id}', [RankingsController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

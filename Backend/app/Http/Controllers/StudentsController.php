@@ -7,10 +7,9 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use LaravelIdea\Helper\App\Models\_IH_Student_C;
-use LaravelIdea\Helper\App\Models\_IH_Student_QB;
 
 class StudentsController extends Controller
 {
@@ -19,13 +18,16 @@ class StudentsController extends Controller
         return Student::with("rankings")->get();
     }
 
-    public function get(Request $request): Collection|array
+    public function get($id): Model|Response|Builder|Application|ResponseFactory
     {
-        $data = $request->validate([
-            "id" => "required|exists:students",
-        ]);
+        $student = Student::with('rankings')->firstWhere('id', $id);
 
-        return Student::find($data["id"])->with('rankings')->get();
+        if (!$student) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return $student;
     }
 
     public function create(Request $request): Response|Application|ResponseFactory
@@ -37,9 +39,9 @@ class StudentsController extends Controller
         return response(status: 201);
     }
 
-    public function update(Request $request): Response|Application|ResponseFactory
+    public function update($id, Request $request): Response|Application|ResponseFactory
     {
-        $student = Student::updateFromRequest($request);
+        $student = Student::updateFromRequest($id, $request);
 
         if (empty($student)) {
             // No Content
@@ -49,13 +51,9 @@ class StudentsController extends Controller
         return response($student);
     }
 
-    public function delete(Request $request): Response|Application|ResponseFactory
+    public function delete($id): Response|Application|ResponseFactory
     {
-        $data = $request->validate([
-            "id" => "required|int|gt:0"
-        ]);
-
-        $student = Student::find($data["id"]);
+        $student = Student::find($id);
 
         if (!$student) {
             // No Content

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('rankings', function (Blueprint $table) {
             $table->id();
             $table->uuid('code');
-            $table->foreignId('student_id')->constrained();
+            $table->foreignId('student_id')->onDelete('cascade')->constrained();
             $table->unsignedInteger('rank');
             $table->timestamps();
 

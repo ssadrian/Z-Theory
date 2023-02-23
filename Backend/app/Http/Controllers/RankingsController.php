@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Ranking;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -16,13 +18,16 @@ class RankingsController extends Controller
         return Ranking::with("student")->get();
     }
 
-    public function get(Request $request)
+    public function get($id): Model|Response|Builder|Application|ResponseFactory
     {
-        $data = $request->validate([
-            'id' => 'required|exists:rankings,id',
-        ]);
+        $ranking = Ranking::with("student")->firstWhere('id', $id);
 
-        return Ranking::find($data['id']);
+        if (!$ranking) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return $ranking;
     }
 
     public function create(Request $request): Response|Application|ResponseFactory
@@ -34,19 +39,19 @@ class RankingsController extends Controller
         return response(status: 201);
     }
 
-    public function update(Request $request): Response|Application|ResponseFactory
+    public function update($id, Request $request): Response|Application|ResponseFactory
     {
-        $rank = Ranking::updateFromRequest($request);
+        $rank = Ranking::updateFromRequest($id, $request);
         return response($rank);
     }
 
-    public function delete(Request $request): Response|Application|ResponseFactory
+    public function delete($id): Response|Application|ResponseFactory
     {
-        $data = $request->validate([
-            'id' => 'required|exists:rankings',
-        ]);
+        $rank = Ranking::find($id);
+        if (!$rank) {
+            return response(status: 204);
+        }
 
-        $rank = Ranking::find($data['id']);
         $rank->delete();
 
         return response(status: 200);
