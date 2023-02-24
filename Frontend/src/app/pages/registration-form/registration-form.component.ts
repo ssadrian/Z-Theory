@@ -64,7 +64,7 @@ export class RegistrationFormComponent {
 
   #registerStudent(): void {
     const formValue = this.form.value;
-    let student: IFormStudent = {
+    const student: IFormStudent = {
       avatar: this.#b64Avatar,
       name: formValue.name!,
       surnames: formValue.surnames!,
@@ -72,7 +72,7 @@ export class RegistrationFormComponent {
       email: formValue.email!,
       password: formValue.password!,
       password_confirmation: formValue.password_confirmation!,
-      birth_date: formValue.birth_date!,
+      birth_date: formValue.birth_date!
     };
 
     this.register.registerStudent(student)
@@ -83,7 +83,7 @@ export class RegistrationFormComponent {
 
   #registerTeacher(): void {
     const formValue = this.form.value;
-    let teacher: IFormTeacher = {
+    const teacher: IFormTeacher = {
       avatar: this.#b64Avatar,
       name: formValue.name!,
       surnames: formValue.surnames!,
