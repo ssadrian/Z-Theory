@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class Ranking extends Model
+class StudentsRankings extends Model
 {
     use HasFactory;
 
@@ -18,7 +18,10 @@ class Ranking extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'code'
+        'students_id',
+        'rankings_code',
+        'rank',
+        'points'
     ];
 
     public static function createFromRequest(Request $request): StudentsRankings
@@ -35,30 +38,36 @@ class Ranking extends Model
             'points' => 'required|int|gt:0'
         ]);
 
-        Ranking::create([
+        return StudentsRankings::create([
             'code' => $data['code']
         ]);
-
-        return StudentsRankings::createFromRequest($request);
     }
 
-    public static function updateFromRequest($code, Request $request): array|Ranking|null
+    public static function updateFromRequest($id, Request $request): array|StudentsRankings|null
     {
         $data = $request->validate([
-            'code' => 'required|uuid|unique:rankings',
+            'code' => 'required|uuid',
+            'student_id' => 'required|exists:students,id',
+            'rank' => ['required', 'int', 'gt:0',
+                Rule::unique('rankings')->where(fn($query) => $query->where('code', $request->code))
+            ],
+            'points' => 'required|int|gt:0'
         ]);
 
-        $ranking = Ranking::find($code);
+        $studentsRankings = StudentsRankings::find($id);
 
-        if (!$ranking) {
+        if (!$studentsRankings) {
             return null;
         }
 
-        $oldRanking = $ranking;
-        $ranking->code = $data['code'];
-        $ranking->save();
+        $oldStudentsRankings = $studentsRankings;
+        $studentsRankings->code = $data['code'];
+        $studentsRankings->student_id = $data['student_id'];
+        $studentsRankings->rank = $data['rank'];
+        $studentsRankings->points = $data['points'];
+        $studentsRankings->save();
 
-        return $oldRanking;
+        return $oldStudentsRankings;
     }
 
     public function students(): HasMany

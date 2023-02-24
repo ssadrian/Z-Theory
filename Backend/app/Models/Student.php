@@ -28,11 +28,6 @@ class Student extends Authenticatable
         'birth_date',
     ];
 
-    public function rankings(): HasMany
-    {
-        return $this->hasMany(Ranking::class);
-    }
-
     public static function createFromRequest(Request $request): Student
     {
         $data = $request->validate([
@@ -82,5 +77,10 @@ class Student extends Authenticatable
         $student->save();
 
         return $oldStudent;
+    }
+
+    public function rankings(): HasMany
+    {
+        return $this->hasMany(Ranking::class);
     }
 }

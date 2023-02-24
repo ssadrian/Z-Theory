@@ -15,12 +15,12 @@ class RankingsController extends Controller
 {
     public function all(): Collection
     {
-        return Ranking::with("student")->get();
+        return Ranking::with("students")->get();
     }
 
-    public function get($id): Model|Response|Builder|Application|ResponseFactory
+    public function get($code): Model|Response|Builder|Application|ResponseFactory
     {
-        $ranking = Ranking::with("student")->firstWhere('id', $id);
+        $ranking = Ranking::with("students")->find($code);
 
         if (!$ranking) {
             // No Content
@@ -39,15 +39,15 @@ class RankingsController extends Controller
         return response(status: 201);
     }
 
-    public function update($id, Request $request): Response|Application|ResponseFactory
+    public function update($code, Request $request): Response|Application|ResponseFactory
     {
-        $rank = Ranking::updateFromRequest($id, $request);
+        $rank = Ranking::updateFromRequest($code, $request);
         return response($rank);
     }
 
-    public function delete($id): Response|Application|ResponseFactory
+    public function delete($code): Response|Application|ResponseFactory
     {
-        $rank = Ranking::find($id);
+        $rank = Ranking::find($code);
         if (!$rank) {
             return response(status: 204);
         }

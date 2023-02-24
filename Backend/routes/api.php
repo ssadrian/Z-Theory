@@ -50,12 +50,12 @@ Route::prefix('teacher')->group(function () {
 
 Route::prefix('ranking')->group(function () {
     Route::get('', [RankingsController::class, 'all']);
-    Route::get('{id}', [RankingsController::class, 'get']);
+    Route::get('{code}', [RankingsController::class, 'get']);
 
     Route::post('', [RankingsController::class, 'create']);
-    Route::put('{id}', [RankingsController::class, 'update']);
+    Route::put('{code}', [RankingsController::class, 'update']);
 
-    Route::delete('{id}', [RankingsController::class, 'delete']);
+    Route::delete('{code}', [RankingsController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

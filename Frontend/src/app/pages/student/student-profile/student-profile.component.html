@@ -17,7 +17,7 @@
                   <div class="text-center">
                     <span
                       class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-                      >Estudiante</span
+                    >Estudiante</span
                     >
                   </div>
                 </div>
@@ -109,189 +109,40 @@
     </div>
   </div>
 
-  <hr />
+  <hr/>
 
   <div class="p-20">
-    <div class="text-center text-3xl text-white font-bold mb-10">> RANKING <</div>
+    <div class="text-center text-3xl text-white font-bold mb-10">
+      Rankings
+    </div>
 
     <div class="grid grid-cols-4 gap-4 w-full">
-      <div>
-        <div
-          class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-        >
-          <div class="text-center mb">
-            <span>123-abc-456</span>
-          </div>
+      <div *ngFor="let ranking of rankings"
+           class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+      >
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <caption [innerText]="ranking.code"></caption>
 
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table
-              class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-            >
-              <thead
-                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" class="px-6 py-3">Estudiante</th>
+                <th scope="col" class="px-6 py-3">Puntos</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
-                <tr>
-                  <th scope="col" class="px-6 py-3">Estudiante</th>
-                  <th scope="col" class="px-6 py-3">Puntos</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Paco
-                  </th>
-                  <td class="px-6 py-4">30</td>
-                </tr>
-                <tr
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Carlos
-                  </th>
-                  <td class="px-6 py-4">20</td>
-                </tr>
-                <tr
-                  class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Paula
-                  </th>
-                  <td class="px-6 py-4">45</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  Paco
+                </th>
 
-      <div>
-        <div
-          class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-        >
-          <div class="text-center mb">
-            <span>123-abc-456</span>
-          </div>
-
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table
-              class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-            >
-              <thead
-                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-              >
-                <tr>
-                  <th scope="col" class="px-6 py-3">Estudiante</th>
-                  <th scope="col" class="px-6 py-3">Puntos</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Paco
-                  </th>
-                  <td class="px-6 py-4">30</td>
-                </tr>
-                <tr
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Carlos
-                  </th>
-                  <td class="px-6 py-4">20</td>
-                </tr>
-                <tr
-                  class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Paula
-                  </th>
-                  <td class="px-6 py-4">45</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div
-          class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-        >
-          <div class="text-center mb">
-            <span>123-abc-456</span>
-          </div>
-
-          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table
-              class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
-            >
-              <thead
-                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-              >
-                <tr>
-                  <th scope="col" class="px-6 py-3">Estudiante</th>
-                  <th scope="col" class="px-6 py-3">Puntos</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Paco
-                  </th>
-                  <td class="px-6 py-4">30</td>
-                </tr>
-                <tr
-                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Carlos
-                  </th>
-                  <td class="px-6 py-4">20</td>
-                </tr>
-                <tr
-                  class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Paula
-                  </th>
-                  <td class="px-6 py-4">45</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                <td class="px-6 py-4">30</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
