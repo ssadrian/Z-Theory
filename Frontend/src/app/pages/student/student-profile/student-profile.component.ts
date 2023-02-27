@@ -5,6 +5,7 @@ import { StudentService } from 'src/app/services/repository/student.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Base64Service } from 'src/app/services/base64.service';
 import { IUpdateStudent } from 'src/models/update/update-student';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-profile',
@@ -18,6 +19,8 @@ export class StudentProfileComponent {
     private fb: FormBuilder,
     private b64: Base64Service
   ) {}
+
+  show: boolean = false;
 
   student: IStudent = this.credentials.currentUser as IStudent;
 
@@ -50,17 +53,15 @@ export class StudentProfileComponent {
       birth_date: this.student.birth_date.toString()!,
     };
 
-    /**
-     * TODO: 
-     * 
-     * Input de tipo fichero, que lleva el evento $change para encodeAvatar. 
-     * En updateAvatar después setear base64.
-     * Dentro de updateAvatar hacer llamada al servicio de student con el 
-     * this.studentSetvice.update.suscribe
-     * 
-     */
+    this.studentService
+      .update(this.student.id, student)
+      .subscribe((response) => {});
+    this.student.avatar = this.#b64Avatar;
 
+    this.show = false;
+  }
 
-
+  toggle() {
+    this.show = true;
   }
 }
