@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -79,8 +79,10 @@ class Student extends Authenticatable
         return $oldStudent;
     }
 
-    public function rankings(): HasMany
+    public function rankings(): BelongsToMany
     {
-        return $this->hasMany(Ranking::class);
+        return $this
+            ->belongsToMany(Ranking::class, 'ranking_student', 'student_id', 'ranking_id')
+            ->withPivot('points');
     }
 }

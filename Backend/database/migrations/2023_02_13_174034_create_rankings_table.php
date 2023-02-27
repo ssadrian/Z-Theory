@@ -14,7 +14,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rankings', function (Blueprint $table) {
-            $table->uuid('code')->primary();
+            $table->id();
+            $table->uuid('code')->unique();
             $table->timestamps();
         });
     }

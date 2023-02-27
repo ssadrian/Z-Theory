@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ranking;
+use App\Models\Student;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -20,7 +22,8 @@ class RankingsController extends Controller
 
     public function get($code): Model|Response|Builder|Application|ResponseFactory
     {
-        $ranking = Ranking::with("students")->find($code);
+        $ranking = Ranking::with("students")
+            ->firstWhere('code', $code);
 
         if (!$ranking) {
             // No Content
@@ -30,13 +33,26 @@ class RankingsController extends Controller
         return $ranking;
     }
 
-    public function create(Request $request): Response|Application|ResponseFactory
+    public function create(Request $request): JsonResponse
     {
         $rank = Ranking::createFromRequest($request);
         $rank->save();
 
         // Created
-        return response(status: 201);
+        return response()
+            ->json($rank, 201);
+    }
+
+    public function assignStudent($id, Request $request)
+    {
+        $assignmentDone = Ranking::assignStudent($id, $request);
+        return response()->json($assignmentDone);
+        if (!$assignmentDone) {
+            // Bad Request
+            return response(status: 422);
+        }
+
+        return response(status: 200);
     }
 
     public function update($code, Request $request): Response|Application|ResponseFactory
