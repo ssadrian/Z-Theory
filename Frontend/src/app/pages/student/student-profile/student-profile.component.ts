@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {IRanking} from '../../../../models/ranking.model';
-import {CredentialService} from '../../../services/credential.service';
 import {IStudent} from '../../../../models/student.model';
+import {CredentialService} from '../../../services/credential.service';
 import {RankingService} from '../../../services/repository/ranking.service';
 
 @Component({
@@ -12,16 +12,16 @@ import {RankingService} from '../../../services/repository/ranking.service';
 export class StudentProfileComponent implements OnInit {
   constructor(
     private credentials: CredentialService,
-    private rankingRepository: RankingService) {
+    private rankingService: RankingService) {
   }
 
   student: IStudent = this.credentials.currentUser as IStudent;
   rankings: IRanking[] = [];
 
   ngOnInit(): void {
-    this.rankingRepository.all()
-      .subscribe((rankings: IRanking[]): void => {
-        this.rankings = rankings.filter((r: IRanking): boolean => r.student_id === this.student.id);
+    this.rankingService.all()
+      .subscribe((response: IRanking[]): void => {
+        this.rankings = response;
       });
   }
 }

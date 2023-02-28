@@ -6,6 +6,7 @@ import {IStudent} from '../../../models/student.model';
 import {IUpdateStudent} from '../../../models/update/update-student';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
+import {IRepository} from '../../../models/patterns/repository/repository.model';
 
 @Injectable({
   providedIn: 'root',
@@ -35,16 +36,16 @@ export class StudentService {
     });
   }
 
-  create(student: ICreateStudent): Observable<HttpResponse<Object>> {
-    return this.http.post(this.#studentUrl, student, {
+  create(entity: ICreateStudent): Observable<HttpResponse<Object>> {
+    return this.http.post(this.#studentUrl, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });
   }
 
-  update(id: number, student: IUpdateStudent): Observable<HttpResponse<Object>> {
+  update(id: number, entity: IUpdateStudent): Observable<HttpResponse<Object>> {
     const url: string = `${this.#studentUrl}/${id}`;
-    return this.http.put(url, student, {
+    return this.http.put(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });

@@ -35,16 +35,16 @@ export class TeacherService {
     });
   }
 
-  create(teacher: ICreateTeacher): Observable<HttpResponse<Object>> {
-    return this.http.post(this.#teacherUrl, teacher, {
+  create(entity: ICreateTeacher): Observable<HttpResponse<Object>> {
+    return this.http.post(this.#teacherUrl, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });
   }
 
-  update(id: number, teacher: IUpdateTeacher): Observable<HttpResponse<Object>> {
+  update(id: number, entity: IUpdateTeacher): Observable<HttpResponse<Object>> {
     const url: string = `${this.#teacherUrl}/${id}`;
-    return this.http.put(url, teacher, {
+    return this.http.put(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });

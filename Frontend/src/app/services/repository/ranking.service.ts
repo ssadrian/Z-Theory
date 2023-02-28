@@ -6,6 +6,7 @@ import {IRanking} from '../../../models/ranking.model';
 import {IUpdateRanking} from '../../../models/update/update-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
+import {IRepository} from '../../../models/patterns/repository/repository.model';
 
 @Injectable({
   providedIn: 'root',
@@ -35,16 +36,16 @@ export class RankingService {
     });
   }
 
-  create(ranking: ICreateRanking): Observable<HttpResponse<Object>> {
-    return this.http.post(this.#rankingUrl, ranking, {
+  create(entity: ICreateRanking): Observable<HttpResponse<Object>> {
+    return this.http.post(this.#rankingUrl, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });
   }
 
-  update(id: number, ranking: IUpdateRanking): Observable<HttpResponse<Object>> {
+  update(id: number, entity: IUpdateRanking): Observable<HttpResponse<Object>> {
     const url: string = `${this.#rankingUrl}/${id}`;
-    return this.http.put(url, ranking, {
+    return this.http.put(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });
