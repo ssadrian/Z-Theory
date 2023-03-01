@@ -43,10 +43,24 @@ class RankingsController extends Controller
             ->json($rank, 201);
     }
 
-    public function assignStudent($id, Request $request)
+    public function forStudent($id): array
+    {
+        $leaderboards = [];
+
+        foreach (Ranking::with('students')->get() as $ranking) {
+            if (!$ranking->students->contains($id)) {
+                continue;
+            }
+
+            $leaderboards[] = $ranking;
+        }
+
+        return $leaderboards;
+    }
+
+    public function assignStudent($id, Request $request): Response|Application|ResponseFactory
     {
         $assignmentDone = Ranking::assignStudent($id, $request);
-        return response()->json($assignmentDone);
         if (!$assignmentDone) {
             // Bad Request
             return response(status: 422);
