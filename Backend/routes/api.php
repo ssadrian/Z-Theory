@@ -34,6 +34,7 @@ Route::prefix('student')->group(function () {
     Route::get('{id?}', [StudentsController::class, 'get']);
 
     Route::post('', [StudentsController::class, 'create']);
+
     Route::put('{id}', [StudentsController::class, 'update']);
 
     Route::delete('{id}', [StudentsController::class, 'delete']);
@@ -44,6 +45,7 @@ Route::prefix('teacher')->group(function () {
     Route::get('{id?}', [TeachersController::class, 'get']);
 
     Route::post('', [TeachersController::class, 'create']);
+
     Route::put('{id}', [TeachersController::class, 'update']);
 
     Route::delete('{id}', [TeachersController::class, 'delete']);
@@ -52,9 +54,11 @@ Route::prefix('teacher')->group(function () {
 Route::prefix('ranking')->group(function () {
     Route::get('', [RankingsController::class, 'all']);
     Route::get('{code}', [RankingsController::class, 'get']);
+    Route::get('assign/{id}', [RankingsController::class, 'assignStudent']);
+    Route::get('for/{id}', [RankingsController::class, 'forStudent']);
 
-    Route::post('assign/{id}', [RankingsController::class, 'assignStudent']);
     Route::post('', [RankingsController::class, 'create']);
+
     Route::put('{code}', [RankingsController::class, 'update']);
 
     Route::delete('{code}', [RankingsController::class, 'delete']);
