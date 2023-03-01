@@ -4,5 +4,6 @@ import {IStudent} from './student.model';
 export interface IRanking {
   id: number;
   code: string;
-  students: (IStudent & IPivot)[];
+  students: IStudent[];
+  pivot: IPivot;
 }

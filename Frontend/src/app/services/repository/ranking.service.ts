@@ -1,12 +1,12 @@
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {map, Observable, tap} from 'rxjs';
 import {ICreateRanking} from '../../../models/create/create-ranking';
+import {ICreateStudentAssignation} from '../../../models/create/create-student-assignation';
 import {IRanking} from '../../../models/ranking.model';
 import {IUpdateRanking} from '../../../models/update/update-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
-import {IRepository} from '../../../models/patterns/repository/repository.model';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +32,23 @@ export class RankingService {
   get(id: number): Observable<IRanking | null> {
     const url: string = `${this.#rankingUrl}/${id}`;
     return this.http.get<IRanking>(url, {
+      headers: this.#clientHeaders,
+    });
+  }
+
+  assignStudent(entity: ICreateStudentAssignation): Observable<HttpResponse<Object>> {
+    const url: string =
+      `${this.#rankingUrl}/assign/${entity.student_id}/to/${entity.ranking_code}`;
+
+    return this.http.get(url, {
+      headers: this.#clientHeaders,
+      observe: 'response',
+    });
+  }
+
+  leaderboardsForStudent(id: number): Observable<IRanking[]> {
+    const url: string = `${this.#rankingUrl}/for/${id}`;
+    return this.http.get<IRanking[]>(url, {
       headers: this.#clientHeaders,
     });
   }

@@ -19,9 +19,16 @@ export class StudentProfileComponent implements OnInit {
   rankings: IRanking[] = [];
 
   ngOnInit(): void {
-    this.rankingService.all()
+    this.rankingService.leaderboardsForStudent(this.student.id)
       .subscribe((response: IRanking[]): void => {
         this.rankings = response;
+
+        this.rankings.forEach(rank => {
+          rank.students.sort((a, b) => {
+            return a.nickname.localeCompare(b.nickname)
+              || b.pivot.points - a.pivot.points;
+          });
+        })
       });
   }
 }
