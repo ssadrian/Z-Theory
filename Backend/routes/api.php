@@ -55,8 +55,8 @@ Route::prefix('ranking')->group(function () {
     Route::get('', [RankingsController::class, 'all']);
     Route::get('{code}', [RankingsController::class, 'get']);
     Route::get('for/{id}', [RankingsController::class, 'forStudent']);
-    Route::get('assign/{idStudent}/to/{code}', [RankingsController::class, 'assignStudent']);
 
+    Route::post('assign', [RankingsController::class, 'assignStudent']);
     Route::post('', [RankingsController::class, 'create']);
 
     Route::put('{code}', [RankingsController::class, 'update']);

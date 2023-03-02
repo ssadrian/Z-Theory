@@ -38,9 +38,9 @@ export class RankingService {
 
   assignStudent(entity: ICreateStudentAssignation): Observable<HttpResponse<Object>> {
     const url: string =
-      `${this.#rankingUrl}/assign/${entity.student_id}/to/${entity.ranking_code}`;
+      `${this.#rankingUrl}/assign`;
 
-    return this.http.get(url, {
+    return this.http.post(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });

@@ -58,14 +58,9 @@ class RankingsController extends Controller
         return $leaderboards;
     }
 
-    public function assignStudent($id, Request $request): Response|Application|ResponseFactory
+    public function assignStudent(Request $request): Response|Application|ResponseFactory
     {
-        $assignmentDone = Ranking::assignStudent($id, $request);
-        if (!$assignmentDone) {
-            // Bad Request
-            return response(status: 422);
-        }
-
+        Ranking::assignStudent($request);
         return response(status: 200);
     }
 

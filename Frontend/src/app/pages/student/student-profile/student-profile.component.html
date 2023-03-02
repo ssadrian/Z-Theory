@@ -112,6 +112,14 @@
   <hr/>
 
   <div class="p-20">
+    <form [formGroup]="codeForm" (ngSubmit)="joinRanking()">
+      <label>
+        <input formControlName="code" placeholder="Codigo del Ranking" />
+      </label>
+
+      <button type="submit">Enviar</button>
+    </form>
+
     <div class="text-center text-3xl text-white font-bold mb-10">
       Rankings
     </div>

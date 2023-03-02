@@ -29,22 +29,18 @@ class Ranking extends Model
         'id',
     ];
 
-    public static function assignStudent($id, Request $request)
+    public static function assignStudent(Request $request)
     {
         $data = $request->validate([
-            'code' => 'required|uuid|exists:rankings,code',
-            'points' => 'sometimes|nullable|required|int|gt:0'
+            'student_id' => 'required|exists:students,id',
+            'code' => 'required|uuid|exists:rankings,code'
         ]);
 
         $ranking = Ranking::where('code', $data['code'])->first();
-        $student = Student::find($id);
-
-        if (!($ranking && $student)) {
-            return false;
-        }
+        $student = Student::find($data['student_id']);
 
         return $ranking->students()->attach($student->id, [
-            'points' => $data['points'] ?? 0
+            'points' => 0
         ]);
     }
 
