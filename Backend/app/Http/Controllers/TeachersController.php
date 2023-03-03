@@ -15,12 +15,12 @@ class TeachersController extends Controller
 {
     public function all(): Collection|array
     {
-        return Teacher::all();
+        return Teacher::with('rankings_created')->get();
     }
 
     public function get($id): Model|Response|Builder|Application|ResponseFactory
     {
-        $teacher = Teacher::firstWhere('id', $id);
+        $teacher = Teacher::with('rankings_created')->find($id);
 
         if (!$teacher) {
             // No Content

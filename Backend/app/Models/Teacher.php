@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -33,7 +34,7 @@ class Teacher extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'email,'
+        'email',
         'password'
     ];
 
@@ -86,5 +87,10 @@ class Teacher extends Authenticatable
         $teacher->save();
 
         return $oldTeacher;
+    }
+
+    public function rankings_created(): HasMany
+    {
+        return $this->hasMany(Ranking::class, foreignKey: 'creator');
     }
 }

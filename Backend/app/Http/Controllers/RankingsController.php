@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ranking;
-use App\Models\Student;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,12 +16,12 @@ class RankingsController extends Controller
 {
     public function all(): Collection
     {
-        return Ranking::with("students")->get();
+        return Ranking::with('students')->get();
     }
 
     public function get($code): Model|Response|Builder|Application|ResponseFactory
     {
-        $ranking = Ranking::with("students")
+        $ranking = Ranking::with('students')
             ->firstWhere('code', $code);
 
         if (!$ranking) {
