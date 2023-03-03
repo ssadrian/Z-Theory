@@ -16,7 +16,10 @@ return new class extends Migration {
             $table->id();
             $table->uuid('code')->unique();
             $table->text('name')->unique();
-            $table->foreignId('teachers_id')->constrained();
+
+            $table->unsignedBigInteger('creator');
+            $table->foreign('creator')->on('teachers')->references('id');
+
             $table->timestamps();
         });
     }

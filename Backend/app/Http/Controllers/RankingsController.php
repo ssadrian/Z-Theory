@@ -32,14 +32,13 @@ class RankingsController extends Controller
         return $ranking;
     }
 
-    public function create(Request $request): JsonResponse
+    public function create(Request $request): Application|ResponseFactory|Response
     {
         $rank = Ranking::createFromRequest($request);
         $rank->save();
 
         // Created
-        return response()
-            ->json($rank, 201);
+        return response($rank, 201);
     }
 
     public function forStudent($id)
