@@ -35,8 +35,9 @@ export class TeacherProfileComponent {
     this.rankingService
       .create({
         name: formValue.name!,
-        creator: this.teacher.id,
+        teachers_id: this.teacher.id,
         code: uuidv4(),
+        creator: this.teacher.id
       })
       .subscribe();
   }
