@@ -66,7 +66,7 @@ class Ranking extends Model
             $ranking->rank = $data['rank'];
         }
 
-        if (!empty($data['code'])) {
+        if (!(empty($data['code']) || $ranking->code == $data['code'])) {
             $ranking->code = $data['code'];
         }
 

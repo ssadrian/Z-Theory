@@ -71,7 +71,7 @@ class Student extends Authenticatable
             return null;
         }
 
-        if (!empty($data['nickname'])) {
+        if (!(empty($data['nickname']) || $student->nickname == $data['nickname'])) {
             $student->nickname = $data['nickname'];
         }
 
