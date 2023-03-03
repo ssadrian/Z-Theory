@@ -35,15 +35,15 @@ specifiers:
   zone.js: ~0.12.0
 
 dependencies:
-  '@angular/animations': 15.2.0_@angular+core@15.2.0
-  '@angular/common': 15.2.0_rlouuhf3skgq5v2ddhr4bc7iny
-  '@angular/compiler': 15.2.0_@angular+core@15.2.0
-  '@angular/core': 15.2.0_rxjs@7.5.7+zone.js@0.12.0
-  '@angular/forms': 15.2.0_zuq5cr5g6oi7bacywswds55c6q
-  '@angular/material': 15.2.1_q7g7agtzi5xoyy4hcweqo7wvti
-  '@angular/platform-browser': 15.2.0_soizqph2fnjracxavakx67hoyq
-  '@angular/platform-browser-dynamic': 15.2.0_q3vtycdixm4mw4ocqkr6ifs2ty
-  '@angular/router': 15.2.0_zuq5cr5g6oi7bacywswds55c6q
+  '@angular/animations': 15.2.1_@angular+core@15.1.4
+  '@angular/common': 15.2.1_dvdedfppyzvqzripn7o7dhxzvi
+  '@angular/compiler': 15.2.1_@angular+core@15.1.4
+  '@angular/core': 15.1.4_rxjs@7.5.7+zone.js@0.12.0
+  '@angular/forms': 15.2.1_ekrngvtummdyb6rnd5kk2vzmaa
+  '@angular/material': 15.1.4_jbjjn5t7afbfn4orxxywu4wljm
+  '@angular/platform-browser': 15.2.1_sms7qdv6ass4lneoxkp5lyilti
+  '@angular/platform-browser-dynamic': 15.1.4_57smswdbtcjzgvattoxaxv4wee
+  '@angular/router': 15.1.4_ekrngvtummdyb6rnd5kk2vzmaa
   flowbite: 1.6.3
   primeicons: 6.0.1
   primeng: 15.2.0_rsmpwxuhnjd23aonwu7jbmlrby
@@ -2953,6 +2953,10 @@ packages:
     resolution: {integrity: sha512-f0KEEe05NvUnat+boPTZ0dgaLZ4SfSouXUgv5noUiefG2ajgKjmETo9ZJyuqsl7dfl2aHlLJUiki6B4ZYldiiw==}
     dependencies:
       '@types/node': 18.14.2
+    dev: true
+
+  /@types/uuid/9.0.1:
+    resolution: {integrity: sha512-rFT3ak0/2trgvp4yYZo5iKFEPsET7vKydKF+VRCxlQ9bpheehyAJH89dAkaLEq/j/RZXJIqcgsmPJKUP1Z28HA==}
     dev: true
 
   /@types/uuid/9.0.1:

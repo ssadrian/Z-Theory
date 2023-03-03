@@ -6,4 +6,6 @@ export interface IRanking {
   code: string;
   students: IStudent[];
   pivot: IPivot;
+  name: string,
+  creator: number
 }
