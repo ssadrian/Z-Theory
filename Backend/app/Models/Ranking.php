@@ -58,15 +58,21 @@ class Ranking extends Model
             return null;
         }
 
-        $oldRanking = $ranking;
+        if (!empty($data['student_id'])) {
+            $ranking->student_id = $data['student_id'];
+        }
 
-        $ranking->student_id = $data['student_id'];
-        $ranking->rank = $data['rank'];
-        $ranking->code = $data['code'];
+        if (!empty($data['rank'])) {
+            $ranking->rank = $data['rank'];
+        }
+
+        if (!empty($data['code'])) {
+            $ranking->code = $data['code'];
+        }
 
         $ranking->save();
 
-        return $oldRanking;
+        return $ranking->getOriginal();
     }
 
     public function student(): BelongsTo

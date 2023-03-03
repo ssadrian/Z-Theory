@@ -65,16 +65,27 @@ class Teacher extends Authenticatable
             return null;
         }
 
-        $oldTeacher = $teacher;
+        if (!empty($data['nickname'])) {
+            $teacher->nickname = $data['nickname'];
+        }
 
-        $teacher->nickname = $data['nickname'];
-        $teacher->name = $data['name'];
-        $teacher->surnames = $data['surnames'];
-        $teacher->center = $data['center'];
-        $teacher->avatar = $data['avatar'];
+        if (!empty($data['name'])) {
+            $teacher->name = $data['name'];
+        }
+
+        if (!empty($data['surnames'])) {
+            $teacher->surnames = $data['surnames'];
+        }
+
+        if (!empty($data['center'])) {
+            $teacher->center = $data['center'];
+        }
+
+        if (!empty($data['avatar'])) {
+            $teacher->avatar = $data['avatar'];
+        }
 
         $teacher->save();
-
-        return $oldTeacher;
+        return $teacher->getOriginal();
     }
 }
