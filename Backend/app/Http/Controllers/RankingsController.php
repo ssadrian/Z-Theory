@@ -43,13 +43,19 @@ class RankingsController extends Controller
             ->json($rank, 201);
     }
 
-    public function forStudent($id): array
+    public function forStudent($id)
     {
         $leaderboards = [];
+        $rankings = Ranking::with('students')->get();
 
-        foreach (Ranking::with('students')->get() as $ranking) {
+        foreach ($rankings as $ranking) {
             if (!$ranking->students->contains($id)) {
                 continue;
+            }
+
+            $ranking->students->makeHidden(['email', 'password', 'name', 'surnames']);
+            foreach ($ranking->students as $student) {
+                $student->pivot->makeHidden(['ranking_id', 'student_id']);
             }
 
             $leaderboards[] = $ranking;

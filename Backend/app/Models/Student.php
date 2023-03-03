@@ -28,16 +28,6 @@ class Student extends Authenticatable
         'birth_date',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'email',
-        'password'
-    ];
-
     public static function createFromRequest(Request $request): Student
     {
         $data = $request->validate([
