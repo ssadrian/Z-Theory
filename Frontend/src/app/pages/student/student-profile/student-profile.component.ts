@@ -20,40 +20,7 @@ export class StudentProfileComponent implements OnInit {
   ) {
   }
 
-  customers = [
-    {name: 'Amy Elsner', image: 'amyelsner.png'},
-    {name: 'Anna Fali', image: 'annafali.png'},
-    {name: 'Asiya Javayant', image: 'asiyajavayant.png'},
-    {name: 'Bernardo Dominic', image: 'bernardodominic.png'},
-    {name: 'Elwin Sharvill', image: 'elwinsharvill.png'},
-    {name: 'Ioni Bowcher', image: 'ionibowcher.png'},
-    {name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png'},
-    {name: 'Onyama Limba', image: 'onyamalimba.png'},
-    {name: 'Stephen Shaw', image: 'stephenshaw.png'},
-    {name: 'Xuxue Feng', image: 'xuxuefeng.png'},
-  ];
-
-  representatives = [
-    {label: 'Unqualified', value: 'unqualified'},
-    {label: 'Qualified', value: 'qualified'},
-    {label: 'New', value: 'new'},
-    {label: 'Negotiation', value: 'negotiation'},
-    {label: 'Renewal', value: 'renewal'},
-    {label: 'Proposal', value: 'proposal'},
-  ];
-
-  statuses = [
-    {label: 'Unqualified', value: 'unqualified'},
-    {label: 'Qualified', value: 'qualified'},
-    {label: 'New', value: 'new'},
-    {label: 'Negotiation', value: 'negotiation'},
-    {label: 'Renewal', value: 'renewal'},
-    {label: 'Proposal', value: 'proposal'},
-  ];
-
   loading: boolean = true;
-
-  activityValues: number[] = [0, 100];
 
   codeForm = this.fb.group({
     code: ['', [Validators.required]],
@@ -73,8 +40,8 @@ export class StudentProfileComponent implements OnInit {
         this.rankings.forEach((rank: IRanking): void => {
           rank.students.sort((a: IStudent, b: IStudent) => {
             return (
-              a.nickname.localeCompare(b.nickname)
-              || b.pivot.points - a.pivot.points
+              b.pivot.points - a.pivot.points
+              || a.nickname.localeCompare(b.nickname)
             );
           });
         });
@@ -84,11 +51,6 @@ export class StudentProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.#updateRanks();
-  }
-
-  clear(table: Table): void {
-    table.clear();
     this.#updateRanks();
   }
 

@@ -3,7 +3,7 @@
     <div>
       <div class="w-full px-5 mx-auto">
         <div
-          class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16"
+          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
         >
           <div class="px-10">
             <div class="flex flex-wrap justify-center">
@@ -17,7 +17,7 @@
                   <div class="text-center">
                     <span
                       class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-                      >Estudiante</span
+                    >Estudiante</span
                     >
                   </div>
                 </div>
@@ -67,7 +67,7 @@
     <div>
       <div class="w-full px-5 mx-auto">
         <div
-          class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16"
+          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
         >
           <div class="px-10">
             <div class="flex justify-center py-4 lg:pt-4 pt-8">
@@ -109,20 +109,16 @@
     </div>
   </div>
 
-  <hr />
+  <hr/>
 
   <div class="p-20">
     <form [formGroup]="codeForm" (ngSubmit)="joinRanking()">
       <label>
-        <input formControlName="code" placeholder="Codigo del Ranking" />
+        <input formControlName="code" placeholder="Codigo del Ranking"/>
       </label>
 
       <button type="submit">Enviar</button>
     </form>
-
-    <div class="text-center text-3xl text-white font-bold mb-10">
-      Rankings
-    </div>
 
     <!-- <div class="grid grid-cols-4 gap-4 w-full">
       <div *ngFor="let ranking of rankings"
@@ -163,153 +159,45 @@
       </div>
     </div> -->
 
-    <div class="card">
-      <h5>Filter Menu</h5>
-      <p>Filters are displayed in an overlay.</p>
-      <p-table
-        #dt1
-        [rows]="10"
-        [showCurrentPageReport]="true"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        [paginator]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        [globalFilterFields]="['name', 'representative.name']"
-      >
-        <ng-template pTemplate="caption">
-          <div class="flex">
-            <button
-              pButton
-              label="Clear"
-              class="p-button-outlined"
-              icon="pi pi-filter-slash"
-              (click)="clear(dt1)"
-            ></button>
-            <span class="p-input-icon-left ml-auto">
-              <i class="pi pi-search"></i>
-              <input
-                pInputText
-                type="text"
-                placeholder="Search keyword"
-              />
-            </span>
-          </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-          <tr>
-            <th style="min-width: 15rem">
-              <div class="flex justify-content-center align-items-center">
-                Name
-                <p-columnFilter
-                  field="representative"
-                  matchMode="in"
-                  display="menu"
-                  [showMatchModes]="false"
-                  [showOperator]="false"
-                  [showAddButton]="false"
-                >
-                  <ng-template pTemplate="header">
-                    <div class="px-3 pt-3 pb-0">
-                      <span class="font-bold">Agent Picker</span>
-                    </div>
-                  </ng-template>
-                  <ng-template
-                    pTemplate="filter"
-                    let-value
-                    let-filter="filterCallback"
-                  >
-                    <p-multiSelect
-                      [ngModel]="value"
-                      [options]="representatives"
-                      placeholder="Any"
-                      (onChange)="filter($event.value)"
-                      optionLabel="name"
-                    >
-                    </p-multiSelect>
-                  </ng-template>
-                </p-columnFilter>
-              </div>
-            </th>
+    <p-card header="Rankings" [ngSwitch]="rankings.length">
+      <div *ngSwitchCase="0">
+        No estas dentro de nigun ranking
+      </div>
 
-            <th style="min-width: 15rem">
-              <div class="flex justify-content-center align-items-center">
-                Agent
-                <p-columnFilter
-                  field="representative"
-                  matchMode="in"
-                  display="menu"
-                  [showMatchModes]="false"
-                  [showOperator]="false"
-                  [showAddButton]="false"
-                >
-                  <ng-template pTemplate="header">
-                    <div class="px-3 pt-3 pb-0">
-                      <span class="font-bold">Agent Picker</span>
-                    </div>
-                  </ng-template>
-                  <ng-template
-                    pTemplate="filter"
-                    let-value
-                    let-filter="filterCallback"
-                  >
-                    <p-multiSelect
-                      [ngModel]="value"
-                      [options]="representatives"
-                      placeholder="Any"
-                      (onChange)="filter($event.value)"
-                      optionLabel="name"
-                    >
-                      <ng-template let-option pTemplate="item">
-                        <div class="p-multiselect-representative-option">
-                          <img
-                            [alt]="option.label"
-                            src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{
-                              option.image
-                            }}"
-                            width="32"
-                            style="vertical-align: middle"
-                          />
-                          <span class="ml-1">Paco</span>
-                        </div>
-                      </ng-template>
-                    </p-multiSelect>
-                  </ng-template>
-                </p-columnFilter>
-              </div>
-            </th>
-            <th style="min-width: 10rem">
-              <div class="flex justify-content-center align-items-center">
-                Balance
-                <p-columnFilter
-                  type="numeric"
-                  field="balance"
-                  display="menu"
-                  currency="USD"
-                ></p-columnFilter>
-              </div>
-            </th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-customer>
-          <tr>
-            <td>paco</td>
-            <td>
-              <img
-                [alt]=""
-                src="https://picsum.photos/200"
-                width="32"
-                style="vertical-align: middle"
-              />
-              <span class="image-text">PACO</span>
-            </td>
-            <td>0</td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="7">No customers found.</td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+      <div *ngSwitchDefault>
+        <p-table
+          *ngFor="let ranking of rankings"
+          [value]="ranking.students"
+          [loading]="loading"
+          [rowHover]="true"
+          [paginator]="true"
+          [rowsPerPageOptions]="[3, 5, 10, 25]" [rows]="3"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        >
+          <ng-template pTemplate="caption">
+            <div class="table-header">
+              {{ ranking.name }}
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th>#</th>
+              <th>Estudiante</th>
+              <th>Puntos</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
+            <tr class="p-selectable-row">
+              <td>{{ rowIndex + 1 }}</td>
+              <td>{{ student.nickname }}</td>
+              <td>{{ student.pivot.points }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-card>
   </div>
 </section>
