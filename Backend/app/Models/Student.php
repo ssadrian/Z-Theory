@@ -51,14 +51,14 @@ class Student extends Authenticatable
         ]);
     }
 
-    public static function updateFromRequest($id, Request $request): Student|null
+    public static function updateFromRequest($id, Request $request): array|null
     {
         $data = $request->validate([
-            'nickname' => 'required|string|unique:students|unique:teachers',
-            'name' => 'required|string',
-            'surnames' => 'required|string',
-            'birth_date' => 'required|date',
-            'avatar' => 'required|string',
+            'nickname' => 'sometimes|nullable|required|string',
+            'name' => 'sometimes|nullable|required|string',
+            'surnames' => 'sometimes|nullable|required|string',
+            'birth_date' => 'sometimes|nullable|required|date',
+            'avatar' => 'sometimes|nullable|required|string',
         ]);
 
         $student = Student::find($id);
@@ -66,17 +66,29 @@ class Student extends Authenticatable
             return null;
         }
 
-        $oldStudent = $student;
+        if (!(empty($data['nickname']) || $student->nickname == $data['nickname'])) {
+            $student->nickname = $data['nickname'];
+        }
 
-        $student->nickname = $data['nickname'];
-        $student->name = $data['name'];
-        $student->surnames = $data['surnames'];
-        $student->birth_date = $data['birth_date'];
-        $student->avatar = $data['avatar'];
+        if (!empty($data['name'])) {
+            $student->name = $data['name'];
+        }
+
+        if (!empty($data['surnames'])) {
+            $student->surnames = $data['surnames'];
+        }
+
+        if (!empty($data['birth_date'])) {
+            $student->birth_date = $data['birth_date'];
+        }
+
+        if (!empty($data['avatar'])) {
+            $student->avatar = $data['avatar'];
+        }
 
         $student->save();
 
-        return $oldStudent;
+        return $student->getOriginal();
     }
 
     public function rankings(): BelongsToMany

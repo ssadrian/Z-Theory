@@ -39,9 +39,9 @@ export class StudentGuard implements CanMatch {
         return false;
       }
 
-      let token: string = response.body?.token ?? "";
-      let role: string = response.body?.role ?? "";
-      let user: IStudent | ITeacher | undefined = response.body?.user;
+      const token: string = response.body?.token ?? "";
+      const role: string = response.body?.role ?? "";
+      const user: IStudent | ITeacher | undefined = response.body?.user;
 
       this.credentials.token = token;
       this.credentials.role = role;

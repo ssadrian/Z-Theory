@@ -80,7 +80,7 @@ class Ranking extends Model
         $ranking->pivot->points = $data['points'] ?? 0;
         $ranking->save();
 
-        return $oldRanking;
+        return $ranking->getOriginal();
     }
 
     public function students(): BelongsToMany
