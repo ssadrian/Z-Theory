@@ -6,7 +6,7 @@ import {IStudent} from '../../../models/student.model';
 import {IUpdateStudent} from '../../../models/update/update-student';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
-import {IRepository} from '../../../models/patterns/repository/repository.model';
+import { IUpdatePassword } from 'src/models/update/update-password';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +40,13 @@ export class StudentService {
     return this.http.post(this.#studentUrl, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
+    });
+  }
+
+  updatePassword(entity: IUpdatePassword) {
+    const url: string = `${this.#studentUrl}/password`;
+    return this.http.post(url, entity, {
+      headers: this.#clientHeaders,
     });
   }
 

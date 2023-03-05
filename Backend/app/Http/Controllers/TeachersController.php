@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class TeachersController extends Controller
 {
@@ -37,6 +38,28 @@ class TeachersController extends Controller
 
         // Created
         return response(status: 201);
+    }
+
+    public function changePassword(Request $request): Response|Application|ResponseFactory
+    {
+        $data = $request->validate([
+            'id' => 'required|int|gt:0',
+            'password' => 'required|string',
+            'new_password' => 'required|string'
+        ]);
+
+        $teacher = Teacher::find($data['id']);
+
+        if (!($teacher || Hash::check($data['password'], $teacher->password))) {
+            //  Unprocessable Content
+            return response(status: 422);
+        }
+
+        $teacher->password = Hash::make($data['new_password']);
+        $teacher->save();
+
+        // Ok
+        return response(status: 200);
     }
 
     public function update($id, Request $request): Response|Application|ResponseFactory

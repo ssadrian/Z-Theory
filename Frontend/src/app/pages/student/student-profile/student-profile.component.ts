@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {Table} from 'primeng/table';
 import {IRanking} from '../../../../models/ranking.model';
 import {IStudent} from '../../../../models/student.model';
 import {CredentialService} from '../../../services/credential.service';
 import {RankingService} from '../../../services/repository/ranking.service';
 import {FormBuilder, Validators} from '@angular/forms';
 import {ICreateStudentAssignation} from '../../../../models/create/create-student-assignation';
+import {MessageService} from 'primeng/api';
+import {IUpdatePassword} from '../../../../models/update/update-password';
+import {StudentService} from '../../../services/repository/student.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -15,8 +17,10 @@ import {ICreateStudentAssignation} from '../../../../models/create/create-studen
 export class StudentProfileComponent implements OnInit {
   constructor(
     private credentials: CredentialService,
+    private studentService: StudentService,
     private rankingService: RankingService,
     private fb: FormBuilder,
+    private messageService: MessageService,
   ) {
   }
 
@@ -26,32 +30,45 @@ export class StudentProfileComponent implements OnInit {
     code: ['', [Validators.required]],
   });
 
+  passwordForm = this.fb.group({
+    password: ['', [Validators.required]],
+    new_password: ['', [Validators.required]],
+  });
+
   student: IStudent = this.credentials.currentUser as IStudent;
   rankings: IRanking[] = [];
 
-  #updateRanks(): void {
-    this.loading = true;
+  ngOnInit(): void {
+    this.#updateRanks();
+  }
 
-    this.rankingService
-      .leaderboardsForStudent(this.student.id)
-      .subscribe((rankings: IRanking[]): void => {
-        this.rankings = rankings;
+  showPasswordChangeForm(): void {
+    console.log('Test');
+    this.messageService.add({
+      key: 'passwordChange',
+      sticky: true,
+      severity: 'info',
+      summary: 'Cambiar Contraseña'
+    });
+  }
 
-        this.rankings.forEach((rank: IRanking): void => {
-          rank.students.sort((a: IStudent, b: IStudent) => {
-            return (
-              b.pivot.points - a.pivot.points
-              || a.nickname.localeCompare(b.nickname)
-            );
-          });
-        });
+  changePassword(): void {
+    const formValues = this.passwordForm.value;
+    const entity: IUpdatePassword = {
+      id: this.credentials.currentUser?.id!,
+      password: formValues.password!,
+      new_password: formValues.new_password!,
+    };
 
-        this.loading = false;
+    this.studentService.updatePassword(entity)
+      .subscribe(response => {
+        this.messageService.clear('passwordChange');
+        this.passwordForm.reset();
       });
   }
 
-  ngOnInit(): void {
-    this.#updateRanks();
+  onReject(): void {
+    this.messageService.clear('passwordChange');
   }
 
   joinRanking(): void {
@@ -77,5 +94,26 @@ export class StudentProfileComponent implements OnInit {
     const uuidRegex: RegExp =
       /^[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-4[0-9A-Za-z]{3}-[89ABab][0-9A-Za-z]{3}-[0-9A-Za-z]{12}$/g;
     return uuidRegex.test(uuid);
+  }
+
+  #updateRanks(): void {
+    this.loading = true;
+
+    this.rankingService
+      .leaderboardsForStudent(this.student.id)
+      .subscribe((rankings: IRanking[]): void => {
+        this.rankings = rankings;
+
+        this.rankings.forEach((rank: IRanking): void => {
+          rank.students.sort((a: IStudent, b: IStudent) => {
+            return (
+              b.pivot.points - a.pivot.points
+              || a.nickname.localeCompare(b.nickname)
+            );
+          });
+        });
+
+        this.loading = false;
+      });
   }
 }

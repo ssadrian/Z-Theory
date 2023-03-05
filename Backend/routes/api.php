@@ -34,6 +34,7 @@ Route::prefix('student')->group(function () {
     Route::get('{id?}', [StudentsController::class, 'get']);
 
     Route::post('', [StudentsController::class, 'create']);
+    Route::post('password', [StudentsController::class, 'changePassword']);
 
     Route::put('{id}', [StudentsController::class, 'update']);
 
@@ -45,6 +46,7 @@ Route::prefix('teacher')->group(function () {
     Route::get('{id?}', [TeachersController::class, 'get']);
 
     Route::post('', [TeachersController::class, 'create']);
+    Route::post('password', [TeachersController::class, 'changePassword']);
 
     Route::put('{id}', [TeachersController::class, 'update']);
 
