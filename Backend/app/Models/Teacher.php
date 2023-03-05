@@ -28,16 +28,6 @@ class Teacher extends Authenticatable
         'center',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'email',
-        'password'
-    ];
-
     public static function createFromRequest(Request $request)
     {
         $data = $request->validate([

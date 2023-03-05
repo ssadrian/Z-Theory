@@ -15,18 +15,20 @@ import {IStudent} from '../../../../models/student.model';
   templateUrl: './teacher-profile.component.html',
   styleUrls: ['./teacher-profile.component.scss'],
 })
-export class TeacherProfileComponent implements OnInit{
+export class TeacherProfileComponent implements OnInit {
   constructor(
     private teacherService: TeacherService,
     private credentials: CredentialService,
     private fb: FormBuilder,
     private rankingService: RankingService,
-    private messageService: MessageService
-  ) {}
+    private messageService: MessageService,
+  ) {
+  }
 
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
   createdRankings: IRanking[] = [];
   isSubmit: boolean = false;
+  loading: boolean = true;
 
   createRankingForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -36,6 +38,7 @@ export class TeacherProfileComponent implements OnInit{
     password: ['', [Validators.required]],
     new_password: ['', [Validators.required]],
   });
+
   get formControl(): { [key: string]: AbstractControl } {
     return this.createRankingForm.controls;
   }
@@ -53,7 +56,7 @@ export class TeacherProfileComponent implements OnInit{
         name: formValue.name!,
         teachers_id: this.teacher.id,
         code: uuidv4(),
-        creator: this.teacher.id
+        creator: this.teacher.id,
       })
       .subscribe(response => {
         this.#updateCreatedRanks();
@@ -66,7 +69,7 @@ export class TeacherProfileComponent implements OnInit{
       key: 'passwordChange',
       sticky: true,
       severity: 'info',
-      summary: 'Cambiar Contraseña'
+      summary: 'Cambiar Contraseña',
     });
   }
 
@@ -90,6 +93,8 @@ export class TeacherProfileComponent implements OnInit{
   }
 
   #updateCreatedRanks(): void {
+    this.loading = true;
+
     this.rankingService
       .createdBy(this.teacher.id)
       .subscribe((rankings: IRanking[]): void => {
@@ -103,6 +108,8 @@ export class TeacherProfileComponent implements OnInit{
             );
           });
         });
+
+        this.loading = false;
       });
   }
 }
