@@ -1,27 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { CredentialService } from '../../../services/credential.service';
-import { IStudent } from '../../../../models/student.model';
-import { StudentService } from 'src/app/services/repository/student.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Base64Service } from 'src/app/services/base64.service';
-import { IUpdateStudent } from 'src/models/update/update-student';
-import { Router } from '@angular/router';
-import {IRanking} from '../../../../models/ranking.model';
-import {IStudent} from '../../../../models/student.model';
+import {Component, OnInit} from '@angular/core';
 import {CredentialService} from '../../../services/credential.service';
-import {RankingService} from '../../../services/repository/ranking.service';
+import {IStudent} from '../../../../models/student.model';
+import {StudentService} from 'src/app/services/repository/student.service';
 import {FormBuilder, Validators} from '@angular/forms';
+import {Base64Service} from 'src/app/services/base64.service';
+import {IUpdateStudent} from 'src/models/update/update-student';
+import {IRanking} from '../../../../models/ranking.model';
+import {RankingService} from '../../../services/repository/ranking.service';
 import {ICreateStudentAssignation} from '../../../../models/create/create-student-assignation';
 import {MessageService} from 'primeng/api';
 import {IUpdatePassword} from '../../../../models/update/update-password';
-import {StudentService} from '../../../services/repository/student.service';
 
 @Component({
   selector: 'app-student-profile',
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.scss'],
 })
-export class StudentProfileComponent {
+export class StudentProfileComponent implements OnInit{
   constructor(
     private credentials: CredentialService,
     private studentService: StudentService,
@@ -31,7 +26,7 @@ export class StudentProfileComponent {
     private b64: Base64Service
   ) {
   }
-  
+
   show: boolean = false;
 
   loading: boolean = true;
@@ -117,7 +112,7 @@ export class StudentProfileComponent {
 
     this.show = false;
   }
-  
+
   toggle() {
     this.show = true;
   }
