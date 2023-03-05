@@ -32,6 +32,24 @@ class RankingsController extends Controller
         return $ranking;
     }
 
+    public function createdBy(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|exists:teachers,id'
+        ]);
+
+        $rankings = Ranking::with('students')
+            ->where('creator', $data['id'])
+            ->get();
+
+        if (!$rankings) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return response($rankings);
+    }
+
     public function create(Request $request): Application|ResponseFactory|Response
     {
         $rank = Ranking::createFromRequest($request);

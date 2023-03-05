@@ -1,6 +1,6 @@
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {map, Observable, tap} from 'rxjs';
+import {Observable} from 'rxjs';
 import {ICreateRanking} from '../../../models/create/create-ranking';
 import {ICreateStudentAssignation} from '../../../models/create/create-student-assignation';
 import {IRanking} from '../../../models/ranking.model';
@@ -12,12 +12,12 @@ import {CredentialService} from '../credential.service';
   providedIn: 'root',
 })
 export class RankingService {
-  #rankingUrl: string = `${environment.apiUrl}/ranking`;
+  #rankingUrl: string = `${ environment.apiUrl }/ranking`;
   readonly #clientHeaders: { [header: string]: string };
 
   constructor(private http: HttpClient, private credentials: CredentialService) {
     this.#clientHeaders = {
-      'Authorization': `Bearer ${this.credentials.token}`,
+      'Authorization': `Bearer ${ this.credentials.token }`,
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     };
@@ -30,15 +30,22 @@ export class RankingService {
   }
 
   get(id: number): Observable<IRanking | null> {
-    const url: string = `${this.#rankingUrl}/${id}`;
+    const url: string = `${ this.#rankingUrl }/${ id }`;
     return this.http.get<IRanking>(url, {
+      headers: this.#clientHeaders,
+    });
+  }
+
+  createdBy(id: number): Observable<IRanking[]> {
+    const url: string = `${ this.#rankingUrl }/created_by`;
+    return this.http.post<IRanking[]>(url, { 'id': id }, {
       headers: this.#clientHeaders,
     });
   }
 
   assignStudent(entity: ICreateStudentAssignation): Observable<HttpResponse<Object>> {
     const url: string =
-      `${this.#rankingUrl}/assign`;
+      `${ this.#rankingUrl }/assign`;
 
     return this.http.post(url, entity, {
       headers: this.#clientHeaders,
@@ -47,7 +54,7 @@ export class RankingService {
   }
 
   leaderboardsForStudent(id: number): Observable<IRanking[]> {
-    const url: string = `${this.#rankingUrl}/for/${id}`;
+    const url: string = `${ this.#rankingUrl }/for/${ id }`;
     return this.http.get<IRanking[]>(url, {
       headers: this.#clientHeaders,
     });
@@ -61,7 +68,7 @@ export class RankingService {
   }
 
   update(id: number, entity: IUpdateRanking): Observable<HttpResponse<Object>> {
-    const url: string = `${this.#rankingUrl}/${id}`;
+    const url: string = `${ this.#rankingUrl }/${ id }`;
     return this.http.put(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
@@ -69,7 +76,7 @@ export class RankingService {
   }
 
   delete(id: number): Observable<HttpResponse<Object>> {
-    const url: string = `${this.#rankingUrl}/${id}`;
+    const url: string = `${ this.#rankingUrl }/${ id }`;
     return this.http.delete(url, {
       headers: this.#clientHeaders,
       observe: 'response',

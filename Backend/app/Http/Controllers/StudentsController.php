@@ -43,14 +43,14 @@ class StudentsController extends Controller
     public function changePassword(Request $request): Response|Application|ResponseFactory
     {
         $data = $request->validate([
-            'id' => 'required|int|gt:0',
+            'id' => 'required|exists:students,id',
             'password' => 'required|string',
             'new_password' => 'required|string'
         ]);
 
         $student = Student::find($data['id']);
 
-        if (!($student || Hash::check($data['password'], $student->password))) {
+        if (!Hash::check($data['password'], $student->password)) {
             // Unprocessable Content
             return response(status: 422);
         }

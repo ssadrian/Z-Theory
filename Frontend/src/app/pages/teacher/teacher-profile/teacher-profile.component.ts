@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
-import { Validators, AbstractControl, FormBuilder } from '@angular/forms';
-import { RankingService } from 'src/app/services/repository/ranking.service';
-import { ITeacher } from '../../../../models/teacher.model';
-import { CredentialService } from '../../../services/credential.service';
-import { v4 as uuidv4 } from 'uuid';
+import {Component, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import {RankingService} from 'src/app/services/repository/ranking.service';
+import {ITeacher} from '../../../../models/teacher.model';
+import {CredentialService} from '../../../services/credential.service';
+import {v4 as uuidv4} from 'uuid';
 import {TeacherService} from '../../../services/repository/teacher.service';
 import {IUpdatePassword} from '../../../../models/update/update-password';
 import {MessageService} from 'primeng/api';
+import {IRanking} from '../../../../models/ranking.model';
+import {IStudent} from '../../../../models/student.model';
 
 @Component({
   selector: 'app-teacher-profile',
   templateUrl: './teacher-profile.component.html',
   styleUrls: ['./teacher-profile.component.scss'],
 })
-export class TeacherProfileComponent {
+export class TeacherProfileComponent implements OnInit{
   constructor(
     private teacherService: TeacherService,
     private credentials: CredentialService,
@@ -23,6 +25,7 @@ export class TeacherProfileComponent {
   ) {}
 
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
+  createdRankings: IRanking[] = [];
   isSubmit: boolean = false;
 
   createRankingForm = this.fb.group({
@@ -37,6 +40,10 @@ export class TeacherProfileComponent {
     return this.createRankingForm.controls;
   }
 
+  ngOnInit(): void {
+    this.#updateCreatedRanks();
+  }
+
   submit(): void {
     this.isSubmit = true;
 
@@ -48,7 +55,9 @@ export class TeacherProfileComponent {
         code: uuidv4(),
         creator: this.teacher.id
       })
-      .subscribe();
+      .subscribe(response => {
+        this.#updateCreatedRanks();
+      });
   }
 
   showPasswordChangeForm(): void {
@@ -78,5 +87,22 @@ export class TeacherProfileComponent {
 
   onReject(): void {
     this.messageService.clear('passwordChange');
+  }
+
+  #updateCreatedRanks(): void {
+    this.rankingService
+      .createdBy(this.teacher.id)
+      .subscribe((rankings: IRanking[]): void => {
+        this.createdRankings = rankings;
+
+        this.createdRankings.forEach((rank: IRanking): void => {
+          rank.students.sort((a: IStudent, b: IStudent) => {
+            return (
+              b.pivot.points - a.pivot.points
+              || a.nickname.localeCompare(b.nickname)
+            );
+          });
+        });
+      });
   }
 }

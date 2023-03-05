@@ -58,6 +58,7 @@ Route::prefix('ranking')->group(function () {
     Route::get('{code}', [RankingsController::class, 'get']);
     Route::get('for/{id}', [RankingsController::class, 'forStudent']);
 
+    Route::post('created_by', [RankingsController::class, 'createdBy']);
     Route::post('assign', [RankingsController::class, 'assignStudent']);
     Route::post('', [RankingsController::class, 'create']);
 
