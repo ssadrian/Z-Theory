@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RankingsController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
+use App\Models\Student;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -50,12 +51,13 @@ Route::prefix('teacher')->group(function () {
 
 Route::prefix('ranking')->group(function () {
     Route::get('', [RankingsController::class, 'all']);
-    Route::get('{id}', [RankingsController::class, 'get']);
+    Route::get('{code}', [RankingsController::class, 'get']);
 
+    Route::post('assign/{id}', [RankingsController::class, 'assignStudent']);
     Route::post('', [RankingsController::class, 'create']);
-    Route::put('{id}', [RankingsController::class, 'update']);
+    Route::put('{code}', [RankingsController::class, 'update']);
 
-    Route::delete('{id}', [RankingsController::class, 'delete']);
+    Route::delete('{code}', [RankingsController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

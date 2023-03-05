@@ -10,9 +10,7 @@ class RankFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => fake()->uuid,
-            'student_id' => Student::factory(),
-            'rank' => fake()->randomNumber(30)
+            'code' => fake()->uuid
         ];
     }
 }

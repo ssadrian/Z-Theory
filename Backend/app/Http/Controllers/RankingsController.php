@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ranking;
+use App\Models\Student;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -15,12 +17,13 @@ class RankingsController extends Controller
 {
     public function all(): Collection
     {
-        return Ranking::with("student")->get();
+        return Ranking::with("students")->get();
     }
 
-    public function get($id): Model|Response|Builder|Application|ResponseFactory
+    public function get($code): Model|Response|Builder|Application|ResponseFactory
     {
-        $ranking = Ranking::with("student")->firstWhere('id', $id);
+        $ranking = Ranking::with("students")
+            ->firstWhere('code', $code);
 
         if (!$ranking) {
             // No Content
@@ -30,24 +33,37 @@ class RankingsController extends Controller
         return $ranking;
     }
 
-    public function create(Request $request): Response|Application|ResponseFactory
+    public function create(Request $request): JsonResponse
     {
         $rank = Ranking::createFromRequest($request);
         $rank->save();
 
         // Created
-        return response(status: 201);
+        return response()
+            ->json($rank, 201);
     }
 
-    public function update($id, Request $request): Response|Application|ResponseFactory
+    public function assignStudent($id, Request $request)
     {
-        $rank = Ranking::updateFromRequest($id, $request);
+        $assignmentDone = Ranking::assignStudent($id, $request);
+        return response()->json($assignmentDone);
+        if (!$assignmentDone) {
+            // Bad Request
+            return response(status: 422);
+        }
+
+        return response(status: 200);
+    }
+
+    public function update($code, Request $request): Response|Application|ResponseFactory
+    {
+        $rank = Ranking::updateFromRequest($code, $request);
         return response($rank);
     }
 
-    public function delete($id): Response|Application|ResponseFactory
+    public function delete($code): Response|Application|ResponseFactory
     {
-        $rank = Ranking::find($id);
+        $rank = Ranking::find($code);
         if (!$rank) {
             return response(status: 204);
         }

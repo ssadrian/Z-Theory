@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CredentialService } from '../../../services/credential.service';
 import { IStudent } from '../../../../models/student.model';
 import { StudentService } from 'src/app/services/repository/student.service';
@@ -6,6 +6,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Base64Service } from 'src/app/services/base64.service';
 import { IUpdateStudent } from 'src/models/update/update-student';
 import { Router } from '@angular/router';
+import {IRanking} from '../../../../models/ranking.model';
+import {RankingService} from '../../../services/repository/ranking.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -23,6 +25,7 @@ export class StudentProfileComponent {
   show: boolean = false;
 
   student: IStudent = this.credentials.currentUser as IStudent;
+  rankings: IRanking[] = [];
 
   form = this.fb.group({
     nickname: ['', [Validators.required]],
@@ -37,6 +40,12 @@ export class StudentProfileComponent {
   });
 
   #b64Avatar: string = '';
+
+  ngOnInit(): void {
+  this.rankingRepository.all()
+    .subscribe((rankings: IRanking[]): void => {
+      this.rankings = rankings.filter((r: IRanking): boolean => r.student_id === this.student.id);
+    });
 
   encodeAvatar(event: Event): void {
     this.b64.toBase64(event).then((b64: string): void => {
