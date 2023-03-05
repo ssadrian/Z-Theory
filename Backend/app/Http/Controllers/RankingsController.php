@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ranking;
-use App\Models\Student;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,12 +16,12 @@ class RankingsController extends Controller
 {
     public function all(): Collection
     {
-        return Ranking::with("students")->get();
+        return Ranking::with('students')->get();
     }
 
     public function get($code): Model|Response|Builder|Application|ResponseFactory
     {
-        $ranking = Ranking::with("students")
+        $ranking = Ranking::with('students')
             ->firstWhere('code', $code);
 
         if (!$ranking) {
@@ -33,25 +32,57 @@ class RankingsController extends Controller
         return $ranking;
     }
 
-    public function create(Request $request): JsonResponse
+    public function createdBy(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|exists:teachers,id'
+        ]);
+
+        $rankings = Ranking::with('students')
+            ->where('creator', $data['id'])
+            ->get();
+
+        if (!$rankings) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return response($rankings);
+    }
+
+    public function create(Request $request): Application|ResponseFactory|Response
     {
         $rank = Ranking::createFromRequest($request);
         $rank->save();
 
         // Created
-        return response()
-            ->json($rank, 201);
+        return response($rank, 201);
     }
 
-    public function assignStudent($id, Request $request)
+    public function forStudent($id)
     {
-        $assignmentDone = Ranking::assignStudent($id, $request);
-        return response()->json($assignmentDone);
-        if (!$assignmentDone) {
-            // Bad Request
-            return response(status: 422);
+        $leaderboards = [];
+        $rankings = Ranking::with('students')->get();
+
+        foreach ($rankings as $ranking) {
+            if (!$ranking->students->contains($id)) {
+                continue;
+            }
+
+            $ranking->students->makeHidden(['email', 'password', 'name', 'surnames']);
+            foreach ($ranking->students as $student) {
+                $student->pivot->makeHidden(['ranking_id', 'student_id']);
+            }
+
+            $leaderboards[] = $ranking;
         }
 
+        return $leaderboards;
+    }
+
+    public function assignStudent(Request $request): Response|Application|ResponseFactory
+    {
+        Ranking::assignStudent($request);
         return response(status: 200);
     }
 

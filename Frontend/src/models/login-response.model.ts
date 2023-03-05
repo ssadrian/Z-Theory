@@ -3,6 +3,6 @@ import {ITeacher} from "./teacher.model";
 
 export interface ILoginResponse {
   user: IStudent | ITeacher;
-  role: string,
-  token: string
+  role: string;
+  token: string;
 }

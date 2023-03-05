@@ -21,6 +21,20 @@ import {StudentProfileComponent} from './pages/student/student-profile/student-p
 import {TeacherProfileComponent} from './pages/teacher/teacher-profile/teacher-profile.component';
 import {StudentService} from './services/repository/student.service';
 import {TeacherService} from './services/repository/teacher.service';
+import {TableModule} from 'primeng/table';
+import {ToastModule} from 'primeng/toast';
+import {CalendarModule} from 'primeng/calendar';
+import {SliderModule} from 'primeng/slider';
+import {MultiSelectModule} from 'primeng/multiselect';
+import {ContextMenuModule} from 'primeng/contextmenu';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {DropdownModule} from 'primeng/dropdown';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {InputTextModule} from 'primeng/inputtext';
+import {CardModule} from 'primeng/card';
+import {PasswordModule} from 'primeng/password';
+import {MessageService} from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -41,9 +55,30 @@ import {TeacherService} from './services/repository/teacher.service';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    TableModule,
+    CalendarModule,
+    SliderModule,
+    DialogModule,
+    MultiSelectModule,
+    ContextMenuModule,
+    DropdownModule,
+    ButtonModule,
+    ToastModule,
+    InputTextModule,
+    ProgressBarModule,
+    CardModule,
+    PasswordModule,
   ],
-  providers: [LoginService, RegistrationService, Base64Service, StudentService, TeacherService, RankingService],
+  providers: [
+    LoginService,
+    RegistrationService,
+    Base64Service,
+    StudentService,
+    TeacherService,
+    RankingService,
+    MessageService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

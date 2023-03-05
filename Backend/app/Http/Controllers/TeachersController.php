@@ -10,17 +10,18 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class TeachersController extends Controller
 {
     public function all(): Collection|array
     {
-        return Teacher::all();
+        return Teacher::with('rankings_created')->get();
     }
 
     public function get($id): Model|Response|Builder|Application|ResponseFactory
     {
-        $teacher = Teacher::firstWhere('id', $id);
+        $teacher = Teacher::with('rankings_created')->find($id);
 
         if (!$teacher) {
             // No Content
@@ -37,6 +38,28 @@ class TeachersController extends Controller
 
         // Created
         return response(status: 201);
+    }
+
+    public function changePassword(Request $request): Response|Application|ResponseFactory
+    {
+        $data = $request->validate([
+            'id' => 'required|exists:teachers,id',
+            'password' => 'required|string',
+            'new_password' => 'required|string'
+        ]);
+
+        $teacher = Teacher::find($data['id']);
+
+        if (!Hash::check($data['password'], $teacher->password)) {
+            //  Unprocessable Content
+            return response(status: 422);
+        }
+
+        $teacher->password = Hash::make($data['new_password']);
+        $teacher->save();
+
+        // Ok
+        return response(status: 200);
     }
 
     public function update($id, Request $request): Response|Application|ResponseFactory

@@ -1,5 +1,6 @@
 export interface ICreateRanking {
-  code: string,
-  student_id: number,
-  rank: number
+  code: string;
+  name: string;
+  teachers_id: number;
+  creator: number;
 }

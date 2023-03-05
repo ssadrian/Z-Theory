@@ -1,9 +1,39 @@
 <section class="pt-16 pb-16 bg-gray-900">
+  <p-toast position="center" key="passwordChange" (onClose)="onReject()" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="message">
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div class="flex flex-column" style="flex: 1">
+          <div class="text-center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+
+            <h4>{{message.summary}}</h4>
+
+            <label for="password">Contraseña Actual</label>
+            <p-password id="password" [toggleMask]="true" formControlName="password"></p-password>
+
+            <label for="new_password">Contraseña Nueva</label>
+            <p-password id="new_password" [toggleMask]="true" formControlName="new_password"></p-password>
+          </div>
+
+          <div class="grid p-fluid">
+            <div class="col-6">
+              <button type="submit" pButton label="Cambiar contraseña" class="p-button-success"></button>
+            </div>
+
+            <div class="col-6">
+              <button type="button" pButton (click)="onReject()" label="Cancelar" class="p-button-secondary"></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+  </p-toast>
+
   <div class="grid grid-cols-2 divide-x">
     <div>
       <div class="w-full px-5 mx-auto">
         <div
-          class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16"
+          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
         >
           <div class="px-10">
             <div class="flex flex-wrap justify-center">
@@ -72,6 +102,7 @@
                 Contraseña
                 <button
                   type="button"
+                  (click)="showPasswordChangeForm()"
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
                   Cambiar contraseña
@@ -89,7 +120,7 @@
     <div>
       <div class="w-full px-5 mx-auto">
         <div
-          class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16"
+          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
         >
           <div class="px-10">
             <div class="flex justify-center py-4 lg:pt-4 pt-8">
@@ -134,13 +165,17 @@
   <hr/>
 
   <div class="p-20">
-    <div class="text-center text-3xl text-white font-bold mb-10">
-      Rankings
-    </div>
+    <form [formGroup]="codeForm" (ngSubmit)="joinRanking()">
+      <label>
+        <input formControlName="code" placeholder="Codigo del Ranking"/>
+      </label>
 
-    <div class="grid grid-cols-4 gap-4 w-full">
+      <button type="submit">Enviar</button>
+    </form>
+
+    <!-- <div class="grid grid-cols-4 gap-4 w-full">
       <div *ngFor="let ranking of rankings"
-           class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+          class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
       >
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -148,6 +183,7 @@
 
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
+                <th scope="col" class="px-6 py-3">#</th>
                 <th scope="col" class="px-6 py-3">Estudiante</th>
                 <th scope="col" class="px-6 py-3">Puntos</th>
               </tr>
@@ -156,17 +192,65 @@
             <tbody>
               <tr
                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                *ngFor="let student of ranking.students; index as i"
               >
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  Paco
+                  {{ i + 1 }}
                 </th>
 
-                <td class="px-6 py-4">30</td>
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  {{ student.nickname }}
+                </th>
+
+                <td class="px-6 py-4">
+                  {{ student.pivot.points }}
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-    </div>
+    </div> -->
+
+    <p-card header="Rankings" [ngSwitch]="rankings.length">
+      <div *ngSwitchCase="0">
+        No estas dentro de nigun ranking
+      </div>
+
+      <div *ngSwitchDefault>
+        <p-table
+          *ngFor="let ranking of rankings"
+          [value]="ranking.students"
+          [loading]="loading"
+          [rowHover]="true"
+          [paginator]="true"
+          [rowsPerPageOptions]="[3, 5, 10, 25]" [rows]="3"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        >
+          <ng-template pTemplate="caption">
+            <div class="table-header">
+              {{ ranking.name }}
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th>#</th>
+              <th>Estudiante</th>
+              <th>Puntos</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
+            <tr class="p-selectable-row">
+              <td>{{ rowIndex + 1 }}</td>
+              <td>{{ student.nickname }}</td>
+              <td>{{ student.pivot.points }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </p-card>
   </div>
 </section>
