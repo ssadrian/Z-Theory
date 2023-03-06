@@ -18,6 +18,7 @@ import {RegistrationService} from './services/registration.service';
 import {RegistrationFormComponent} from './pages/registration-form/registration-form.component';
 import {StudentProfileComponent} from './pages/student/student-profile/student-profile.component';
 import {TeacherProfileComponent} from './pages/teacher/teacher-profile/teacher-profile.component';
+import {InputTextModule} from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {TeacherProfileComponent} from './pages/teacher/teacher-profile/teacher-p
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    InputTextModule
   ],
   providers: [LoginService, RegistrationService, Base64Service],
   bootstrap: [AppComponent],

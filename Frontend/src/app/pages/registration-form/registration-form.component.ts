@@ -17,6 +17,9 @@ export class RegistrationFormComponent {
     private fb: FormBuilder,
     private router: Router, private b64: Base64Service) {
   }
+  
+  value1: any;
+  value2: any;
 
   isSubmit: boolean = false;
 

@@ -16,7 +16,6 @@ specifiers:
   '@angular/router': ^15.1.4
   '@types/jasmine': ~4.3.1
   autoprefixer: ^10.4.13
-  flowbite: ^1.6.3
   jasmine-core: ~4.3.0
   karma: ~6.4.1
   karma-chrome-launcher: ~3.1.1
@@ -24,6 +23,8 @@ specifiers:
   karma-jasmine: ~5.1.0
   karma-jasmine-html-reporter: ~2.0.0
   postcss: ^8.4.21
+  primeicons: ^6.0.1
+  primeng: ^15.2.0
   rxjs: ~7.5.7
   tailwindcss: ^3.2.6
   tslib: ^2.5.0
@@ -40,7 +41,8 @@ dependencies:
   '@angular/platform-browser': 15.1.5_duydvakftniltults5ba25mgcy
   '@angular/platform-browser-dynamic': 15.1.4_tn2plygv2ii2kus4uykwdr7ml4
   '@angular/router': 15.1.4_7legknavxmcc47hqvukur4bu44
-  flowbite: 1.6.3
+  primeicons: 6.0.1
+  primeng: 15.2.0_n2k6hzw246r6qwbnzgezgqrxwa
   rxjs: 7.5.7
   zone.js: 0.12.0
 
@@ -2756,10 +2758,6 @@ packages:
       - supports-color
     dev: true
 
-  /@popperjs/core/2.11.6:
-    resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
-    dev: false
-
   /@schematics/angular/15.1.5:
     resolution: {integrity: sha512-mw5adVNSLX8h6c8F0tNEe11LVOlj100c1PrPggZNVz9nd2fwb32SVFSx+FmOxLVfE1kfnPgsvLpDH23z8SF6bg==}
     engines: {node: ^14.20.0 || ^16.13.0 || >=18.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
@@ -4387,13 +4385,6 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
-  /flowbite/1.6.3:
-    resolution: {integrity: sha512-wTtAzZBLrUYqUBoTSNcMAeJrZNAcdx04EDgXWnkQ7gkKoAPFvLaq/H/Zw0JKZLVKFpKxqJ7PlvocfDApSHjhvw==}
-    dependencies:
-      '@popperjs/core': 2.11.6
-      mini-svg-data-uri: 1.4.4
-    dev: false
-
   /follow-redirects/1.15.2:
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
     engines: {node: '>=4.0'}
@@ -5460,11 +5451,6 @@ packages:
       webpack: 5.75.0_esbuild@0.16.17
     dev: true
 
-  /mini-svg-data-uri/1.4.4:
-    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
-    hasBin: true
-    dev: false
-
   /minimalistic-assert/1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
     dev: true
@@ -6196,6 +6182,29 @@ packages:
     resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
     engines: {node: '>=6'}
     dev: true
+
+  /primeicons/6.0.1:
+    resolution: {integrity: sha512-KDeO94CbWI4pKsPnYpA1FPjo79EsY9I+M8ywoPBSf9XMXoe/0crjbUK7jcQEDHuc0ZMRIZsxH3TYLv4TUtHmAA==}
+    dev: false
+
+  /primeng/15.2.0_n2k6hzw246r6qwbnzgezgqrxwa:
+    resolution: {integrity: sha512-CLcB4RYiI4PcQ8nwov01L5CQHbhl7n1OufA2OKIq9+C4sBEv9sLsnEN2/Cah4m1jtrRkNbsac8JJE7LdPxecaQ==}
+    peerDependencies:
+      '@angular/common': ^15.1.0
+      '@angular/core': ^15.1.0
+      '@angular/forms': ^15.1.0
+      primeicons: ^6.0.1
+      rxjs: ^6.0.0 || ^7.5.0
+      zone.js: ^0.10.2 || ^0.11.0 || ^0.12.0
+    dependencies:
+      '@angular/common': 15.1.5_dvdedfppyzvqzripn7o7dhxzvi
+      '@angular/core': 15.1.4_rxjs@7.5.7+zone.js@0.12.0
+      '@angular/forms': 15.1.5_7legknavxmcc47hqvukur4bu44
+      primeicons: 6.0.1
+      rxjs: 7.5.7
+      tslib: 2.5.0
+      zone.js: 0.12.0
+    dev: false
 
   /proc-log/3.0.0:
     resolution: {integrity: sha512-++Vn7NS4Xf9NacaU9Xq3URUuqZETPsf8L4j5/ckhaRYsfPeRyzGw+iDjFhV/Jr3uNmTvvddEJFWh5R1gRgUH8A==}
