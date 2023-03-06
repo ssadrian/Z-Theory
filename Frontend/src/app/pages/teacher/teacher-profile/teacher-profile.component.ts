@@ -1,14 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import {RankingService} from 'src/app/services/repository/ranking.service';
-import {ITeacher} from '../../../../models/teacher.model';
-import {CredentialService} from '../../../services/credential.service';
-import {v4 as uuidv4} from 'uuid';
-import {TeacherService} from '../../../services/repository/teacher.service';
-import {IUpdatePassword} from '../../../../models/update/update-password';
-import {MessageService} from 'primeng/api';
-import {IRanking} from '../../../../models/ranking.model';
-import {IStudent} from '../../../../models/student.model';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { RankingService } from 'src/app/services/repository/ranking.service';
+import { ITeacher } from '../../../../models/teacher.model';
+import { CredentialService } from '../../../services/credential.service';
+import { v4 as uuidv4 } from 'uuid';
+import { TeacherService } from '../../../services/repository/teacher.service';
+import { IUpdatePassword } from '../../../../models/update/update-password';
+import { MessageService } from 'primeng/api';
+import { IRanking } from '../../../../models/ranking.model';
+import { IUpdateTeacher } from 'src/models/update/update-teacher';
+import { Base64Service } from 'src/app/services/base64.service';
+import { IStudent } from 'src/models/student.model';
 
 @Component({
   selector: 'app-teacher-profile',
@@ -22,8 +24,9 @@ export class TeacherProfileComponent implements OnInit {
     private fb: FormBuilder,
     private rankingService: RankingService,
     private messageService: MessageService,
-  ) {
-  }
+    private b64: Base64Service
+  ) {}
+  show: boolean = false;
 
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
   createdRankings: IRanking[] = [];
@@ -43,6 +46,8 @@ export class TeacherProfileComponent implements OnInit {
     return this.createRankingForm.controls;
   }
 
+  #b64Avatar: string = '';
+
   ngOnInit(): void {
     this.#updateCreatedRanks();
   }
@@ -58,7 +63,7 @@ export class TeacherProfileComponent implements OnInit {
         code: uuidv4(),
         creator: this.teacher.id,
       })
-      .subscribe(response => {
+      .subscribe((response) => {
         this.#updateCreatedRanks();
       });
   }
@@ -81,11 +86,10 @@ export class TeacherProfileComponent implements OnInit {
       new_password: formValues.new_password!,
     };
 
-    this.teacherService.updatePassword(entity)
-      .subscribe(response => {
-        this.messageService.clear('passwordChange');
-        this.passwordForm.reset();
-      });
+    this.teacherService.updatePassword(entity).subscribe((response) => {
+      this.messageService.clear('passwordChange');
+      this.passwordForm.reset();
+    });
   }
 
   onReject(): void {
@@ -103,13 +107,40 @@ export class TeacherProfileComponent implements OnInit {
         this.createdRankings.forEach((rank: IRanking): void => {
           rank.students.sort((a: IStudent, b: IStudent) => {
             return (
-              b.pivot.points - a.pivot.points
-              || a.nickname.localeCompare(b.nickname)
+              b.pivot.points - a.pivot.points ||
+              a.nickname.localeCompare(b.nickname)
             );
           });
         });
 
         this.loading = false;
       });
+  }
+
+  encodeAvatar(event: Event): void {
+    this.b64.toBase64(event).then((b64: string): void => {
+      this.#b64Avatar = b64;
+    });
+  }
+
+  updateAvatar() {
+    let teacher: IUpdateTeacher = {
+      avatar: this.#b64Avatar,
+      name: this.teacher.name!,
+      surnames: this.teacher.surnames!,
+      nickname: this.teacher.nickname!,
+      center: this.teacher.center!,
+    };
+
+    this.teacherService
+      .update(this.teacher.id, teacher)
+      .subscribe((response) => {});
+    this.teacher.avatar = this.#b64Avatar;
+
+    this.show = false;
+  }
+
+  toggle() {
+    this.show = true;
   }
 }

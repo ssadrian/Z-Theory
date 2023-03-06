@@ -54,7 +54,7 @@ class Teacher extends Authenticatable
     public static function updateFromRequest($id, Request $request): Teacher|null
     {
         $data = $request->validate([
-            'nickname' => 'required|string|unique:students|unique:teachers',
+            'nickname' => 'required|string',
             'name' => 'required|string',
             'surnames' => 'required|string',
             'avatar' => 'required|string',
