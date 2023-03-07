@@ -14,12 +14,38 @@ use Illuminate\Support\Facades\Hash;
 
 class TeachersController extends Controller
 {
-    public function all(): Collection|array
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Collection|array
+     */
+    public function index(): Collection|array
     {
         return Teacher::with('rankings_created')->get();
     }
 
-    public function get($id): Model|Response|Builder|Application|ResponseFactory
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
+    public function store(Request $request): Response|Application|ResponseFactory
+    {
+        $teacher = Teacher::createFromRequest($request);
+        $teacher->save();
+
+        // Created
+        return response(status: 201);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
+    public function show($id): Model|Response|Builder|Application|ResponseFactory
     {
         $teacher = Teacher::with('rankings_created')->find($id);
 
@@ -31,13 +57,43 @@ class TeachersController extends Controller
         return $teacher;
     }
 
-    public function create(Request $request): Response|Application|ResponseFactory
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param $id
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
+    public function update($id, Request $request): Response|Application|ResponseFactory
     {
-        $teacher = Teacher::createFromRequest($request);
-        $teacher->save();
+        $teacher = Teacher::updateFromRequest($id, $request);
 
-        // Created
-        return response(status: 201);
+        if (empty($teacher)) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return response($teacher);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return Response
+     */
+    public function destroy($id): Response
+    {
+        $teacher = Teacher::find($id);
+
+        if (!$teacher) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return response(
+            status: $teacher->delete() ? 200 : 204
+        );
     }
 
     public function changePassword(Request $request): Response|Application|ResponseFactory
@@ -60,31 +116,5 @@ class TeachersController extends Controller
 
         // Ok
         return response(status: 200);
-    }
-
-    public function update($id, Request $request): Response|Application|ResponseFactory
-    {
-        $teacher = Teacher::updateFromRequest($id, $request);
-
-        if (empty($teacher)) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response($teacher);
-    }
-
-    public function delete($id): Response
-    {
-        $teacher = Teacher::find($id);
-
-        if (!$teacher) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response(
-            status: $teacher->delete() ? 200 : 204
-        );
     }
 }

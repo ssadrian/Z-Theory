@@ -14,12 +14,38 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentsController extends Controller
 {
-    public function all(): Collection|array
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Collection|array
+     */
+    public function index(): Collection|array
     {
         return Student::with("rankings")->get();
     }
 
-    public function get($id): Model|Response|Builder|Application|ResponseFactory
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
+    public function store(Request $request): Response|Application|ResponseFactory
+    {
+        $student = Student::createFromRequest($request);
+        $student->save();
+
+        // Created
+        return response(status: 201);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     * @return Model|Response|Builder|Application|ResponseFactory
+     */
+    public function show($id): Model|Response|Builder|Application|ResponseFactory
     {
         $student = Student::with('rankings')->firstWhere('id', $id);
 
@@ -31,15 +57,49 @@ class StudentsController extends Controller
         return $student;
     }
 
-    public function create(Request $request): Response|Application|ResponseFactory
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param $id
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
+    public function update($id, Request $request): Response|Application|ResponseFactory
     {
-        $student = Student::createFromRequest($request);
-        $student->save();
+        $student = Student::updateFromRequest($id, $request);
 
-        // Created
-        return response(status: 201);
+        if (empty($student)) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return response($student);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return Response|Application|ResponseFactory
+     */
+    public function destroy($id): Response|Application|ResponseFactory
+    {
+        $student = Student::find($id);
+
+        if (!$student) {
+            // No Content
+            return response(status: 204);
+        }
+
+        return response(
+            status: $student->delete() ? 200 : 204
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return Response|Application|ResponseFactory
+     */
     public function changePassword(Request $request): Response|Application|ResponseFactory
     {
         $data = $request->validate([
@@ -60,31 +120,5 @@ class StudentsController extends Controller
 
         // Ok
         return response(status: 200);
-    }
-
-    public function update($id, Request $request): Response|Application|ResponseFactory
-    {
-        $student = Student::updateFromRequest($id, $request);
-
-        if (empty($student)) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response($student);
-    }
-
-    public function delete($id): Response|Application|ResponseFactory
-    {
-        $student = Student::find($id);
-
-        if (!$student) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response(
-            status: $student->delete() ? 200 : 204
-        );
     }
 }
