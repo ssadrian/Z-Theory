@@ -3,10 +3,10 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ICreateTeacher} from '../../../models/create/create-teacher';
 import {ITeacher} from '../../../models/teacher.model';
+import {IUpdatePassword} from '../../../models/update/update-password';
 import {IUpdateTeacher} from '../../../models/update/update-teacher';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
-import {IUpdatePassword} from '../../../models/update/update-password';
 
 @Injectable({
   providedIn: 'root',

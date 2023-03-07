@@ -29,8 +29,8 @@ export class RankingService {
     });
   }
 
-  get(id: number): Observable<IRanking | null> {
-    const url: string = `${ this.#rankingUrl }/${ id }`;
+  get(code: string): Observable<IRanking | null> {
+    const url: string = `${ this.#rankingUrl }/${ code }`;
     return this.http.get<IRanking>(url, {
       headers: this.#clientHeaders,
     });
@@ -67,16 +67,16 @@ export class RankingService {
     });
   }
 
-  update(id: number, entity: IUpdateRanking): Observable<HttpResponse<Object>> {
-    const url: string = `${ this.#rankingUrl }/${ id }`;
+  update(code: number, entity: IUpdateRanking): Observable<HttpResponse<Object>> {
+    const url: string = `${ this.#rankingUrl }/${ code }`;
     return this.http.put(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
     });
   }
 
-  delete(id: number): Observable<HttpResponse<Object>> {
-    const url: string = `${ this.#rankingUrl }/${ id }`;
+  delete(code: string): Observable<HttpResponse<Object>> {
+    const url: string = `${ this.#rankingUrl }/${ code }`;
     return this.http.delete(url, {
       headers: this.#clientHeaders,
       observe: 'response',
