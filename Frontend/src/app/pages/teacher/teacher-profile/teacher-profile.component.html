@@ -230,8 +230,34 @@
           <ng-template pTemplate="header">
             <tr>
               <th>#</th>
-              <th>Estudiante</th>
+              <th>Nickname del estudiante</th>
+              <th>Nombre del estudiante</th>
               <th>Puntos</th>
+              <th>Acciones</th>
+              <th>
+                <button
+                  pButton
+                  pRipple
+                  label="Añadir entrega"
+                  icon="pi pi-plus-circle"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  class="p-button-danger"
+                  label="Borrar Entrega"
+                  icon="pi pi-trash"
+                ></button>
+                
+                <button
+                  pButton
+                  pRipple
+                  class="p-button-help"
+                  label="Generar nuevo código de Ranking"
+                  icon="pi pi-undo"
+                ></button>
+                
+              </th>
             </tr>
           </ng-template>
 
@@ -239,7 +265,24 @@
             <tr class="p-selectable-row">
               <td>{{ rowIndex + 1 }}</td>
               <td>{{ student.nickname }}</td>
+              <td>{{ student.name }}</td>
               <td>{{ student.pivot.points }}</td>
+              <td class="grid gap-4 grid-cols-1">
+                <button
+                  pButton
+                  pRipple
+                  class="p-button-warning"
+                  label="Modificar Puntuación"
+                  icon="pi pi-pencil"
+                ></button>
+                <button
+                  pButton
+                  pRipple
+                  class="p-button-danger"
+                  label="Borrar Alumno"
+                  icon="pi pi-trash"
+                ></button>
+              </td>
             </tr>
           </ng-template>
         </p-table>
