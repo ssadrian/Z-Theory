@@ -8,8 +8,10 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class RankingsController extends Controller
 {
@@ -44,17 +46,14 @@ class RankingsController extends Controller
      * @param $code
      * @return Model|Response|Builder|Application|ResponseFactory
      */
-    public function show($code): Model|Response|Builder|Application|ResponseFactory
+    public function show($code, Request $request): Model|Response|Builder|Application|ResponseFactory
     {
-        $ranking = Ranking::with('students')
+        $request->validate(['code' => $code], [
+            'code' => 'required|exists:rankings,code'
+        ]);
+
+        return Ranking::with('students')
             ->firstWhere('code', $code);
-
-        if (!$ranking) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return $ranking;
     }
 
     /**
@@ -62,29 +61,42 @@ class RankingsController extends Controller
      *
      * @param $code
      * @param Request $request
-     * @return Response|Application|ResponseFactory
+     * @return Ranking|JsonResponse
      */
-    public function update($code, Request $request): Response|Application|ResponseFactory
+    public function update($code, Request $request): Ranking|JsonResponse
     {
-        $rank = Ranking::updateFromRequest($code, $request);
-        return response($rank);
+        $validator = Validator::make(['code' => $code], [
+            'code' => 'required|exists:rankings,code'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        return Ranking::updateFromRequest($code, $request);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param $code
-     * @return Response|Application|ResponseFactory
+     * @return Response|JsonResponse
      */
-    public function destroy($code): Response|Application|ResponseFactory
+    public function destroy($code): Response|JsonResponse
     {
-        $rank = Ranking::find($code);
-        if (!$rank) {
-            return response(status: 204);
+        $validator = Validator::make(['code' => $code], [
+           'code' => 'required|exists:rankings,code'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()
+            ]);
         }
 
-        $rank->delete();
-
+        Ranking::find($code)->delete();
         return response(status: 200);
     }
 
