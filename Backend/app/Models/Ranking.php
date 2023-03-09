@@ -64,18 +64,15 @@ class Ranking extends Model
         return Ranking::find($ranking->id);
     }
 
-    public static function updateFromRequest($code, Request $request): array|Ranking|null
+    public static function updateFromRequest($code, Request $request): array
     {
         $data = $request->validate([
             'name' => 'sometimes|nullable|required|string|unique:rankings,name',
             'creator' => 'sometimes|nullable|required|exists:teachers,id'
         ]);
 
-        $ranking = Ranking::all()->firstWhere('code', $code);
-
-        if (!$ranking) {
-            return null;
-        }
+        $ranking = Ranking::all()
+            ->firstWhere('code', $code);
 
         if (!(empty($data['name']) || $ranking->name == $data['name'])) {
             $ranking->name = $data['name'];
@@ -85,8 +82,10 @@ class Ranking extends Model
             $ranking->creator = $data['creator'];
         }
 
+        $original = $ranking->getOriginal();
+
         $ranking->save();
-        return $ranking->getOriginal();
+        return $original;
     }
 
     public function students(): BelongsToMany
