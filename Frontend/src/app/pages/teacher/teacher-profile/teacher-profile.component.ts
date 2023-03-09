@@ -59,7 +59,6 @@ export class TeacherProfileComponent implements OnInit {
     this.rankingService
       .create({
         name: formValue.name!,
-        teachers_id: this.teacher.id,
         code: uuidv4(),
         creator: this.teacher.id,
       })
@@ -112,7 +111,6 @@ export class TeacherProfileComponent implements OnInit {
             );
           });
         });
-
         this.loading = false;
       });
   }
@@ -142,5 +140,19 @@ export class TeacherProfileComponent implements OnInit {
 
   toggle() {
     this.show = true;
+  }
+
+  changeRankingId(ranking: IRanking) {
+    let ranking_code = uuidv4();
+    this.rankingService
+      .update(ranking.id, {
+        code: ranking_code,
+        student_id: ranking.pivot.student_id,
+        rank: ranking.pivot.points,
+        name: ranking.name,
+        creator: ranking.creator
+      })
+      .subscribe((response) => {});
+    console.log(ranking_code);
   }
 }

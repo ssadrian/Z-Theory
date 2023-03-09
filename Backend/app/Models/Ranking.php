@@ -70,7 +70,7 @@ class Ranking extends Model
             'ranking_code' => 'required|uuid|unique:rankings,code',
             'student_id' => 'required|int|gt:0',
             'points' => 'sometimes|nullable|required|int|gt:0',
-            'name' => 'required|text|unique:rankings,name',
+            'name' => 'required|string|unique:rankings,name',
             'creator' => 'required|unique:teachers,id'
         ]);
 

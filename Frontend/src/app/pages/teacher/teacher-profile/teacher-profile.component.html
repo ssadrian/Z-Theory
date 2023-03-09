@@ -234,7 +234,7 @@
               <th>Nombre del estudiante</th>
               <th>Puntos</th>
               <th>Acciones</th>
-              <th>
+              <th class="grid gap-4 grid-cols-3">
                 <button
                   pButton
                   pRipple
@@ -248,26 +248,26 @@
                   label="Borrar Entrega"
                   icon="pi pi-trash"
                 ></button>
-                
+
                 <button
                   pButton
                   pRipple
                   class="p-button-help"
-                  label="Generar nuevo código de Ranking"
+                  label="Generar Nuevo Código de Ranking"
                   icon="pi pi-undo"
+                  (click)="changeRankingId(ranking)"
                 ></button>
-                
               </th>
             </tr>
           </ng-template>
 
           <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
-            <tr class="p-selectable-row">
+            <tr class="p-selectable-row w-full">
               <td>{{ rowIndex + 1 }}</td>
               <td>{{ student.nickname }}</td>
               <td>{{ student.name }}</td>
               <td>{{ student.pivot.points }}</td>
-              <td class="grid gap-4 grid-cols-1">
+              <td class="grid gap-4 grid-cols-2">
                 <button
                   pButton
                   pRipple
