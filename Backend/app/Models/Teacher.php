@@ -62,9 +62,6 @@ class Teacher extends Authenticatable
         ]);
 
         $teacher = Teacher::find($id);
-        if (!$teacher) {
-            return null;
-        }
 
         if (!(empty($data['nickname']) || $teacher->nickname == $data['nickname'])) {
             $teacher->nickname = $data['nickname'];
@@ -86,8 +83,10 @@ class Teacher extends Authenticatable
             $teacher->avatar = $data['avatar'];
         }
 
+        $original = $teacher->getOriginal();
         $teacher->save();
-        return $teacher->getOriginal();
+
+        return $original;
     }
 
     public function rankings_created(): HasMany

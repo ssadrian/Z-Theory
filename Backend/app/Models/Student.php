@@ -51,7 +51,7 @@ class Student extends Authenticatable
         ]);
     }
 
-    public static function updateFromRequest($id, Request $request): array|null
+    public static function updateFromRequest($id, Request $request): array
     {
         $data = $request->validate([
             'nickname' => 'sometimes|nullable|required|string',
@@ -62,9 +62,6 @@ class Student extends Authenticatable
         ]);
 
         $student = Student::find($id);
-        if (!$student) {
-            return null;
-        }
 
         if (!(empty($data['nickname']) || $student->nickname == $data['nickname'])) {
             $student->nickname = $data['nickname'];
@@ -86,9 +83,10 @@ class Student extends Authenticatable
             $student->avatar = $data['avatar'];
         }
 
+        $original = $student->getOriginal();
         $student->save();
 
-        return $student->getOriginal();
+        return $original;
     }
 
     public function rankings(): BelongsToMany
