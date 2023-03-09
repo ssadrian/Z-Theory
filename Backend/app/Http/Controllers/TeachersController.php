@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class TeachersController extends Controller
 {
@@ -28,9 +27,9 @@ class TeachersController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response|Application|ResponseFactory
+     * @return Response
      */
-    public function store(Request $request): Response|Application|ResponseFactory
+    public function store(Request $request): Response
     {
         $teacher = Teacher::createFromRequest($request);
         $teacher->save();
@@ -40,21 +39,21 @@ class TeachersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display the specified resource.
      *
-     * @param Request $request
-     * @return Response|Application|ResponseFactory
+     * @param $id
+     * @return Model|Response
+     * @throws ValidationException
      */
-    public function show($id): Model|Response|Builder|Application|ResponseFactory
+    public function show($id): Model|Response
     {
-        $teacher = Teacher::with('rankings_created')->find($id);
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
 
-        if (!$teacher) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return $teacher;
+        return Teacher::with('rankings_created')
+            ->find($id);
     }
 
     /**
@@ -62,18 +61,17 @@ class TeachersController extends Controller
      *
      * @param $id
      * @param Request $request
-     * @return Response|Application|ResponseFactory
+     * @return Teacher
+     * @throws ValidationException
      */
-    public function update($id, Request $request): Response|Application|ResponseFactory
+    public function update($id, Request $request): Teacher
     {
-        $teacher = Teacher::updateFromRequest($id, $request);
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
 
-        if (empty($teacher)) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response($teacher);
+        return Teacher::updateFromRequest($id, $request);
     }
 
     /**
@@ -81,25 +79,24 @@ class TeachersController extends Controller
      *
      * @param $id
      * @return Response
+     * @throws ValidationException
      */
     public function destroy($id): Response
     {
-        $teacher = Teacher::find($id);
-
-        if (!$teacher) {
-            // No Content
-            return response(status: 204);
-        }
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
 
         return response(
-            status: $teacher->delete() ? 200 : 204
+            status: Teacher::find($id)->delete() ? 200 : 204
         );
     }
 
-    public function changePassword(Request $request): Response|Application|ResponseFactory
+    public function changePassword(Request $request): Response
     {
         $data = $request->validate([
-            'id' => 'required|exists:teachers,id',
+            'id' => 'required|exists:teachers',
             'password' => 'required|string',
             'new_password' => 'required|string'
         ]);
@@ -107,7 +104,7 @@ class TeachersController extends Controller
         $teacher = Teacher::find($data['id']);
 
         if (!Hash::check($data['password'], $teacher->password)) {
-            //  Unprocessable Content
+            // Unprocessable Content
             return response(status: 422);
         }
 

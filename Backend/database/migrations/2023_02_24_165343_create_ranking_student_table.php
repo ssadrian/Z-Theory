@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('ranking_student', function (Blueprint $table) {
             $table->foreignId('student_id')->constrained();
-            $table->foreignId('ranking_id');
+            $table->foreignId('ranking_id')->constrained();
 
             $table->unsignedInteger('points');
             $table->timestamps();

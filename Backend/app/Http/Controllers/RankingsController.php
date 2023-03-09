@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ranking;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class RankingsController extends Controller
 {
@@ -27,9 +27,9 @@ class RankingsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response|Application|ResponseFactory
+     * @return Response
      */
-    public function store(Request $request): Application|ResponseFactory|Response
+    public function store(Request $request): Response
     {
         $rank = Ranking::createFromRequest($request);
         $rank->save();
@@ -42,19 +42,18 @@ class RankingsController extends Controller
      * Display the specified resource.
      *
      * @param $code
-     * @return Model|Response|Builder|Application|ResponseFactory
+     * @return Model|Response|JsonResponse
+     * @throws ValidationException
      */
-    public function show($code): Model|Response|Builder|Application|ResponseFactory
+    public function show($code): Model|Response|JsonResponse
     {
-        $ranking = Ranking::with('students')
+        $validator = Validator::make(['code' => $code], [
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return Ranking::with('students')
             ->firstWhere('code', $code);
-
-        if (!$ranking) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return $ranking;
     }
 
     /**
@@ -62,52 +61,59 @@ class RankingsController extends Controller
      *
      * @param $code
      * @param Request $request
-     * @return Response|Application|ResponseFactory
+     * @return Ranking|JsonResponse
+     * @throws ValidationException
      */
-    public function update($code, Request $request): Response|Application|ResponseFactory
+    public function update($code, Request $request): array|JsonResponse
     {
-        $rank = Ranking::updateFromRequest($code, $request);
-        return response($rank);
+        $validator = Validator::make(['code' => $code], [
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return Ranking::updateFromRequest($code, $request);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param $code
-     * @return Response|Application|ResponseFactory
+     * @return Response|JsonResponse
+     * @throws ValidationException
      */
-    public function destroy($code): Response|Application|ResponseFactory
+    public function destroy($code): Response|JsonResponse
     {
-        $rank = Ranking::find($code);
-        if (!$rank) {
-            return response(status: 204);
-        }
+        $validator = Validator::make(['code' => $code], [
+           'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
 
-        $rank->delete();
-
-        return response(status: 200);
+        return response(
+            status: Ranking::all()->firstWhere('code', $code)->delete() ? 200 : 204
+        );
     }
 
-    public function createdBy(Request $request)
+    public function createdBy(Request $request): array
     {
         $data = $request->validate([
-            'id' => 'required|exists:teachers,id'
+            'id' => 'required|exists:teachers'
         ]);
 
-        $rankings = Ranking::with('students')
+        return Ranking::with('students')
             ->where('creator', $data['id'])
             ->get();
-
-        if (!$rankings) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response($rankings);
     }
 
-    public function forStudent($id)
+    /**
+     * @throws ValidationException
+     */
+    public function forStudent($id): array
     {
+        $validator = Validator::make(['id' => $id], [
+           'id' => 'required|exists:students'
+        ]);
+        $this->throwIfInvalid($validator);
+
         $leaderboards = [];
         $rankings = Ranking::with('students')->get();
 
@@ -127,7 +133,7 @@ class RankingsController extends Controller
         return $leaderboards;
     }
 
-    public function assignStudent(Request $request): Response|Application|ResponseFactory
+    public function assignStudent(Request $request): Response
     {
         Ranking::assignStudent($request);
         return response(status: 200);
