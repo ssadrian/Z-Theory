@@ -4,7 +4,7 @@ namespace Tests\Feature\Http;
 
 use Tests\TestCase;
 
-class AssignmentsTest extends TestCase
+class AssignmentTest extends TestCase
 {
     /**
      * A basic feature test example.

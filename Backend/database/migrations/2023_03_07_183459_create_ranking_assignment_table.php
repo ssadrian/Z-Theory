@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assignment_teacher', function (Blueprint $table) {
-            $table->id();
+        Schema::create('ranking_assignment', function (Blueprint $table) {
+            $table->foreignId('ranking_id')->constrained();
             $table->foreignId('assignment_id')->constrained();
-            $table->foreignId('teacher_id')->constrained();
+
+            $table->primary(['ranking_id', 'assignment_id']);
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assignment_teacher');
+        Schema::dropIfExists('ranking_assignment');
     }
 };

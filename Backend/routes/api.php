@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RankingsController;
-use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
 use Illuminate\Support\Facades\Request;
@@ -41,10 +41,15 @@ Route::prefix('teacher')->group(function () {
 
 Route::apiResource('ranking', RankingsController::class);
 Route::prefix('ranking')->group(function () {
-    Route::get('for/{id}', [RankingsController::class, 'forStudent']);
+    Route::get('for/{studentId}', [RankingsController::class, 'forStudent']);
 
-    Route::post('created_by', [RankingsController::class, 'createdBy']);
-    Route::post('assign', [RankingsController::class, 'assignStudent']);
+    Route::post('created_by/{teacherId}', [RankingsController::class, 'createdBy']);
+    Route::post('assign/{studentId}', [RankingsController::class, 'assignStudent']);
+});
+
+Route::apiResource('assignment', AssignmentController::class);
+Route::prefix('assignment')->group(function () {
+    Route::post('assign/ranking/{rankCode}', [AssignmentController::class, 'assignToRank']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

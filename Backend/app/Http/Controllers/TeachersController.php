@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -16,11 +14,11 @@ class TeachersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection|array
+     * @return Response
      */
-    public function index(): Collection|array
+    public function index(): Response
     {
-        return Teacher::with('rankings_created')->get();
+        return response(Teacher::with('rankingsCreated')->get());
     }
 
     /**
@@ -31,29 +29,37 @@ class TeachersController extends Controller
      */
     public function store(Request $request): Response
     {
-        $teacher = Teacher::createFromRequest($request);
-        $teacher->save();
+        $data = $request->validate([
+            'nickname' => 'required|unique:students|unique:teachers',
+            'email' => 'required|email|unique:students|unique:teachers',
+            'password' => 'required|confirmed',
+            'name' => 'required|string',
+            'surnames' => 'required|string',
+            'center' => 'required|string',
+            'avatar' => 'sometimes|string'
+        ]);
 
-        // Created
-        return response(status: 201);
+        return response(Teacher::create($data), 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param $id
-     * @return Model|Response
+     * @return Response
      * @throws ValidationException
      */
-    public function show($id): Model|Response
+    public function show($id): Response
     {
         $validator = Validator::make(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
         $this->throwIfInvalid($validator);
 
-        return Teacher::with('rankings_created')
-            ->find($id);
+        return response(
+            Teacher::with('rankings_created')
+                ->find($id)
+        );
     }
 
     /**
@@ -61,17 +67,40 @@ class TeachersController extends Controller
      *
      * @param $id
      * @param Request $request
-     * @return Teacher
-     * @throws ValidationException
+     * @return Response
      */
-    public function update($id, Request $request): Teacher
+    public function update($id, Request $request): Response
     {
-        $validator = Validator::make(['id' => $id], [
-            'id' => 'required|exists:teachers'
-        ]);
-        $this->throwIfInvalid($validator);
+        // Append teacher's id from url to request's body
+        $request['id'] = $id;
 
-        return Teacher::updateFromRequest($id, $request);
+        $data = $request->validate([
+            'nickname' => 'required|string|unique:students|unique:teachers',
+            'name' => 'required|string',
+            'surnames' => 'required|string',
+            'avatar' => 'required|string',
+            'center' => 'required|string',
+        ]);
+
+        $previousTeacher = Teacher::with(['rankingsCreated'])
+            ->find($id);
+
+        $teacher = Teacher::with(['rankingsCreated'])
+            ->find($id);
+
+        foreach ($data as $key => $value) {
+            if (empty($value)) {
+                $teacher->makeHidden($key);
+            }
+        }
+
+        $teacher->fill($data);
+        $success = $teacher->save();
+
+        return response(
+            $previousTeacher,
+            status: $success ? 200 : 422
+        );
     }
 
     /**
@@ -89,10 +118,14 @@ class TeachersController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            status: Teacher::find($id)->delete() ? 200 : 204
+            status: Teacher::destroy($id) ? 200 : 204
         );
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function changePassword(Request $request): Response
     {
         $data = $request->validate([

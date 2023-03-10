@@ -2,9 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Student>
+ */
 class StudentFactory extends Factory
 {
     /**
@@ -21,9 +25,7 @@ class StudentFactory extends Factory
             'password' => bcrypt(fake()->password()),
             'nickname' => fake()->word(),
             'birth_date' => Carbon::now()->format('Y-m-d'),
-            'avatar' => fake()->text(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'avatar' => fake()->text(10)
         ];
     }
 }

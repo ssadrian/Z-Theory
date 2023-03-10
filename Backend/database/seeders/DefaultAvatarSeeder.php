@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Database\Factories\DefaultAvatarFactory;
+use App\Models\DefaultAvatar;
 use Illuminate\Database\Seeder;
 
 class DefaultAvatarSeeder extends Seeder
@@ -14,7 +14,7 @@ class DefaultAvatarSeeder extends Seeder
      */
     public function run(): void
     {
-        DefaultAvatarFactory::new()->create();
-        DefaultAvatarFactory::new()->create();
+        DefaultAvatar::factory()->create();
+        DefaultAvatar::factory()->create();
     }
 }

@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Assignment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Assignment>
+ * @extends Factory<Assignment>
  */
 class AssignmentFactory extends Factory
 {
@@ -17,7 +18,10 @@ class AssignmentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => fake()->text(20),
+            'description' => fake()->text(),
+            'content' => fake()->text(),
+            'points' => fake()->numberBetween(0, 100)
         ];
     }
 }

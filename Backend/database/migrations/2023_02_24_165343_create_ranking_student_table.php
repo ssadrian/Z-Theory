@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignId('student_id')->constrained();
             $table->foreignId('ranking_id')->constrained();
 
-            $table->unsignedInteger('points');
+            $table->integer('points');
             $table->timestamps();
 
             $table->primary(['student_id', 'ranking_id']);
