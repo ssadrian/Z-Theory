@@ -70,7 +70,6 @@ class RankingsController extends Controller
             'code' => 'required|exists:rankings'
         ]);
         $this->throwIfInvalid($validator);
-
         return Ranking::updateFromRequest($code, $request);
     }
 

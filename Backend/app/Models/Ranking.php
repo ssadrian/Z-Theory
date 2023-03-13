@@ -88,6 +88,7 @@ class Ranking extends Model
         return $original;
     }
 
+
     public function students(): BelongsToMany
     {
         return $this

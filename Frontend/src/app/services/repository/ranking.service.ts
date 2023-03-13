@@ -67,7 +67,7 @@ export class RankingService {
     });
   }
 
-  update(code: number, entity: IUpdateRanking): Observable<HttpResponse<Object>> {
+  update(code: string, entity: IUpdateRanking): Observable<HttpResponse<Object>> {
     const url: string = `${ this.#rankingUrl }/${ code }`;
     return this.http.put(url, entity, {
       headers: this.#clientHeaders,
