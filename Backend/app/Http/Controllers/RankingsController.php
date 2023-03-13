@@ -3,24 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ranking;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use JoinStatus;
 
 class RankingsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Collection
+     * @return Response
      */
-    public function index(): Collection
+    public function index(): Response
     {
-        return Ranking::with('students')->get();
+        return response(Ranking::with(['students', 'queues'])->get());
     }
 
     /**
@@ -31,29 +30,39 @@ class RankingsController extends Controller
      */
     public function store(Request $request): Response
     {
-        $rank = Ranking::createFromRequest($request);
-        $rank->save();
+        $data = $request->validate([
+            'code' => 'required|uuid|unique:rankings',
+            'name' => 'required|string|unique:rankings',
+            'creator' => 'required|exists:teachers,id'
+        ]);
 
-        // Created
-        return response($rank, 201);
+        $ranking = Ranking::create($data);
+
+        return response(
+            Ranking::with(['creator'])
+                ->find($ranking->id)
+            , 201
+        );
     }
 
     /**
      * Display the specified resource.
      *
      * @param $code
-     * @return Model|Response|JsonResponse
+     * @return Response
      * @throws ValidationException
      */
-    public function show($code): Model|Response|JsonResponse
+    public function show($code): Response
     {
         $validator = Validator::make(['code' => $code], [
             'code' => 'required|exists:rankings'
         ]);
         $this->throwIfInvalid($validator);
 
-        return Ranking::with('students')
-            ->firstWhere('code', $code);
+        return response(
+            Ranking::with('students')
+                ->firstWhere('code', $code)
+        );
     }
 
     /**
@@ -61,55 +70,83 @@ class RankingsController extends Controller
      *
      * @param $code
      * @param Request $request
-     * @return Ranking|JsonResponse
-     * @throws ValidationException
+     * @return Response
      */
-    public function update($code, Request $request): array|JsonResponse
+    public function update($code, Request $request): Response
     {
-        $validator = Validator::make(['code' => $code], [
-            'code' => 'required|exists:rankings'
+        // Append ranking's id from url to request's body
+        $request['code'] = $code;
+
+        $data = $request->validate([
+            'code' => 'required|exists:rankings',
+            'name' => 'sometimes|nullable|string|unique:rankings',
+            'creator' => 'sometimes|nullable|exists:teachers,id'
         ]);
-        $this->throwIfInvalid($validator);
-        return Ranking::updateFromRequest($code, $request);
+
+        $previousRanking = Ranking::with(['creator', 'students', 'queues'])
+            ->find($code);
+
+        $ranking = Ranking::with(['creator', 'students', 'queues'])
+            ->find($code);
+
+        foreach ($data as $key => $value) {
+            if (empty($value)) {
+                $ranking->makeHidden($key);
+            }
+        }
+
+        $ranking->fill($data);
+        $success = $ranking->save();
+
+        return response(
+            $previousRanking,
+            status: $success ? 200 : 422
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param $code
-     * @return Response|JsonResponse
+     * @return Response
+     */
+    public function destroy($code): Response
+    {
+        return response(
+            status: Ranking::all()
+                ->firstWhere('code', $code)
+                ->delete() ? 200 : 204
+        );
+    }
+
+    /**
+     * @param $teacherId
+     * @return Response
      * @throws ValidationException
      */
-    public function destroy($code): Response|JsonResponse
+    public function createdBy($teacherId): Response
     {
-        $validator = Validator::make(['code' => $code], [
-           'code' => 'required|exists:rankings'
+        $validator = Validator::make(['id' => $teacherId], [
+            'id' => 'required|exists:teachers'
         ]);
         $this->throwIfInvalid($validator);
 
         return response(
-            status: Ranking::all()->firstWhere('code', $code)->delete() ? 200 : 204
+            Ranking::with(['students'])
+                ->where('creator', $teacherId)
+                ->get()
         );
     }
 
-    public function createdBy(Request $request): array
-    {
-        $data = $request->validate([
-            'id' => 'required|exists:teachers'
-        ]);
-
-        return Ranking::with('students')
-            ->where('creator', $data['id'])
-            ->get();
-    }
-
     /**
+     * @param $studentId
+     * @return Response
      * @throws ValidationException
      */
-    public function forStudent($id): array
+    public function forStudent($studentId): Response
     {
-        $validator = Validator::make(['id' => $id], [
-           'id' => 'required|exists:students'
+        $validator = Validator::make(['id' => $studentId], [
+            'id' => 'required|exists:students'
         ]);
         $this->throwIfInvalid($validator);
 
@@ -117,7 +154,7 @@ class RankingsController extends Controller
         $rankings = Ranking::with('students')->get();
 
         foreach ($rankings as $ranking) {
-            if (!$ranking->students->contains($id)) {
+            if (!$ranking->students->contains($studentId)) {
                 continue;
             }
 
@@ -129,12 +166,48 @@ class RankingsController extends Controller
             $leaderboards[] = $ranking;
         }
 
-        return $leaderboards;
+        return response($leaderboards);
     }
 
-    public function assignStudent(Request $request): Response
+    /**
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     */
+    public function assignStudent($studentId, Request $request): Response
     {
-        Ranking::assignStudent($request);
-        return response(status: 200);
+        // Append student's id from url to request's body
+        $request['student_id'] = $studentId;
+
+        $data = $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'code' => 'required|exists:rankings'
+        ]);
+
+        $ranking = Ranking::with(['students', 'queues'])
+            ->firstWhere('code', $data['code']);
+
+        // Don't repeat same pending/accepted queue for student and ranking
+        foreach ($ranking->queues() as $item) {
+            $wantedRelation = $item['student_id'] === $studentId
+                && $item['ranking_id'] === $ranking->id;
+
+            // Accepted & Pending
+            if ($wantedRelation && $item['join_status_id'] <= JoinStatus::Pending) {
+                // Bad Request
+                return response(status: 422);
+            }
+        }
+
+        $ranking->queues()->attach($studentId, [
+            'join_status_id' => JoinStatus::Pending,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
+        $ranking->students()->attach($studentId, [
+            'points' => 0
+        ]);
+
+        return response($ranking);
     }
 }

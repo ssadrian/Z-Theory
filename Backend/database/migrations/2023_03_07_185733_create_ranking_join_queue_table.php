@@ -4,32 +4,29 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('ranking_student', function (Blueprint $table) {
+        Schema::create('ranking_join_queue', function (Blueprint $table) {
             $table->foreignId('student_id')->constrained();
             $table->foreignId('ranking_id')->constrained();
-
-            $table->integer('points');
-            $table->timestamps();
+            $table->foreignId('join_status_id')
+                ->default(JoinStatus::Pending)->constrained();
 
             $table->primary(['student_id', 'ranking_id']);
+            $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('students_rankings');
+        Schema::dropIfExists('ranking_join_queue');
     }
 };

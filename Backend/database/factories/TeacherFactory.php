@@ -2,9 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
+/**
+ * @extends Factory<Teacher>
+ */
 class TeacherFactory extends Factory
 {
     /**
@@ -15,15 +18,13 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'surnames' => fake()->word(),
+            'name' => fake()->text(20),
+            'surnames' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt(fake()->password()),
             'nickname' => fake()->word(),
             'avatar' => fake()->text(),
-            'center' => fake()->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'center' => fake()->word()
         ];
     }
 }
