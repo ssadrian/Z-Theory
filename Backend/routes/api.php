@@ -49,7 +49,7 @@ Route::prefix('ranking')->group(function () {
 
 Route::apiResource('assignment', AssignmentController::class);
 Route::prefix('assignment')->group(function () {
-    Route::post('assign/ranking/{rankCode}', [AssignmentController::class, 'assignToRank']);
+    Route::post('assign/ranking/{rankCode}', [AssignmentController::class, 'assignToRanking']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

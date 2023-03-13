@@ -31,6 +31,17 @@ class Ranking extends Model
         'id',
     ];
 
+    /**
+     * All the relationships to be touched.
+     *
+     * @var array
+     */
+    protected $touches = [
+        'students',
+        'queues',
+        'assignments'
+    ];
+
     public function students(): BelongsToMany
     {
         return $this

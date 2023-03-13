@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\JoinStatus;
 use App\Models\Ranking;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use JoinStatus;
 
 class RankingsController extends Controller
 {
@@ -71,23 +71,27 @@ class RankingsController extends Controller
      * @param $code
      * @param Request $request
      * @return Response
+     * @throws ValidationException
      */
     public function update($code, Request $request): Response
     {
         // Append ranking's id from url to request's body
-        $request['code'] = $code;
+        $validator = Validator::make(['code' => $code], [
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
 
         $data = $request->validate([
-            'code' => 'required|exists:rankings',
-            'name' => 'sometimes|nullable|string|unique:rankings',
+            'code' => 'sometimes|nullable|unique:rankings,code',
+            'name' => 'sometimes|nullable|string',
             'creator' => 'sometimes|nullable|exists:teachers,id'
         ]);
 
         $previousRanking = Ranking::with(['creator', 'students', 'queues'])
-            ->find($code);
+            ->firstWhere('code', $code);
 
         $ranking = Ranking::with(['creator', 'students', 'queues'])
-            ->find($code);
+            ->firstWhere('code', $code);
 
         foreach ($data as $key => $value) {
             if (empty($value)) {
@@ -188,19 +192,26 @@ class RankingsController extends Controller
             ->firstWhere('code', $data['code']);
 
         // Don't repeat same pending/accepted queue for student and ranking
-        foreach ($ranking->queues() as $item) {
-            $wantedRelation = $item['student_id'] === $studentId
-                && $item['ranking_id'] === $ranking->id;
+        if (
+            Ranking::with([
+                'queues' => function ($query) {
+                    global $data;
 
-            // Accepted & Pending
-            if ($wantedRelation && $item['join_status_id'] <= JoinStatus::Pending) {
-                // Bad Request
-                return response(status: 422);
-            }
+                    return $query
+                        ->where('student_id', $data['student_id'])
+                        ->where('ranking_id', $data['ranking_id'])
+                        ->where('join_status_id', '<=', JoinStatus::Pending->value);
+                }
+            ])
+                ->firstWhere('code', $data['code'])
+                ->queues
+                ->count() !== 0
+        ) {
+            return response(status: 422);
         }
 
         $ranking->queues()->attach($studentId, [
-            'join_status_id' => JoinStatus::Pending,
+            'join_status_id' => JoinStatus::Pending->value,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
