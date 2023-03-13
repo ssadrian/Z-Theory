@@ -122,7 +122,7 @@ class AssignmentController extends Controller
         );
     }
 
-    public function assignToRank($rankCode, Request $request): Response
+    public function assignToRanking($rankCode, Request $request): Response
     {
         // Append rank's code from url to request's body
         $request['rank_code'] = $rankCode;
