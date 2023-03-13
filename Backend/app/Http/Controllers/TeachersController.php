@@ -3,35 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class TeachersController extends Controller
 {
-    public function all(): Collection|array
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Collection|array
+     */
+    public function index(): Collection|array
     {
         return Teacher::with('rankings_created')->get();
     }
 
-    public function get($id): Model|Response|Builder|Application|ResponseFactory
-    {
-        $teacher = Teacher::with('rankings_created')->find($id);
-
-        if (!$teacher) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return $teacher;
-    }
-
-    public function create(Request $request): Response|Application|ResponseFactory
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function store(Request $request): Response
     {
         $teacher = Teacher::createFromRequest($request);
         $teacher->save();
@@ -40,10 +38,65 @@ class TeachersController extends Controller
         return response(status: 201);
     }
 
-    public function changePassword(Request $request): Response|Application|ResponseFactory
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     * @return Model|Response
+     * @throws ValidationException
+     */
+    public function show($id): Model|Response
+    {
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return Teacher::with('rankings_created')
+            ->find($id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param $id
+     * @param Request $request
+     * @return Teacher
+     * @throws ValidationException
+     */
+    public function update($id, Request $request): Teacher
+    {
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return Teacher::updateFromRequest($id, $request);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return Response
+     * @throws ValidationException
+     */
+    public function destroy($id): Response
+    {
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return response(
+            status: Teacher::find($id)->delete() ? 200 : 204
+        );
+    }
+
+    public function changePassword(Request $request): Response
     {
         $data = $request->validate([
-            'id' => 'required|exists:teachers,id',
+            'id' => 'required|exists:teachers',
             'password' => 'required|string',
             'new_password' => 'required|string'
         ]);
@@ -51,7 +104,7 @@ class TeachersController extends Controller
         $teacher = Teacher::find($data['id']);
 
         if (!Hash::check($data['password'], $teacher->password)) {
-            //  Unprocessable Content
+            // Unprocessable Content
             return response(status: 422);
         }
 
@@ -60,31 +113,5 @@ class TeachersController extends Controller
 
         // Ok
         return response(status: 200);
-    }
-
-    public function update($id, Request $request): Response|Application|ResponseFactory
-    {
-        $teacher = Teacher::updateFromRequest($id, $request);
-
-        if (empty($teacher)) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response($teacher);
-    }
-
-    public function delete($id): Response
-    {
-        $teacher = Teacher::find($id);
-
-        if (!$teacher) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response(
-            status: $teacher->delete() ? 200 : 204
-        );
     }
 }
