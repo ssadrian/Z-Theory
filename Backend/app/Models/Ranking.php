@@ -54,4 +54,10 @@ class Ranking extends Model
             ->join('join_statuses',
                 'join_statuses.id', '=', 'ranking_join_queue.join_status_id');
     }
+
+    public function assignments(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Assignment::class, 'ranking_assignment');
+    }
 }

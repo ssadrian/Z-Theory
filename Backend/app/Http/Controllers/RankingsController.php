@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use JoinStatus;
 
 class RankingsController extends Controller
 {
@@ -30,14 +31,18 @@ class RankingsController extends Controller
     public function store(Request $request): Response
     {
         $data = $request->validate([
-            'code' => 'required|uuid|unique:rankings,code',
-            'name' => 'required|string|unique:rankings,name',
+            'code' => 'required|uuid|unique:rankings',
+            'name' => 'required|string|unique:rankings',
             'creator' => 'required|exists:teachers,id'
         ]);
 
         $ranking = Ranking::create($data);
 
-        return response(Ranking::with(['creator'])->find($ranking->id), 201);
+        return response(
+            Ranking::with(['creator'])
+                ->find($ranking->id)
+            , 201
+        );
     }
 
     /**
@@ -108,7 +113,9 @@ class RankingsController extends Controller
     public function destroy($code): Response
     {
         return response(
-            status: Ranking::all()->firstWhere('code', $code)->delete() ? 200 : 204
+            status: Ranking::all()
+                ->firstWhere('code', $code)
+                ->delete() ? 200 : 204
         );
     }
 
@@ -125,7 +132,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Ranking::with('students')
+            Ranking::with(['students'])
                 ->where('creator', $teacherId)
                 ->get()
         );
@@ -162,6 +169,11 @@ class RankingsController extends Controller
         return response($leaderboards);
     }
 
+    /**
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     */
     public function assignStudent($studentId, Request $request): Response
     {
         // Append student's id from url to request's body
@@ -176,21 +188,19 @@ class RankingsController extends Controller
             ->firstWhere('code', $data['code']);
 
         // Don't repeat same pending/accepted queue for student and ranking
-        if (array_search([
-                'student_id' => $studentId,
-                'ranking_id' => $ranking->id,
-                'join_status_id' => 2 // Pending
-            ], $ranking->queues()) || array_search([
-                'student_id' => $studentId,
-                'ranking_id' => $ranking->id,
-                'join_status_id' => 1 // Accepted
-            ], $ranking->queues())) {
-            // Bad Request
-            return response(status: 422);
+        foreach ($ranking->queues() as $item) {
+            $wantedRelation = $item['student_id'] === $studentId
+                && $item['ranking_id'] === $ranking->id;
+
+            // Accepted & Pending
+            if ($wantedRelation && $item['join_status_id'] <= JoinStatus::Pending) {
+                // Bad Request
+                return response(status: 422);
+            }
         }
 
         $ranking->queues()->attach($studentId, [
-            'join_status_id' => 2, // Pending
+            'join_status_id' => JoinStatus::Pending,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);

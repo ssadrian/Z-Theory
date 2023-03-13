@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('ranking_join_queue', function (Blueprint $table) {
             $table->foreignId('student_id')->constrained();
             $table->foreignId('ranking_id')->constrained();
-
-            // 2 = Pending
-            $table->foreignId('join_status_id')->default(2)->constrained();
+            $table->foreignId('join_status_id')
+                ->default(JoinStatus::Pending)->constrained();
 
             $table->primary(['student_id', 'ranking_id']);
             $table->timestamps();

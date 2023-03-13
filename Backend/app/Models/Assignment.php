@@ -6,7 +6,7 @@ use App\Traits\CanUpdate;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Assignment extends Model
 {
@@ -38,5 +38,11 @@ class Assignment extends Model
     {
         return $this
             ->belongsTo(Teacher::class, 'teacher_id');
+    }
+
+    public function rankingsAssigned(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Ranking::class, 'ranking_assignment');
     }
 }
