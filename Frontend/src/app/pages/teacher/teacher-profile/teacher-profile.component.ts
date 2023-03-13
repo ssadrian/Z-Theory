@@ -9,6 +9,7 @@ import { IUpdatePassword } from '../../../../models/update/update-password';
 import { MessageService } from 'primeng/api';
 import { IRanking } from '../../../../models/ranking.model';
 import { IUpdateTeacher } from 'src/models/update/update-teacher';
+import { IUpdateRanking } from 'src/models/update/update-ranking';
 import { Base64Service } from 'src/app/services/base64.service';
 import { IStudent } from 'src/models/student.model';
 
@@ -60,6 +61,7 @@ export class TeacherProfileComponent implements OnInit {
       .create({
         name: formValue.name!,
         code: uuidv4(),
+        teachers_id: this.teacher.id,
         creator: this.teacher.id,
       })
       .subscribe((response) => {
@@ -144,15 +146,16 @@ export class TeacherProfileComponent implements OnInit {
 
   changeRankingId(ranking: IRanking) {
     let ranking_code = uuidv4();
+    let UpdateRanking: IUpdateRanking = {
+      code: ranking_code,
+      student_id: 2,
+      rank: 70,
+    };
+
     this.rankingService
-      .update(ranking.id, {
-        code: ranking_code,
-        student_id: ranking.pivot.student_id,
-        rank: ranking.pivot.points,
-        name: ranking.name,
-        creator: ranking.creator
-      })
-      .subscribe((response) => {});
-    console.log(ranking_code);
+      .update(ranking_code, UpdateRanking)
+      .subscribe((response) => {
+        console.log(response);
+      });
   }
 }

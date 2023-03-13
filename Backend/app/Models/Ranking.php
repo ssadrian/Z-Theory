@@ -64,35 +64,30 @@ class Ranking extends Model
         return Ranking::find($ranking->id);
     }
 
-    public static function updateFromRequest($id, Request $request): array|Ranking|null
+    public static function updateFromRequest($code, Request $request): array
     {
         $data = $request->validate([
-            'ranking_code' => 'required|uuid|unique:rankings,code',
-            'student_id' => 'required|int|gt:0',
-            'points' => 'sometimes|nullable|required|int|gt:0',
-            'name' => 'required|string|unique:rankings,name',
-            'creator' => 'required|unique:teachers,id'
+            'name' => 'sometimes|nullable|required|string|unique:rankings,name',
+            'creator' => 'sometimes|nullable|required|exists:teachers,id'
         ]);
 
-        $ranking = Ranking::find($id);
+        $ranking = Ranking::all()
+            ->firstWhere('code', $code);
 
-        if (!$ranking) {
-            return null;
+        if (!(empty($data['name']) || $ranking->name == $data['name'])) {
+            $ranking->name = $data['name'];
         }
 
-        $oldRanking = $ranking;
+        if (!(empty($data['creator']) || $ranking->creator == $data['creator'])) {
+            $ranking->creator = $data['creator'];
+        }
 
-        $ranking->id = $data['id'];
-        $ranking->name = $data['name'];
-        $ranking->creator = $data['creator'];
+        $original = $ranking->getOriginal();
 
-        $ranking->pivot->ranking_id = $data['id'];
-        $ranking->pivot->student_id = $data['students_id'];
-        $ranking->pivot->points = $data['points'] ?? 0;
         $ranking->save();
-
-        return $ranking->getOriginal();
+        return $original;
     }
+
 
     public function students(): BelongsToMany
     {
