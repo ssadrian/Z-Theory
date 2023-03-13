@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RankingsController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
-use App\Models\Student;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,46 +25,26 @@ Route::prefix('login')->group(function () {
 });
 
 Route::prefix('register')->group(function () {
-    Route::post('/student', [StudentsController::class, 'create']);
-    Route::post('/teacher', [TeachersController::class, 'create']);
+    Route::post('/student', [StudentsController::class, 'store']);
+    Route::post('/teacher', [TeachersController::class, 'store']);
 });
 
+Route::apiResource('student', StudentsController::class);
 Route::prefix('student')->group(function () {
-    Route::get('', [StudentsController::class, 'all']);
-    Route::get('{id?}', [StudentsController::class, 'get']);
-
-    Route::post('', [StudentsController::class, 'create']);
     Route::post('password', [StudentsController::class, 'changePassword']);
-
-    Route::put('{id}', [StudentsController::class, 'update']);
-
-    Route::delete('{id}', [StudentsController::class, 'delete']);
 });
 
+Route::apiResource('teacher', TeachersController::class);
 Route::prefix('teacher')->group(function () {
-    Route::get('', [TeachersController::class, 'all']);
-    Route::get('{id?}', [TeachersController::class, 'get']);
-
-    Route::post('', [TeachersController::class, 'create']);
     Route::post('password', [TeachersController::class, 'changePassword']);
-
-    Route::put('{id}', [TeachersController::class, 'update']);
-
-    Route::delete('{id}', [TeachersController::class, 'delete']);
 });
 
+Route::apiResource('ranking', RankingsController::class);
 Route::prefix('ranking')->group(function () {
-    Route::get('', [RankingsController::class, 'all']);
-    Route::get('{code}', [RankingsController::class, 'get']);
     Route::get('for/{id}', [RankingsController::class, 'forStudent']);
 
     Route::post('created_by', [RankingsController::class, 'createdBy']);
     Route::post('assign', [RankingsController::class, 'assignStudent']);
-    Route::post('', [RankingsController::class, 'create']);
-
-    Route::put('{code}', [RankingsController::class, 'update']);
-
-    Route::delete('{code}', [RankingsController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

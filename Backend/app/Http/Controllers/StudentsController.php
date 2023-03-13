@@ -3,35 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class StudentsController extends Controller
 {
-    public function all(): Collection|array
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Collection|array
+     */
+    public function index(): Collection|array
     {
         return Student::with("rankings")->get();
     }
 
-    public function get($id): Model|Response|Builder|Application|ResponseFactory
-    {
-        $student = Student::with('rankings')->firstWhere('id', $id);
-
-        if (!$student) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return $student;
-    }
-
-    public function create(Request $request): Response|Application|ResponseFactory
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function store(Request $request): Response
     {
         $student = Student::createFromRequest($request);
         $student->save();
@@ -40,10 +38,69 @@ class StudentsController extends Controller
         return response(status: 201);
     }
 
-    public function changePassword(Request $request): Response|Application|ResponseFactory
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     * @return Model|Response
+     * @throws ValidationException
+     */
+    public function show($id): Model|Response
+    {
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:students'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return Student::with('rankings')
+            ->find($id);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param $id
+     * @param Request $request
+     * @return array
+     * @throws ValidationException
+     */
+    public function update($id, Request $request): array
+    {
+        $validator = Validator::make(['id' => $id], [
+           'id' => 'required|exists:students'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return Student::updateFromRequest($id, $request);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param $id
+     * @return Response
+     * @throws ValidationException
+     */
+    public function destroy($id): Response
+    {
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'required|exists:students'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return response(
+            status: Student::find($id)->delete() ? 200 : 204
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function changePassword(Request $request): Response
     {
         $data = $request->validate([
-            'id' => 'required|exists:students,id',
+            'id' => 'required|exists:students',
             'password' => 'required|string',
             'new_password' => 'required|string'
         ]);
@@ -60,31 +117,5 @@ class StudentsController extends Controller
 
         // Ok
         return response(status: 200);
-    }
-
-    public function update($id, Request $request): Response|Application|ResponseFactory
-    {
-        $student = Student::updateFromRequest($id, $request);
-
-        if (empty($student)) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response($student);
-    }
-
-    public function delete($id): Response|Application|ResponseFactory
-    {
-        $student = Student::find($id);
-
-        if (!$student) {
-            // No Content
-            return response(status: 204);
-        }
-
-        return response(
-            status: $student->delete() ? 200 : 204
-        );
     }
 }
