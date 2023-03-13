@@ -124,7 +124,7 @@ export class TeacherProfileComponent implements OnInit {
   }
 
   updateAvatar() {
-    let teacher: IUpdateTeacher = {
+    const teacher: IUpdateTeacher = {
       avatar: this.#b64Avatar,
       name: this.teacher.name!,
       surnames: this.teacher.surnames!,
@@ -145,17 +145,13 @@ export class TeacherProfileComponent implements OnInit {
   }
 
   changeRankingId(ranking: IRanking) {
-    let ranking_code = uuidv4();
-    let UpdateRanking: IUpdateRanking = {
+    const ranking_code = uuidv4();
+    const UpdateRanking: IUpdateRanking = {
       code: ranking_code,
       student_id: 2,
       rank: 70,
     };
 
-    this.rankingService
-      .update(ranking_code, UpdateRanking)
-      .subscribe((response) => {
-        console.log(response);
-      });
+    this.rankingService.update(ranking_code, UpdateRanking).subscribe();
   }
 }
