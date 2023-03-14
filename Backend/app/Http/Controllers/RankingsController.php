@@ -75,10 +75,11 @@ class RankingsController extends Controller
     public function update($code, Request $request): Response
     {
         // Append ranking's id from url to request's body
-        $request['code'] = $code;
+        $request['new_code'] = $code;
 
         $data = $request->validate([
             'code' => 'required|exists:rankings',
+            'new_code' => 'required|unique:rankings,code',
             'name' => 'sometimes|nullable|string|unique:rankings',
             'creator' => 'sometimes|nullable|exists:teachers,id'
         ]);
