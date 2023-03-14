@@ -71,24 +71,27 @@ class RankingsController extends Controller
      * @param $code
      * @param Request $request
      * @return Response
+     * @throws ValidationException
      */
     public function update($code, Request $request): Response
     {
         // Append ranking's id from url to request's body
-        $request['new_code'] = $code;
+        $validator = Validator::make(['code' => $code], [
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
 
         $data = $request->validate([
-            'code' => 'required|exists:rankings',
-            'new_code' => 'required|unique:rankings,code',
-            'name' => 'sometimes|nullable|string|unique:rankings',
+            'code' => 'sometimes|nullable|unique:rankings,code',
+            'name' => 'sometimes|nullable|string',
             'creator' => 'sometimes|nullable|exists:teachers,id'
         ]);
 
         $previousRanking = Ranking::with(['creator', 'students', 'queues'])
-            ->find($code);
+            ->firstWhere('code', $code);
 
         $ranking = Ranking::with(['creator', 'students', 'queues'])
-            ->find($code);
+            ->firstWhere('code', $code);
 
         foreach ($data as $key => $value) {
             if (empty($value)) {
