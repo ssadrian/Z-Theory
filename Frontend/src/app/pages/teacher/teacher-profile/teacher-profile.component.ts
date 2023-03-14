@@ -1,17 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import {MessageService} from 'primeng/api';
-import {Base64Service} from 'src/app/services/base64.service';
-import {RankingService} from 'src/app/services/repository/ranking.service';
-import {IStudent} from 'src/models/student.model';
-import {IUpdateRanking} from 'src/models/update/update-ranking';
-import {IUpdateTeacher} from 'src/models/update/update-teacher';
-import {v4 as uuidv4} from 'uuid';
-import {IRanking} from '../../../../models/ranking.model';
-import {ITeacher} from '../../../../models/teacher.model';
-import {IUpdatePassword} from '../../../../models/update/update-password';
-import {CredentialService} from '../../../services/credential.service';
-import {TeacherService} from '../../../services/repository/teacher.service';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { Base64Service } from 'src/app/services/base64.service';
+import { RankingService } from 'src/app/services/repository/ranking.service';
+import { IStudent } from 'src/models/student.model';
+import { IUpdateRanking } from 'src/models/update/update-ranking';
+import { IUpdateTeacher } from 'src/models/update/update-teacher';
+import { v4 as uuidv4 } from 'uuid';
+import { IRanking } from '../../../../models/ranking.model';
+import { ITeacher } from '../../../../models/teacher.model';
+import { IUpdatePassword } from '../../../../models/update/update-password';
+import { CredentialService } from '../../../services/credential.service';
+import { TeacherService } from '../../../services/repository/teacher.service';
 
 @Component({
   selector: 'app-teacher-profile',
@@ -25,9 +25,8 @@ export class TeacherProfileComponent implements OnInit {
     private fb: FormBuilder,
     private rankingService: RankingService,
     private messageService: MessageService,
-    private b64: Base64Service,
-  ) {
-  }
+    private b64: Base64Service
+  ) {}
 
   show: boolean = false;
 
@@ -130,9 +129,7 @@ export class TeacherProfileComponent implements OnInit {
       center: this.teacher.center!,
     };
 
-    this.teacherService
-      .update(this.teacher.id, entity)
-      .subscribe();
+    this.teacherService.update(this.teacher.id, entity).subscribe();
     this.teacher.avatar = this.#b64Avatar;
 
     this.show = false;
@@ -146,12 +143,11 @@ export class TeacherProfileComponent implements OnInit {
     const ranking_code: string = uuidv4();
     const entity: IUpdateRanking = {
       code: ranking_code,
+      old_code: ranking.code,
       name: ranking.name,
       creator: ranking.creator,
     };
 
-    this.rankingService
-      .update(ranking_code, entity)
-      .subscribe();
+    this.rankingService.update(entity).subscribe();
   }
 }

@@ -82,7 +82,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         $data = $request->validate([
-            'code' => 'sometimes|nullable|unique:rankings,code',
+            'code' => 'sometimes|nullable|unique:rankings',
             'name' => 'sometimes|nullable|string',
             'creator' => 'sometimes|nullable|exists:teachers,id'
         ]);
