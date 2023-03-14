@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\JoinStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained();
             $table->foreignId('ranking_id')->constrained();
             $table->foreignId('join_status_id')
-                ->default(JoinStatus::Pending)->constrained();
+                ->default(JoinStatus::Pending->value)->constrained();
 
             $table->primary(['student_id', 'ranking_id']);
             $table->timestamps();

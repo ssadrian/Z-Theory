@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Enums;
+
 enum JoinStatus: int
 {
     case Accepted = 1;
