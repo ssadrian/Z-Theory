@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Assignment;
 use App\Models\Ranking;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -134,10 +133,7 @@ class AssignmentController extends Controller
 
         Assignment::find($data['id'])
             ->rankingsAssigned()
-            ->attach(Ranking::all()->firstWhere('code', $rankCode), [
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]);
+            ->attach(Ranking::all()->firstWhere('code', $rankCode));
 
         return response(Assignment::with(['creator'])->find($data['id']));
     }

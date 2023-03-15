@@ -26,6 +26,15 @@ class Teacher extends Authenticatable
         'center',
     ];
 
+    /**
+     * All the relationships to be touched.
+     *
+     * @var array
+     */
+    protected $touches = [
+        'rankingsCreated'
+    ];
+
     public function rankingsCreated(): HasMany
     {
         return $this->hasMany(Ranking::class, foreignKey: 'creator');

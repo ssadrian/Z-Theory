@@ -34,6 +34,15 @@ class Assignment extends Model
         'teacher_id',
     ];
 
+    /**
+     * All the relationships to be touched.
+     *
+     * @var array
+     */
+    protected $touches = [
+        'rankingsAssigned'
+    ];
+
     public function creator(): BelongsTo
     {
         return $this

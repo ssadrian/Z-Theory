@@ -26,6 +26,15 @@ class Student extends Authenticatable
         'birth_date',
     ];
 
+    /**
+     * All the relationships to be touched.
+     *
+     * @var array
+     */
+    protected $touches = [
+        'rankings'
+    ];
+
     public function rankings(): BelongsToMany
     {
         return $this

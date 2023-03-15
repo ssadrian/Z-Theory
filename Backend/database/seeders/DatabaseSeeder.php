@@ -58,9 +58,7 @@ class DatabaseSeeder extends Seeder
             $student->rankings()->attach(
                 Ranking::all()->random(),
                 [
-                    'points' => fake()->numberBetween(int2: 50),
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
+                    'points' => fake()->numberBetween(int2: 50)
                 ]
             );
 
