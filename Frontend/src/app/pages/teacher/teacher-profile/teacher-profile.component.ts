@@ -3,9 +3,11 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Base64Service } from 'src/app/services/base64.service';
 import { RankingService } from 'src/app/services/repository/ranking.service';
+import { StudentService } from 'src/app/services/repository/student.service';
 import { IStudent } from 'src/models/student.model';
 import { IUpdateRanking } from 'src/models/update/update-ranking';
 import { IUpdateTeacher } from 'src/models/update/update-teacher';
+import { IUser } from 'src/models/user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { IRanking } from '../../../../models/ranking.model';
 import { ITeacher } from '../../../../models/teacher.model';
@@ -25,7 +27,8 @@ export class TeacherProfileComponent implements OnInit {
     private fb: FormBuilder,
     private rankingService: RankingService,
     private messageService: MessageService,
-    private b64: Base64Service
+    private b64: Base64Service,
+    private studentService: StudentService
   ) {}
 
   show: boolean = false;
@@ -149,5 +152,9 @@ export class TeacherProfileComponent implements OnInit {
     };
 
     this.rankingService.update(entity).subscribe();
+  }
+
+  deleteStudent(student: IUser): void {
+    this.studentService.delete(student.id).subscribe();
   }
 }
