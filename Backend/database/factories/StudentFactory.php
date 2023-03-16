@@ -19,10 +19,10 @@ class StudentFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'surnames' => fake()->word(),
+            'surnames' => fake()->uuid(),
             'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt(fake()->password()),
-            'nickname' => fake()->word(),
+            'nickname' => fake()->uuid(),
             'birth_date' => Carbon::now()->format('Y-m-d'),
             'avatar' => fake()->text(10)
         ];
