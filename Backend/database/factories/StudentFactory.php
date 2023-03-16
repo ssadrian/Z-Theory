@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Student;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
+use Illuminate\{Database\Eloquent\Factories\Factory, Support\Carbon};
 
 /**
  * @extends Factory<Student>
@@ -20,10 +18,10 @@ class StudentFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'surnames' => fake()->word(),
+            'surnames' => fake()->uuid(),
             'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt(fake()->password()),
-            'nickname' => fake()->word(),
+            'nickname' => fake()->uuid(),
             'birth_date' => Carbon::now()->format('Y-m-d'),
             'avatar' => fake()->text(10)
         ];

@@ -13,8 +13,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('ranking_student', function (Blueprint $table) {
-            $table->foreignId('student_id')->constrained();
-            $table->foreignId('ranking_id')->constrained();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('ranking_id')->constrained()->onDelete('cascade');
 
             $table->integer('points');
             $table->timestamps();

@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\JoinStatus;
-use App\Models\Ranking;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use App\{Enums\JoinStatus, Models\Ranking};
+use Illuminate\{Http\Request, Http\Response, Support\Carbon, Support\Facades\Validator, Validation\ValidationException};
 
 class RankingsController extends Controller
 {
@@ -173,6 +168,8 @@ class RankingsController extends Controller
         return response($leaderboards);
     }
 
+    private $data = [];
+
     /**
      * @param $studentId
      * @param Request $request
@@ -183,27 +180,28 @@ class RankingsController extends Controller
         // Append student's id from url to request's body
         $request['student_id'] = $studentId;
 
-        $data = $request->validate([
+        $this->data = $request->validate([
             'student_id' => 'required|exists:students,id',
             'code' => 'required|exists:rankings'
         ]);
 
         $ranking = Ranking::with(['students', 'queues'])
-            ->firstWhere('code', $data['code']);
+            ->firstWhere('code', $this->data['code']);
+
+        // Needed for the queues relationship
+        $this->data['ranking_id'] = $ranking->id;
 
         // Don't repeat same pending/accepted queue for student and ranking
         if (
             Ranking::with([
                 'queues' => function ($query) {
-                    global $data;
-
                     return $query
-                        ->where('student_id', $data['student_id'])
-                        ->where('ranking_id', $data['ranking_id'])
+                        ->where('student_id', $this->data['student_id'])
+                        ->where('ranking_id', $this->data['ranking_id'])
                         ->where('join_status_id', '<=', JoinStatus::Pending->value);
                 }
             ])
-                ->firstWhere('code', $data['code'])
+                ->firstWhere('code', $this->data['code'])
                 ->queues
                 ->count() !== 0
         ) {
@@ -216,9 +214,55 @@ class RankingsController extends Controller
             'updated_at' => Carbon::now()
         ]);
         $ranking->students()->attach($studentId, [
-            'points' => 0
+            'points' => 0,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
 
+        return response($ranking);
+    }
+
+    public function acceptStudent($studentId, Request $request): Response
+    {
+        // Append student's id from url to request's body
+        $request['student_id'] = $studentId;
+
+        $this->data = $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'code' => 'required|exists:rankings'
+        ]);
+
+        $ranking = Ranking::with(['queues'])
+            ->firstWhere('code', $this->data['code']);
+
+        // Needed for the queues relationship
+        $this->data['ranking_id'] = $ranking->id;
+
+        // Don't repeat same pending/accepted queue for student and ranking
+        if (
+            Ranking::with([
+                'queues' => function ($query) {
+                    return $query
+                        ->where('student_id', $this->data['student_id'])
+                        ->where('ranking_id', $this->data['ranking_id'])
+                        ->where('join_status_id', '<=', JoinStatus::Pending->value);
+                }
+            ])
+                ->firstWhere('code', $this->data['code'])
+                ->queues
+                ->count() === 0
+        ) {
+            return response(status: 422);
+        }
+
+        $queue = $ranking->queues()
+            ->where('student_id', 1)
+            ->where('ranking_id', 1)
+            ->firstWhere('join_status_id', JoinStatus::Pending->value);
+        $queue->pivot->join_status_id = JoinStatus::Accepted->value;
+        $queue->push();
+
+        $ranking->refresh();
         return response($ranking);
     }
 }

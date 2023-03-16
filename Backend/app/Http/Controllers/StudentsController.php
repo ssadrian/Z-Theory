@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use Illuminate\{
+    Http\Request,
+    Http\Response,
+    Support\Facades\Hash,
+    Support\Facades\Validator,
+    Validation\ValidationException
+};
 
 class StudentsController extends Controller
 {

@@ -2,11 +2,42 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\{
+    Database\Eloquent\Factories\HasFactory,
+    Database\Eloquent\Model,
+    Database\Eloquent\Relations\BelongsTo,
+    Database\Eloquent\Relations\BelongsToMany
+};
 
+/**
+ * App\Models\Ranking
+ *
+ * @property int $id
+ * @property string $code
+ * @property string $name
+ * @property \App\Models\Teacher $creator
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Assignment> $assignments
+ * @property-read int|null $assignments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Student> $queues
+ * @property-read int|null $queues_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Student> $students
+ * @property-read int|null $students_count
+ * @method static \Database\Factories\RankingFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking whereCreator($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ranking whereUpdatedAt($value)
+ * @mixin \Eloquent
+ * @noinspection PhpFullyQualifiedNameUsageInspection
+ * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+ */
 class Ranking extends Model
 {
     use HasFactory;
