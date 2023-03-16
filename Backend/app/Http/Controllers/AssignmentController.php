@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assignment;
-use App\Models\Ranking;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use App\{Models\Assignment, Models\Ranking};
+use Illuminate\{Http\Request, Http\Response, Support\Facades\Validator, Validation\ValidationException};
 
 class AssignmentController extends Controller
 {

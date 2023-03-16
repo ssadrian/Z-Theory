@@ -2,15 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\JoinStatus;
-use App\Models\Ranking;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use App\{Enums\JoinStatus, Models\Ranking};
+use Illuminate\{Http\Request, Http\Response, Support\Carbon, Support\Facades\Validator, Validation\ValidationException};
 
 class RankingsController extends Controller
 {
