@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('rankings', function (Blueprint $table) {
             $table->id();
             $table->uuid('code')->unique();
-            $table->text('name')->unique();
+            $table->text('name');
 
             $table->unsignedBigInteger('creator');
             $table->foreign('creator')->on('teachers')->references('id')
