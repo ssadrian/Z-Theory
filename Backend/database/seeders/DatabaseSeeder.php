@@ -2,11 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Ranking;
-use App\Models\Student;
-use App\Models\Teacher;
-use Carbon\Carbon;
-use Illuminate\Database\Seeder;
+use App\{Models\Ranking, Models\Student, Models\Teacher};
+use Illuminate\{Database\Seeder, Support\Carbon};
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,6 +18,7 @@ class DatabaseSeeder extends Seeder
             DefaultAvatarSeeder::class
         ]);
 
+        $this->command->info('Creating test student');
         // Test student
         Student::factory()
             ->create(attributes: [
@@ -33,6 +31,7 @@ class DatabaseSeeder extends Seeder
                 'avatar' => fake()->text(10)
             ]);
 
+        $this->command->info('Creating test teacher');
         // Test teacher
         Teacher::factory()
             ->has(Ranking::factory(), 'rankingsCreated')
@@ -46,29 +45,36 @@ class DatabaseSeeder extends Seeder
                 'avatar' => fake()->text(10)
             ]);
 
+        $this->command->info('Creating other 9 students');
         Student::factory(9)
             ->create();
 
+        $this->command->info('Creating other 9 teachers');
         Teacher::factory(9)
             ->has(Ranking::factory(), 'rankingsCreated')
             ->create();
 
+        $this->command->info('Assigning ranks to students');
         foreach (Student::all() as $student) {
-            attachRandomRanking:
-            $student->rankings()->attach(
-                Ranking::all()->random(),
-                [
-                    'points' => fake()->numberBetween(int2: 50),
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now()
-                ]
-            );
+            foreach (range(0, 9) as $ignored) {
+                $randomRank = Ranking::all()->random();
+                $pivot = [
+                    'points' => fake()->numberBetween(int2: 50)
+                ];
 
-            // 10% possibility of adding the student to another ranking
-            // as well could result in integrity errors
-            if (fake()->numberBetween(int2: 9) == 0) {
-                goto attachRandomRanking;
+                $this->command->info('Attaching to student ' . $student['id'] . ' rank ' . $randomRank['code'] . ' with points ' . $pivot['points']);
+                $student->rankings()->attach($randomRank, $pivot);
+
+                // 10% possibility of adding the student to another ranking
+                $this->command->info('Rolling random number');
+                $rolledNumber = fake()->numberBetween(int2: 9);
+                $this->command->info('Rolled number ' . $rolledNumber);
+                if ($rolledNumber == 0) {
+                    $this->command->info('Attaching new ranking to same student');
+                }
             }
+
+            $this->command->info('Going to next student');
         }
     }
 }

@@ -14,7 +14,7 @@ class RankingFactory extends Factory
     {
         return [
             'code' => fake()->uuid(),
-            'name' => fake()->text(),
+            'name' => fake()->text(50),
             'creator' => Teacher::all()->random()
         ];
     }

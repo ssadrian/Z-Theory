@@ -57,6 +57,14 @@ export class RankingService {
     });
   }
 
+  acceptStudent(entity: IAcceptStudentAssignation): Observable<HttpResponse<Object>> {
+    const url: string = `${ this.#rankingUrl }/accept/${ entity.url_studentId }`;
+    return this.http.post(url, entity, {
+      headers: this.#clientHeaders,
+      observe: 'response',
+    })
+  }
+
   leaderboardsForStudent(id: number): Observable<IRanking[]> {
     const url: string = `${this.#rankingUrl}/for/${id}`;
     return this.http.get<IRanking[]>(url, {

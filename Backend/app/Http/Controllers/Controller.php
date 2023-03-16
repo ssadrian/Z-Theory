@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Validator;
+use Illuminate\{
+    Foundation\Auth\Access\AuthorizesRequests,
+    Foundation\Bus\DispatchesJobs,
+    Foundation\Validation\ValidatesRequests,
+    Routing\Controller as BaseController,
+    Validation\ValidationException,
+    Validation\Validator
+};
 
 class Controller extends BaseController
 {

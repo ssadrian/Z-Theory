@@ -45,6 +45,7 @@ Route::prefix('ranking')->group(function () {
 
     Route::post('created_by/{teacherId}', [RankingsController::class, 'createdBy']);
     Route::post('assign/{studentId}', [RankingsController::class, 'assignStudent']);
+    Route::post('accept/{studentId}', [RankingsController::class, 'acceptStudent']);
 });
 
 Route::apiResource('assignment', AssignmentController::class);

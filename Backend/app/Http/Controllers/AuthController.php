@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\Teacher;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\{Models\Student, Models\Teacher};
+use Illuminate\{Http\JsonResponse, Http\Request, Support\Facades\Hash};
 
 class AuthController extends Controller
 {

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Assignment;
+use App\Models\Teacher;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +21,8 @@ class AssignmentFactory extends Factory
             'title' => fake()->text(20),
             'description' => fake()->text(),
             'content' => fake()->text(),
-            'points' => fake()->numberBetween(0, 100)
+            'points' => fake()->numberBetween(0, 100),
+            'creator' => Teacher::all()->random()
         ];
     }
 }

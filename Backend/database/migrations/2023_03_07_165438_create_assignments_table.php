@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('content')->default('');
             $table->unsignedInteger('points');
 
-            $table->foreignId('teacher_id')->constrained();
+            $table->foreignId('teacher_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });

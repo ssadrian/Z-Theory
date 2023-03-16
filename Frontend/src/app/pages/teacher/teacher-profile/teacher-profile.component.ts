@@ -132,7 +132,9 @@ export class TeacherProfileComponent implements OnInit {
       center: this.teacher.center!,
     };
 
-    this.teacherService.update(this.teacher.id, entity).subscribe();
+    this.teacherService
+      .update(this.teacher.id, entity)
+      .subscribe();
     this.teacher.avatar = this.#b64Avatar;
 
     this.show = false;
