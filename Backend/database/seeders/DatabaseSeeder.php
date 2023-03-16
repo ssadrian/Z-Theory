@@ -55,9 +55,8 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         $this->command->info('Assigning ranks to students');
-
         foreach (Student::all() as $student) {
-            while (true) {
+            foreach (range(0, 9) as $ignored) {
                 $randomRank = Ranking::all()->random();
                 $pivot = [
                     'points' => fake()->numberBetween(int2: 50)
@@ -67,17 +66,15 @@ class DatabaseSeeder extends Seeder
                 $student->rankings()->attach($randomRank, $pivot);
 
                 // 10% possibility of adding the student to another ranking
-                // as well could result in integrity errors
                 $this->command->info('Rolling random number');
                 $rolledNumber = fake()->numberBetween(int2: 9);
                 $this->command->info('Rolled number ' . $rolledNumber);
-                if ($rolledNumber != 0) {
-                    $this->command->info('Going to next student');
-                    break;
+                if ($rolledNumber == 0) {
+                    $this->command->info('Attaching new ranking to same student');
                 }
-
-                $this->command->info('Attaching new ranking to same student');
             }
+
+            $this->command->info('Going to next student');
         }
     }
 }
