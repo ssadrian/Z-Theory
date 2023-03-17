@@ -132,9 +132,7 @@ export class TeacherProfileComponent implements OnInit {
       center: this.teacher.center!,
     };
 
-    this.teacherService
-      .update(this.teacher.id, entity)
-      .subscribe();
+    this.teacherService.update(this.teacher.id, entity).subscribe();
     this.teacher.avatar = this.#b64Avatar;
 
     this.show = false;
@@ -144,7 +142,7 @@ export class TeacherProfileComponent implements OnInit {
     this.show = true;
   }
 
-  changeRankingId(ranking: IRanking): void {
+  changeRankingId(ranking: IRanking): void { 
     const ranking_code: string = uuidv4();
     const entity: IUpdateRanking = {
       code: ranking_code,
@@ -153,9 +151,9 @@ export class TeacherProfileComponent implements OnInit {
       creator: ranking.creator,
     };
 
-    this.rankingService.update(entity).subscribe();
+    this.rankingService.update(ranking_code, entity).subscribe();
   }
-
+  
   deleteStudent(student: IUser): void {
     this.studentService.delete(student.id).subscribe();
   }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ICreateRanking } from '../../../models/create/create-ranking';
 import { ICreateStudentAssignation } from '../../../models/create/create-student-assignation';
 import { IRanking } from '../../../models/ranking.model';
+import { IAcceptStudentAssignation } from '../../../models/update/accept-student-assignation';
 import { IUpdateRanking } from '../../../models/update/update-ranking';
 import { environment } from '../../environments/environment';
 import { CredentialService } from '../credential.service';
@@ -45,7 +46,6 @@ export class RankingService {
       headers: this.#clientHeaders,
     });
   }
-
   assignStudent(
     entity: ICreateStudentAssignation
   ): Observable<HttpResponse<Object>> {
@@ -57,12 +57,14 @@ export class RankingService {
     });
   }
 
-  acceptStudent(entity: IAcceptStudentAssignation): Observable<HttpResponse<Object>> {
-    const url: string = `${ this.#rankingUrl }/accept/${ entity.url_studentId }`;
+  acceptStudent(
+    entity: IAcceptStudentAssignation
+  ): Observable<HttpResponse<Object>> {
+    const url: string = `${this.#rankingUrl}/accept/${entity.url_studentId}`;
     return this.http.post(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
-    })
+    });
   }
 
   leaderboardsForStudent(id: number): Observable<IRanking[]> {
@@ -79,8 +81,11 @@ export class RankingService {
     });
   }
 
-  update(entity: IUpdateRanking): Observable<HttpResponse<Object>> {
-    const url: string = `${this.#rankingUrl}/${entity.old_code}`;
+  update(
+    code: string,
+    entity: IUpdateRanking
+  ): Observable<HttpResponse<Object>> {
+    const url: string = `${this.#rankingUrl}/${code}`;
     return this.http.put(url, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
