@@ -18,7 +18,7 @@ class TeacherFactory extends Factory
     {
         return [
             'name' => fake()->text(20),
-            'surnames' => fake()->uuid(),
+            'surnames' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'password' => bcrypt(fake()->password()),
             'nickname' => fake()->uuid(),

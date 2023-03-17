@@ -68,10 +68,16 @@ class Ranking extends Model
      * @var array
      */
     protected $touches = [
-        'students',
         'queues',
         'assignments'
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
 
     public function students(): BelongsToMany
     {

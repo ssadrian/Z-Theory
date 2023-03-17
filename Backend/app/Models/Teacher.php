@@ -72,6 +72,13 @@ class Teacher extends Authenticatable
         'rankingsCreated'
     ];
 
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
     public function rankingsCreated(): HasMany
     {
         return $this->hasMany(Ranking::class, foreignKey: 'creator');
