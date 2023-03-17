@@ -75,6 +75,13 @@ class Assignment extends Model
         'rankingsAssigned'
     ];
 
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
     public function creator(): BelongsTo
     {
         return $this
