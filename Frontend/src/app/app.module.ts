@@ -2,6 +2,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
+import {RippleModule} from 'primeng/ripple';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -69,6 +70,7 @@ import {MessageService} from 'primeng/api';
     ProgressBarModule,
     CardModule,
     PasswordModule,
+    RippleModule,
   ],
   providers: [
     LoginService,

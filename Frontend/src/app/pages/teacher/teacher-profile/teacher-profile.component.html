@@ -207,7 +207,7 @@
   <hr />
   <div class="p-20">
     <p-card header="Rankings Creados" [ngSwitch]="createdRankings.length">
-      <div *ngSwitchCase="0">No create ningun ranking</div>
+      <div *ngSwitchCase="0">Ningun ranking creado</div>
 
       <div *ngSwitchDefault>
         <p-table
@@ -247,7 +247,6 @@
                   class="p-button-danger"
                   label="Borrar Entrega"
                   icon="pi pi-trash"
-                 
                 ></button>
 
                 <button

@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\{Models\Assignment, Models\Ranking};
-use Illuminate\{Http\Request, Http\Response, Support\Facades\Validator, Validation\ValidationException};
+use Illuminate\{
+    Http\Request,
+    Http\Response,
+    Support\Facades\DB,
+    Support\Facades\Log,
+    Support\Facades\Validator,
+    Validation\ValidationException
+};
 
 class AssignmentController extends Controller
 {
@@ -120,17 +127,24 @@ class AssignmentController extends Controller
     public function assignToRanking($rankCode, Request $request): Response
     {
         // Append rank's code from url to request's body
-        $request['rank_code'] = $rankCode;
+        $request['code'] = $rankCode;
 
         $data = $request->validate([
             'id' => 'required|exists:assignments',
-            'rank_code' => 'required|exists:rankings,code'
+            'code' => 'required|exists:rankings'
         ]);
 
+        DB::enableQueryLog();
+
+        $rank = Ranking::all()->firstWhere('code', $data['code']);
         Assignment::find($data['id'])
             ->rankingsAssigned()
-            ->attach(Ranking::all()->firstWhere('code', $rankCode));
+            ->syncWithoutDetaching($rank);
 
-        return response(Assignment::with(['creator'])->find($data['id']));
+        Log::debug(DB::getQueryLog());
+
+        return response(
+            Assignment::find($data['id'])
+        );
     }
 }

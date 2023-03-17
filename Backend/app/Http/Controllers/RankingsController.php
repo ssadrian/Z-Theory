@@ -68,10 +68,10 @@ class RankingsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function update($code, Request $request): Response
+    public function update($oldRankCode, Request $request): Response
     {
         // Append ranking's id from url to request's body
-        $validator = Validator::make(['code' => $code], [
+        $validator = Validator::make(['code' => $oldRankCode], [
             'code' => 'required|exists:rankings'
         ]);
         $this->throwIfInvalid($validator);
@@ -83,10 +83,10 @@ class RankingsController extends Controller
         ]);
 
         $previousRanking = Ranking::with(['creator', 'students', 'queues'])
-            ->firstWhere('code', $code);
+            ->firstWhere('code', $oldRankCode);
 
         $ranking = Ranking::with(['creator', 'students', 'queues'])
-            ->firstWhere('code', $code);
+            ->firstWhere('code', $oldRankCode);
 
         foreach ($data as $key => $value) {
             if (empty($value)) {
