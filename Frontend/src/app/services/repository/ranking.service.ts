@@ -46,6 +46,7 @@ export class RankingService {
       headers: this.#clientHeaders,
     });
   }
+
   assignStudent(
     entity: ICreateStudentAssignation
   ): Observable<HttpResponse<Object>> {

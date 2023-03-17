@@ -17,8 +17,8 @@ export class TeacherService {
 
   constructor(private http: HttpClient, private credentials: CredentialService) {
     this.#clientHeaders = {
-      'Authorization': `Bearer ${this.credentials.token}`,
-      'Accept': 'application/json',
+      Authorization: `Bearer ${this.credentials.token}`,
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     };
   }

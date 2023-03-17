@@ -134,17 +134,16 @@ class AssignmentController extends Controller
             'code' => 'required|exists:rankings'
         ]);
 
-        DB::enableQueryLog();
-
-        $rank = Ranking::all()->firstWhere('code', $data['code']);
         Assignment::find($data['id'])
             ->rankingsAssigned()
-            ->syncWithoutDetaching($rank);
+            ->syncWithoutDetaching(Ranking::all()->firstWhere('code', $data['code']));
 
-        Log::debug(DB::getQueryLog());
+        $assignment = Assignment::with(['creator', 'rankingsAssigned'])
+            ->find($data['id']);
+        $assignment->rankingsAssigned->makeHidden('pivot');
 
         return response(
-            Assignment::find($data['id'])
+            $assignment
         );
     }
 }
