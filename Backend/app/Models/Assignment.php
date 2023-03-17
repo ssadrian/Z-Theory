@@ -67,15 +67,6 @@ class Assignment extends Model
     ];
 
     /**
-     * All the relationships to be touched.
-     *
-     * @var array
-     */
-    protected $touches = [
-        'rankingsAssigned'
-    ];
-
-    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
