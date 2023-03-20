@@ -168,7 +168,10 @@ class RankingsController extends Controller
         return response($leaderboards);
     }
 
-    private $data = [];
+    /**
+     * @var array
+     */
+    private array $data = [];
 
     /**
      * @param $studentId
@@ -222,6 +225,11 @@ class RankingsController extends Controller
         return response($ranking);
     }
 
+    /**
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     */
     public function acceptStudent($studentId, Request $request): Response
     {
         // Append student's id from url to request's body
@@ -264,5 +272,47 @@ class RankingsController extends Controller
 
         $ranking->refresh();
         return response($ranking);
+    }
+
+    /**
+     * @param $rankingCode
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     * @throws ValidationException
+     */
+    public function updateForStudent($rankingCode, $studentId, Request $request): Response
+    {
+        // Append ranking's code and student's id from url to request's body
+        $validator = Validator::make([
+            'code' => $rankingCode,
+            'id' => $studentId
+        ], [
+            'code' => 'required|exists:rankings',
+            'id' => 'required|exists:students|exists:ranking_student,student_id'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        $data = $request->validate([
+            'points' => 'sometimes|nullable|int'
+        ]);
+
+        $previousRanking = Ranking::with(['students'])
+            ->firstWhere('code', $rankingCode)
+            ->students()
+            ->firstWhere('student_id', $studentId);
+
+        $ranking = Ranking::with(['students'])
+            ->firstWhere('code', $rankingCode)
+            ->students()
+            ->firstWhere('student_id', $studentId);
+
+        $ranking->pivot->points = $data['points'];
+        $success = $ranking->pivot->save();
+
+        return response(
+            $previousRanking,
+            status: $success ? 200 : 422
+        );
     }
 }
