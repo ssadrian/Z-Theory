@@ -6,6 +6,7 @@ import { ICreateStudentAssignation } from '../../../models/create/create-student
 import { IRanking } from '../../../models/ranking.model';
 import { IAcceptStudentAssignation } from '../../../models/update/accept-student-assignation';
 import { IUpdateRanking } from '../../../models/update/update-ranking';
+import {IUpdateRankingStudent} from '../../../models/update/update-ranking-student';
 import { environment } from '../../environments/environment';
 import { CredentialService } from '../credential.service';
 
@@ -98,6 +99,13 @@ export class RankingService {
     return this.http.delete(url, {
       headers: this.#clientHeaders,
       observe: 'response',
+    });
+  }
+
+  updateForStudent(entity: IUpdateRankingStudent): Observable<Object> {
+    const url: string = `${this.#rankingUrl}/${entity.url_rankingCode}/for/${entity.url_studentId}`;
+    return this.http.put(url, '', {
+      headers: this.#clientHeaders
     });
   }
 }

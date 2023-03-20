@@ -2,15 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\{Models\Assignment, Models\Ranking};
-use Illuminate\{
-    Http\Request,
-    Http\Response,
-    Support\Facades\DB,
-    Support\Facades\Log,
-    Support\Facades\Validator,
-    Validation\ValidationException
-};
+use App\{Models\Assignment, Models\Ranking, Models\Student};
+use Illuminate\{Http\Request, Http\Response, Support\Facades\Validator, Validation\ValidationException};
 
 class AssignmentController extends Controller
 {
@@ -22,7 +15,7 @@ class AssignmentController extends Controller
     public function index(): Response
     {
         return response(
-            Assignment::with(['creator'])->get()
+            Assignment::with(['creator', 'rankingsAssigned', 'studentsAssigned'])->get()
         );
     }
 
@@ -107,7 +100,7 @@ class AssignmentController extends Controller
 
         return response(
             $previousAssignment,
-            status: $success ? 200 : 422
+            status: $success ? 200 : 400
         );
     }
 
@@ -120,23 +113,37 @@ class AssignmentController extends Controller
     public function destroy($id): Response
     {
         return response(
-            status: Assignment::destroy($id) ? 200 : 422
+            status: Assignment::destroy($id) ? 200 : 400
         );
     }
 
     public function assignToRanking($rankCode, Request $request): Response
     {
         // Append rank's code from url to request's body
-        $request['code'] = $rankCode;
+        $validator = Validator::make(['code' => $rankCode], [
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
 
         $data = $request->validate([
             'id' => 'required|exists:assignments',
-            'code' => 'required|exists:rankings'
         ]);
 
         Assignment::find($data['id'])
             ->rankingsAssigned()
-            ->syncWithoutDetaching(Ranking::all()->firstWhere('code', $data['code']));
+            ->syncWithoutDetaching(Ranking::all()->firstWhere('code', $rankCode));
+
+        $ranking = Ranking::with('students')
+            ->firstWhere('code', $rankCode);
+
+        // Each member of the ranking with the assignment should have their assignments
+        foreach ($ranking->students as $student) {
+            Student::find($student->id)
+                ->assignments()
+                ->syncWithoutDetaching([
+                    $data['id'] => ['status' => 'Pending'],
+                ]);
+        }
 
         $assignment = Assignment::with(['creator', 'rankingsAssigned'])
             ->find($data['id']);
@@ -144,6 +151,37 @@ class AssignmentController extends Controller
 
         return response(
             $assignment
+        );
+    }
+
+    public function removeFromRanking($rankCode, Request $request): Response
+    {
+        // Append rank's code from url to request's body
+        $validator = Validator::make(['code' => $rankCode], [
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        $data = $request->validate([
+            'id' => 'required|exists:assignments',
+        ]);
+
+        Assignment::find($data['id'])
+            ->rankingsAssigned()
+            ->detach(Ranking::all()->firstWhere('code', $rankCode));
+
+        $ranking = Ranking::with('students')
+            ->firstWhere('code', $rankCode);
+
+        // Each member of the ranking with the assignment should have their assignments
+        foreach ($ranking->students as $student) {
+            Student::find($student->id)
+                ->assignments()
+                ->detach($data['id']);
+        }
+
+        return response(
+            status: 200
         );
     }
 }

@@ -73,7 +73,14 @@ class Student extends Authenticatable
     public function rankings(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Ranking::class, 'ranking_student')
+            ->belongsToMany(Ranking::class)
             ->withPivot('points');
+    }
+
+    public function assignments(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Assignment::class)
+            ->withPivot(['status', 'mark']);
     }
 }
