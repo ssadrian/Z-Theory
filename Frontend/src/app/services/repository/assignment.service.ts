@@ -3,6 +3,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ICreateRanking} from '../../../models/create/create-ranking';
 import {IAssignment} from '../../../models/assignment.model';
+import {IAssignRanking} from '../../../models/misc/assign-ranking';
+import {IRemoveAssignRanking} from '../../../models/misc/remove-assign-ranking';
 import {IUpdateRanking} from '../../../models/update/update-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
@@ -58,7 +60,17 @@ export class AssignmentService {
     });
   }
 
-  assignToRank(): Observable<any> {
-    return new Observable<any>();
+  assignToRank(entity: IAssignRanking): Observable<any> {
+    const url: string = `${this.#assignmentUrl}/assign/ranking/${entity.url_rankCode}`;
+    return this.http.post(url, entity, {
+      headers: this.#clientHeaders,
+    });
+  }
+
+  removeFromRank(entity: IRemoveAssignRanking): Observable<any> {
+    const url: string = `${this.#assignmentUrl}/remove/ranking/${entity.url_rankCode}`;
+    return this.http.post(url, entity, {
+      headers: this.#clientHeaders,
+    });
   }
 }

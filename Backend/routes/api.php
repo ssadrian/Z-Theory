@@ -53,6 +53,7 @@ Route::prefix('ranking')->group(function () {
 Route::apiResource('assignment', AssignmentController::class);
 Route::prefix('assignment')->group(function () {
     Route::post('assign/ranking/{rankCode}', [AssignmentController::class, 'assignToRanking']);
+    Route::post('remove/ranking/{rankCode}', [AssignmentController::class, 'removeFromRanking']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
