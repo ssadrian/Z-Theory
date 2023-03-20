@@ -20,7 +20,9 @@ class StudentsController extends Controller
      */
     public function index(): Response
     {
-        return response(Student::with(['rankings'])->get());
+        return response(
+            Student::with(['rankings', 'assignments'])->get()
+        );
     }
 
     /**
@@ -41,7 +43,10 @@ class StudentsController extends Controller
             'avatar' => 'sometimes|nullable|string'
         ]);
 
-        return response(Student::create($data), 201);
+        return response(
+            Student::create($data)
+            , 201
+        );
     }
 
     /**
@@ -59,7 +64,7 @@ class StudentsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Student::with(['rankings'])
+            Student::with(['rankings', 'assignments'])
                 ->find($id)
         );
     }
@@ -102,7 +107,7 @@ class StudentsController extends Controller
 
         return response(
             $previousStudent,
-            status: $success ? 200 : 422
+            status: $success ? 200 : 400
         );
     }
 
@@ -140,14 +145,18 @@ class StudentsController extends Controller
         $student = Student::find($data['id']);
 
         if (!Hash::check($data['password'], $student->password)) {
-            // Unprocessable Content
-            return response(status: 422);
+            // Bad Request
+            return response(
+                status: 400
+            );
         }
 
         $student->password = Hash::make($data['new_password']);
         $student->save();
 
         // Ok
-        return response(status: 200);
+        return response(
+            status: 200
+        );
     }
 }

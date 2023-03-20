@@ -82,6 +82,12 @@ class Assignment extends Model
     public function rankingsAssigned(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Ranking::class, 'ranking_assignment');
+            ->belongsToMany(Ranking::class);
+    }
+
+    public function studentsAssigned(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Student::class);
     }
 }

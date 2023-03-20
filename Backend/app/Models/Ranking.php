@@ -106,6 +106,6 @@ class Ranking extends Model
     public function assignments(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Assignment::class, 'ranking_assignment');
+            ->belongsToMany(Assignment::class);
     }
 }

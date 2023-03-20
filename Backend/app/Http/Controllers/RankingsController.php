@@ -14,7 +14,9 @@ class RankingsController extends Controller
      */
     public function index(): Response
     {
-        return response(Ranking::with(['students', 'queues'])->get());
+        return response(
+            Ranking::with(['students', 'queues'])->get()
+        );
     }
 
     /**
@@ -99,7 +101,7 @@ class RankingsController extends Controller
 
         return response(
             $previousRanking,
-            status: $success ? 200 : 422
+            status: $success ? 200 : 400
         );
     }
 
@@ -165,7 +167,9 @@ class RankingsController extends Controller
             $leaderboards[] = $ranking;
         }
 
-        return response($leaderboards);
+        return response(
+            $leaderboards
+        );
     }
 
     /**
@@ -208,7 +212,9 @@ class RankingsController extends Controller
                 ->queues
                 ->count() !== 0
         ) {
-            return response(status: 422);
+            return response(
+                status: 400
+            );
         }
 
         $ranking->queues()->attach($studentId, [
@@ -222,7 +228,9 @@ class RankingsController extends Controller
             'updated_at' => Carbon::now()
         ]);
 
-        return response($ranking);
+        return response(
+            $ranking
+        );
     }
 
     /**
@@ -260,7 +268,9 @@ class RankingsController extends Controller
                 ->queues
                 ->count() === 0
         ) {
-            return response(status: 422);
+            return response(
+                status: 400
+            );
         }
 
         $queue = $ranking->queues()
@@ -271,7 +281,9 @@ class RankingsController extends Controller
         $queue->push();
 
         $ranking->refresh();
-        return response($ranking);
+        return response(
+            $ranking
+        );
     }
 
     /**
@@ -312,7 +324,7 @@ class RankingsController extends Controller
 
         return response(
             $previousRanking,
-            status: $success ? 200 : 422
+            status: $success ? 200 : 400
         );
     }
 }
