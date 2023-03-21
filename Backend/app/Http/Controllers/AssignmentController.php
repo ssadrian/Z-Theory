@@ -32,7 +32,7 @@ class AssignmentController extends Controller
             'title' => 'required|string',
             'points' => 'required|int',
             'description' => 'sometimes|nullable|string',
-            'content' => 'sometimes|nullable|string'
+            'content' => 'sometimes|nullable|string',
         ]);
 
         // Model requires the teacher's id, however the user must see it as creator
@@ -127,6 +127,7 @@ class AssignmentController extends Controller
 
         $data = $request->validate([
             'id' => 'required|exists:assignments',
+            'file' => 'required|string'
         ]);
 
         Assignment::find($data['id'])
@@ -141,7 +142,10 @@ class AssignmentController extends Controller
             Student::find($student->id)
                 ->assignments()
                 ->syncWithoutDetaching([
-                    $data['id'] => ['status' => 'Pending'],
+                    $data['id'] => [
+                        'status' => 'Pending',
+                        'file' => $data['file']
+                    ],
                 ]);
         }
 

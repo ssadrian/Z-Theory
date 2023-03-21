@@ -20,6 +20,7 @@ return new class extends Migration {
                 ->nullOnDelete();
 
             $table->unsignedFloat('mark', 3)->default(0);
+            $table->string('file')->nullable();
 
             $table->timestamps();
         });
