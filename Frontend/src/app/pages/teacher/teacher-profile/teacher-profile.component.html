@@ -266,7 +266,15 @@
               <td>{{ rowIndex + 1 }}</td>
               <td>{{ student.nickname }}</td>
               <td>{{ student.name }}</td>
-              <td>{{ student.pivot.points }}</td>
+              <td>
+                <input
+                  type="number"
+                  class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  [(ngModel)]="student.pivot.points"
+                  [disabled]="!inputEnabled"
+                  (blur)="modifyStudentPoints(ranking, student)"
+                />
+              </td>
               <td class="grid gap-4 grid-cols-2">
                 <button
                   pButton
@@ -274,6 +282,7 @@
                   class="p-button-warning"
                   label="Modificar Puntuación"
                   icon="pi pi-pencil"
+                  [disabled]="inputEnabled" (click)="inputEnabled = true"
                 ></button>
                 <button
                   pButton
@@ -291,4 +300,3 @@
     </p-card>
   </div>
 </section>
-

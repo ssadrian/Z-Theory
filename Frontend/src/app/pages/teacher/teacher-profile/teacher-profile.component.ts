@@ -6,6 +6,7 @@ import { RankingService } from 'src/app/services/repository/ranking.service';
 import { StudentService } from 'src/app/services/repository/student.service';
 import { IStudent } from 'src/models/student.model';
 import { IUpdateRanking } from 'src/models/update/update-ranking';
+import { IUpdateRankingStudent } from 'src/models/update/update-ranking-student';
 import { IUpdateTeacher } from 'src/models/update/update-teacher';
 import { IUser } from 'src/models/user.model';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,6 +32,7 @@ export class TeacherProfileComponent implements OnInit {
     private studentService: StudentService
   ) {}
 
+  inputEnabled = false;
   show: boolean = false;
 
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
@@ -155,6 +157,23 @@ export class TeacherProfileComponent implements OnInit {
   }
 
   deleteStudent(student: IUser): void {
-    this.studentService.delete(student.id).subscribe();
+    if (
+      window.confirm('¿Estás seguro de que deseas eliminar este estudiante?')
+    ) {
+      this.studentService.delete(student.id).subscribe();
+    }
+  }
+
+  modifyStudentPoints(ranking: IRanking, student: IStudent) {
+    this.inputEnabled = false;
+
+    console.log(student.pivot.points);
+
+    const entity: IUpdateRankingStudent = {
+      url_studentId: student.id,
+      url_rankingCode: ranking.code,
+      points: student.pivot.points,
+    };
+    this.rankingService.updateForStudent(entity).subscribe();
   }
 }
