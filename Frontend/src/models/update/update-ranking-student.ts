@@ -1,4 +1,5 @@
 export interface IUpdateRankingStudent {
-  url_studentId: string;
+  url_studentId: number;
   url_rankingCode: string;
+  points: number;
 }

@@ -104,7 +104,7 @@ export class RankingService {
 
   updateForStudent(entity: IUpdateRankingStudent): Observable<Object> {
     const url: string = `${this.#rankingUrl}/${entity.url_rankingCode}/for/${entity.url_studentId}`;
-    return this.http.put(url, '', {
+    return this.http.put(url, entity, {
       headers: this.#clientHeaders
     });
   }
