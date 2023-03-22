@@ -2,6 +2,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
+import {FileUploadModule} from 'primeng/fileupload';
+import {StyleClassModule} from 'primeng/styleclass';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -42,7 +44,9 @@ import {MessageService} from 'primeng/api';
     PrimengModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FileUploadModule,
+    StyleClassModule,
   ],
   providers: [
     LoginService,

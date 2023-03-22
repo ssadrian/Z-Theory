@@ -11,6 +11,12 @@
 npm-debug.log
 yarn-error.log
 
+### Sass ###
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map
+
 # IDEs and editors
 .idea/
 .project
@@ -30,7 +36,6 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
-.sass-cache/
 /connect.lock
 /coverage
 /libpeerconnection.log
