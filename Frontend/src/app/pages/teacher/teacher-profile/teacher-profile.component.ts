@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Base64Service } from 'src/app/services/base64.service';
+import { AssignmentService } from 'src/app/services/repository/assignment.service';
 import { RankingService } from 'src/app/services/repository/ranking.service';
 import { StudentService } from 'src/app/services/repository/student.service';
+import { IAssignment } from 'src/models/assignment.model';
+import { ICreateAssignment } from 'src/models/create/create-assignment';
 import { IStudent } from 'src/models/student.model';
 import { IUpdateRanking } from 'src/models/update/update-ranking';
 import { IUpdateRankingStudent } from 'src/models/update/update-ranking-student';
@@ -29,14 +32,17 @@ export class TeacherProfileComponent implements OnInit {
     private rankingService: RankingService,
     private messageService: MessageService,
     private b64: Base64Service,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private assignmentService: AssignmentService
   ) {}
 
   inputEnabled = false;
   show: boolean = false;
+  showAssignment: boolean = false;
 
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
   createdRankings: IRanking[] = [];
+  createdAssignment: ICreateAssignment[] = [];
   isSubmit: boolean = false;
   loading: boolean = true;
 
@@ -47,6 +53,13 @@ export class TeacherProfileComponent implements OnInit {
   passwordForm = this.fb.group({
     password: ['', [Validators.required]],
     new_password: ['', [Validators.required]],
+  });
+
+  assignmentForm = this.fb.group({
+    titleAssignment: ['', [Validators.required]],
+    descriptionAssignment: ['', [Validators.required]],
+    contentAssignment: ['', [Validators.required]],
+    pointsAssignment: ['', [Validators.required]],
   });
 
   get formControl(): { [key: string]: AbstractControl } {
@@ -176,5 +189,23 @@ export class TeacherProfileComponent implements OnInit {
       points: student.pivot.points,
     };
     this.rankingService.updateForStudent(entity).subscribe();
+  }
+
+  showAssignmentF() {
+    this.showAssignment = true;
+  }
+
+  createAssignment() {
+    const formValue = this.assignmentForm.value;
+    this.assignmentService
+      .create({
+        title: formValue.titleAssignment!,
+        description: formValue.descriptionAssignment!,
+        content: formValue.contentAssignment!,
+        points: 0,
+        creator: this.teacher.id,
+      })
+      .subscribe();
+    this.showAssignment = false;
   }
 }
