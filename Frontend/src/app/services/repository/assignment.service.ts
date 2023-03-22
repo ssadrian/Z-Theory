@@ -8,6 +8,7 @@ import {IRemoveAssignRanking} from '../../../models/misc/remove-assign-ranking';
 import {IUpdateRanking} from '../../../models/update/update-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
+import { ICreateAssignment } from 'src/models/create/create-assignment';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +38,7 @@ export class AssignmentService {
     });
   }
 
-  create(entity: ICreateRanking): Observable<HttpResponse<Object>> {
+  create(entity: ICreateAssignment): Observable<HttpResponse<Object>> {
     return this.http.post(this.#assignmentUrl, entity, {
       headers: this.#clientHeaders,
       observe: 'response',
