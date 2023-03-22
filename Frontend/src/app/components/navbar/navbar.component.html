@@ -1,11 +1,11 @@
-<nav class="p-3 bg-gray-800 border-gray-700 sticky top-0 z-50">
+<nav class="bg-gray-800 border-gray-700 sticky top-0 z-50">
   <div class="container flex flex-wrap items-center justify-between mx-auto">
     <a [routerLink]="['/']" class="flex items-center">
       <app-logo></app-logo>
-      <span
-        class="self-center text-3xl font-semibold whitespace-nowrap text-white"
-        >Z-Theory</span
-      >
+
+      <span class="text-3xl font-semibold">
+        Z-Theory
+      </span>
     </a>
 
     <button
@@ -32,32 +32,35 @@
       </svg>
     </button>
 
-    <div class="hidden w-full md:block md:w-auto" id="navbar-solid-bg">
+    <div class="hidden w-full md:block md:w-auto">
       <ul
         class="menu3 flex flex-col mt-4 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-transparent bg-gray-800 md:dark:bg-transparent border-gray-700"
       >
         <li *ngIf="!isLogged">
           <a
             [routerLink]="['/register']" [routerLinkActive]="['text-white']"
-            class="menu3 hover:transition-all register text-2xl block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
-            >Registro</a
+            class="text-2xl block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
           >
+            Registro
+          </a>
         </li>
 
         <li *ngIf="!isLogged">
           <a
             [routerLink]="['/login']" [routerLinkActive]="['text-white']"
-            class="menu4 singin text-2xl block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
-            >Iniciar sesión</a
+            class="text-2xl block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
           >
+            Iniciar sesión
+          </a>
         </li>
 
         <li *ngIf="isLogged">
           <a
             (click)="logOut()"
-            class="cursor:pointer text-2xl block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
-            >Cerrar sesión</a
+            class="text-2xl block py-2 pl-3 pr-4 text-gray-400 rounded md:border-0 md:p-0 md:hover:text-white hover:bg-gray-700 hover:text-white md:hover:bg-transparent"
           >
+            Cerrar sesión
+          </a>
         </li>
       </ul>
     </div>
