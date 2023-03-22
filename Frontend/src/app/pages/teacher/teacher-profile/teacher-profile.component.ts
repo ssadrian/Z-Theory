@@ -158,16 +158,15 @@ export class TeacherProfileComponent implements OnInit {
   }
 
   changeRankingId(ranking: IRanking): void {
-    const ranking_code: string = uuidv4();
+    const newRankingCode: string = uuidv4();
     const entity: IUpdateRanking = {
-      url_code: ranking.code,
-      code: ranking_code,
-      old_code: ranking.code,
+      url_oldCode: ranking.code,
+      code: newRankingCode,
       name: ranking.name,
       creator: ranking.creator,
     };
 
-    this.rankingService.update(ranking_code, entity).subscribe();
+    this.rankingService.update(entity).subscribe();
   }
 
   deleteStudent(student: IUser): void {
