@@ -29,7 +29,7 @@ class AssignmentController extends Controller
     {
         $data = $request->validate([
             'creator' => 'required|exists:teachers,id',
-            'title' => 'required|string',
+            'title' => 'required|string|unique:assignments',
             'points' => 'required|int',
             'description' => 'sometimes|nullable|string',
             'content' => 'sometimes|nullable|string',
@@ -79,7 +79,7 @@ class AssignmentController extends Controller
 
         $data = $request->validate([
             'id' => 'required|exists:assignments',
-            'title' => 'sometimes|nullable|string',
+            'title' => 'sometimes|nullable|string|unique:assignments',
             'description' => 'sometimes|nullable|string',
             'content' => 'sometimes|nullable|string',
             'points' => 'sometimes|nullable|int',
@@ -126,8 +126,7 @@ class AssignmentController extends Controller
         $this->throwIfInvalid($validator);
 
         $data = $request->validate([
-            'id' => 'required|exists:assignments',
-            'file' => 'required|string'
+            'id' => 'required|exists:assignments'
         ]);
 
         Assignment::find($data['id'])
@@ -143,8 +142,7 @@ class AssignmentController extends Controller
                 ->assignments()
                 ->syncWithoutDetaching([
                     $data['id'] => [
-                        'status' => 'Pending',
-                        'file' => $data['file']
+                        'status' => 'Pending'
                     ],
                 ]);
         }
@@ -186,6 +184,25 @@ class AssignmentController extends Controller
 
         return response(
             status: 200
+        );
+    }
+
+    /**
+     * @param $teacherId
+     * @return Response
+     * @throws ValidationException
+     */
+    public function createdBy($teacherId): Response
+    {
+        $validator = Validator::make(['id' => $teacherId], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return response(
+            Assignment::all()
+                ->where('teacher_id', $teacherId)
+                ->get()
         );
     }
 }

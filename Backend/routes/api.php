@@ -52,6 +52,8 @@ Route::prefix('ranking')->group(function () {
 
 Route::apiResource('assignment', AssignmentController::class);
 Route::prefix('assignment')->group(function () {
+    Route::get('creator/{teacherId}', [AssignmentController::class, 'createdBy']);
+
     Route::post('assign/ranking/{rankCode}', [AssignmentController::class, 'assignToRanking']);
     Route::post('remove/ranking/{rankCode}', [AssignmentController::class, 'removeFromRanking']);
 });

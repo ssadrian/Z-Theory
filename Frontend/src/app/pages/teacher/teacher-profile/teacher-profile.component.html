@@ -171,7 +171,7 @@
           <div class="px-10">
             <div class="text-center mt-5">
               <h2 class="mb-2 text-lg font-semibold text-black">
-                Añadir RANKING:
+                Añadir Ranking
               </h2>
 
               <form [formGroup]="createRankingForm" (ngSubmit)="submit()">
@@ -240,7 +240,7 @@
                   pRipple
                   label="Añadir entrega"
                   icon="pi pi-plus-circle"
-                  (click)="showAssignmentF()"
+                  (click)="showAssignmentForm()"
                 ></button>
                 <button
                   pButton
@@ -301,7 +301,7 @@
       </div>
     </p-card>
 
-    <div class="mt-5">&ensp;</div>
+    <div class="mt-5"></div>
 
     <p-card  header="Tareas Creadas" [ngSwitch]="createdAssignment.length">
       <div *ngSwitchCase="0">No hay tareas</div>
@@ -317,7 +317,7 @@
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         >
           <ng-template pTemplate="caption">
-            <div class="table-header">TAREAS</div>
+            <div class="table-header">Tareas</div>
           </ng-template>
 
           <ng-template pTemplate="header">
@@ -356,9 +356,6 @@
             </tr>
           </ng-template>
         </p-table>
-
-
-
       </div>
     </p-card>
 
@@ -367,9 +364,10 @@
         <form [formGroup]="assignmentForm">
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="titulo" class="inline-block text-white font-bold mb-2"
-                >Título de la entrega</label
-              >
+              <label for="titulo" class="inline-block text-white font-bold mb-2">
+                Título de la entrega
+              </label>
+
               <input
                 id="titulo"
                 type="text"
@@ -437,6 +435,5 @@
         Crear tarea
       </button>
     </ng-container>
-    
   </div>
 </section>

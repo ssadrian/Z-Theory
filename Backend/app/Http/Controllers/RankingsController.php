@@ -15,7 +15,7 @@ class RankingsController extends Controller
     public function index(): Response
     {
         return response(
-            Ranking::with(['students', 'queues'])->get()
+            Ranking::with(['students', 'queues', 'assignments'])->get()
         );
     }
 
@@ -57,7 +57,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Ranking::with('students')
+            Ranking::with(['queues', students', 'assignments'])
                 ->firstWhere('code', $code)
         );
     }
@@ -133,7 +133,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Ranking::with(['students'])
+            Ranking::with(['students', 'queues', 'assignments'])
                 ->where('creator', $teacherId)
                 ->get()
         );
@@ -152,7 +152,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         $leaderboards = [];
-        $rankings = Ranking::with('students')->get();
+        $rankings = Ranking::with(['students', 'assignments'])->get();
 
         foreach ($rankings as $ranking) {
             if (!$ranking->students->contains($studentId)) {
