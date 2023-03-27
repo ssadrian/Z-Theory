@@ -20,8 +20,6 @@ export class RegistrationFormComponent {
 
   isSubmit: boolean = false;
 
-  isTeacherRegistering?: boolean;
-
   form = this.fb.group({
     nickname: ['', [Validators.required]],
     name: ['', [Validators.required]],
@@ -30,8 +28,9 @@ export class RegistrationFormComponent {
     password_confirmation: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     tos: [false, [Validators.requiredTrue]],
-    birth_date: [''],
+    birth_date: [<Date | null>null],
     center: [''],
+    isStudent: [true, [Validators.required]]
   });
 
   #b64Avatar: string = '';
@@ -54,12 +53,9 @@ export class RegistrationFormComponent {
       return;
     }
 
-    if (this.isTeacherRegistering) {
-      this.#registerTeacher();
-      return;
-    }
-
-    this.#registerStudent();
+    this.form.value.isStudent
+      ? this.#registerStudent()
+      : this.#registerTeacher();
   }
 
   #registerStudent(): void {

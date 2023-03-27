@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import {IStudent} from "../../models/student.model";
-import {ITeacher} from "../../models/teacher.model";
+import {Injectable} from '@angular/core';
+import {IStudent} from '../../models/student.model';
+import {ITeacher} from '../../models/teacher.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CredentialService {
   email: string = '';
