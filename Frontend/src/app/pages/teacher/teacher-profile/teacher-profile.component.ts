@@ -1,23 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { Base64Service } from 'src/app/services/base64.service';
-import { AssignmentService } from 'src/app/services/repository/assignment.service';
-import { RankingService } from 'src/app/services/repository/ranking.service';
-import { StudentService } from 'src/app/services/repository/student.service';
-import { IAssignment } from 'src/models/assignment.model';
-import { ICreateAssignment } from 'src/models/create/create-assignment';
-import { IStudent } from 'src/models/student.model';
-import { IUpdateRanking } from 'src/models/update/update-ranking';
-import { IUpdateRankingStudent } from 'src/models/update/update-ranking-student';
-import { IUpdateTeacher } from 'src/models/update/update-teacher';
-import { IUser } from 'src/models/user.model';
-import { v4 as uuidv4 } from 'uuid';
-import { IRanking } from '../../../../models/ranking.model';
-import { ITeacher } from '../../../../models/teacher.model';
-import { IUpdatePassword } from '../../../../models/update/update-password';
-import { CredentialService } from '../../../services/credential.service';
-import { TeacherService } from '../../../services/repository/teacher.service';
+import {Component, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import {MessageService} from 'primeng/api';
+import {Base64Service} from 'src/app/services/base64.service';
+import {AssignmentService} from 'src/app/services/repository/assignment.service';
+import {RankingService} from 'src/app/services/repository/ranking.service';
+import {StudentService} from 'src/app/services/repository/student.service';
+import {IAssignment} from 'src/models/assignment.model';
+import {ICreateAssignment} from 'src/models/create/create-assignment';
+import {IStudent} from 'src/models/student.model';
+import {IUpdateRanking} from 'src/models/update/update-ranking';
+import {IUpdateRankingStudent} from 'src/models/update/update-ranking-student';
+import {IUpdateTeacher} from 'src/models/update/update-teacher';
+import {IUser} from 'src/models/user.model';
+import {v4 as uuidv4} from 'uuid';
+import {IRanking} from '../../../../models/ranking.model';
+import {ITeacher} from '../../../../models/teacher.model';
+import {IUpdatePassword} from '../../../../models/update/update-password';
+import {CredentialService} from '../../../services/credential.service';
+import {TeacherService} from '../../../services/repository/teacher.service';
 
 @Component({
   selector: 'app-teacher-profile',
@@ -33,8 +33,9 @@ export class TeacherProfileComponent implements OnInit {
     private messageService: MessageService,
     private b64: Base64Service,
     private studentService: StudentService,
-    private assignmentService: AssignmentService
-  ) {}
+    private assignmentService: AssignmentService,
+  ) {
+  }
 
   inputEnabled = false;
   show: boolean = false;
@@ -42,9 +43,8 @@ export class TeacherProfileComponent implements OnInit {
 
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
   createdRankings: IRanking[] = [];
-  createdAssignment: IAssignment[] = [];
+  createdAssignments: IAssignment[] = [];
   isSubmit: boolean = false;
-  loading: boolean = true;
 
   createRankingForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -70,6 +70,12 @@ export class TeacherProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.#updateCreatedRanks();
+
+    this.assignmentService
+      .createdByTeacher(this.teacher.id)
+      .subscribe((response: IAssignment[]): void => {
+        this.createdAssignments = response;
+      });
   }
 
   submit(): void {
@@ -113,8 +119,6 @@ export class TeacherProfileComponent implements OnInit {
   }
 
   #updateCreatedRanks(): void {
-    this.loading = true;
-
     this.rankingService
       .createdBy(this.teacher.id)
       .subscribe((rankings: IRanking[]): void => {
@@ -128,7 +132,6 @@ export class TeacherProfileComponent implements OnInit {
             );
           });
         });
-        this.loading = false;
       });
   }
 
@@ -205,6 +208,17 @@ export class TeacherProfileComponent implements OnInit {
       })
       .subscribe();
 
+    this.assignmentService
+      .createdByTeacher(this.teacher.id)
+      .subscribe((response: IAssignment[]): void => {
+        response
+          .map((assignment: IAssignment): void => {
+            debugger;
+            if (assignment.title === formValue.titleAssignment) {
+              this.createdAssignments.push(assignment);
+            }
+          });
+      });
 
     this.showAssignment = false;
   }

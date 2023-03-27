@@ -202,7 +202,6 @@ class AssignmentController extends Controller
         return response(
             Assignment::all()
                 ->where('teacher_id', $teacherId)
-                ->get()
         );
     }
 }
