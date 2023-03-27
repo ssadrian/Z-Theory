@@ -188,12 +188,13 @@ export class TeacherProfileComponent implements OnInit {
     this.rankingService.updateForStudent(entity).subscribe();
   }
 
-  showAssignmentF() {
+  showAssignmentForm() {
     this.showAssignment = true;
   }
 
   createAssignment() {
     const formValue = this.assignmentForm.value;
+
     this.assignmentService
       .create({
         title: formValue.titleAssignment!,
@@ -203,6 +204,8 @@ export class TeacherProfileComponent implements OnInit {
         creator: this.teacher.id,
       })
       .subscribe();
+
+
     this.showAssignment = false;
   }
 }

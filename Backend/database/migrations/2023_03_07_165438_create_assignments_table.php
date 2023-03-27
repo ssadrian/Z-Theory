@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->string('description')->default('');
             $table->string('content')->default('');
             $table->unsignedInteger('points');

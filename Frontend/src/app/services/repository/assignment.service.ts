@@ -8,7 +8,7 @@ import {IRemoveAssignRanking} from '../../../models/misc/remove-assign-ranking';
 import {IUpdateRanking} from '../../../models/update/update-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
-import { ICreateAssignment } from 'src/models/create/create-assignment';
+import {ICreateAssignment} from 'src/models/create/create-assignment';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +58,13 @@ export class AssignmentService {
     return this.http.delete(url, {
       headers: this.#clientHeaders,
       observe: 'response',
+    });
+  }
+
+  createdByTeacher(id: number): Observable<IAssignment[]> {
+    const url: string = `${this.#assignmentUrl}/creator/${id}`;
+    return this.http.get<IAssignment[]>(url, {
+      headers: this.#clientHeaders,
     });
   }
 
