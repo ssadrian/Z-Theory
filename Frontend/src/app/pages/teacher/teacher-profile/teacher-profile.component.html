@@ -213,7 +213,6 @@
         <p-table
           *ngFor="let ranking of createdRankings"
           [value]="ranking.students"
-          [loading]="loading"
           [rowHover]="true"
           [paginator]="true"
           [rowsPerPageOptions]="[3, 5, 10, 25]"
@@ -301,14 +300,12 @@
       </div>
     </p-card>
 
-    <div class="mt-5"></div>
-
-    <p-card  header="Tareas Creadas" [ngSwitch]="createdAssignment.length">
+    <p-card  header="Tareas Creadas" [ngSwitch]="createdAssignments.length">
       <div *ngSwitchCase="0">No hay tareas</div>
 
-      <div *ngSwitchDefault>
-        <p-table
-          [loading]="loading"
+      <p-table
+          *ngSwitchDefault
+          [value]="createdAssignments"
           [rowHover]="true"
           [paginator]="true"
           [rowsPerPageOptions]="[3, 5, 10, 25]"
@@ -323,9 +320,9 @@
           <ng-template pTemplate="header">
             <tr>
               <th>#</th>
-              <th>Titulo de la tarea</th>
-              <th>Descripcion de la tarea</th>
-              <th>Contenido de la tarea</th>
+              <th>Titulo</th>
+              <th>Descripcion</th>
+              <th>Contenido</th>
               <th>Puntos</th>
               <th>Acciones</th>
               <th class="grid gap-4 grid-cols-3">
@@ -356,7 +353,6 @@
             </tr>
           </ng-template>
         </p-table>
-      </div>
     </p-card>
 
     <ng-container *ngIf="showAssignment">

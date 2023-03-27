@@ -57,7 +57,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Ranking::with(['queues', students', 'assignments'])
+            Ranking::with(['queues', 'students', 'assignments'])
                 ->firstWhere('code', $code)
         );
     }
