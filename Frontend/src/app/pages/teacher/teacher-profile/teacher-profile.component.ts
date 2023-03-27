@@ -42,7 +42,7 @@ export class TeacherProfileComponent implements OnInit {
 
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
   createdRankings: IRanking[] = [];
-  createdAssignment: ICreateAssignment[] = [];
+  createdAssignment: IAssignment[] = [];
   isSubmit: boolean = false;
   loading: boolean = true;
 
@@ -59,7 +59,7 @@ export class TeacherProfileComponent implements OnInit {
     titleAssignment: ['', [Validators.required]],
     descriptionAssignment: ['', [Validators.required]],
     contentAssignment: ['', [Validators.required]],
-    pointsAssignment: ['', [Validators.required]],
+    pointsAssignment: [0, [Validators.required]],
   });
 
   get formControl(): { [key: string]: AbstractControl } {
@@ -180,8 +180,6 @@ export class TeacherProfileComponent implements OnInit {
   modifyStudentPoints(ranking: IRanking, student: IStudent) {
     this.inputEnabled = false;
 
-    console.log(student.pivot.points);
-
     const entity: IUpdateRankingStudent = {
       url_studentId: student.id,
       url_rankingCode: ranking.code,
@@ -201,7 +199,7 @@ export class TeacherProfileComponent implements OnInit {
         title: formValue.titleAssignment!,
         description: formValue.descriptionAssignment!,
         content: formValue.contentAssignment!,
-        points: 0,
+        points: formValue.pointsAssignment,
         creator: this.teacher.id,
       })
       .subscribe();
