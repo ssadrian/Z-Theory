@@ -213,7 +213,6 @@ export class TeacherProfileComponent implements OnInit {
       .subscribe((response: IAssignment[]): void => {
         response
           .map((assignment: IAssignment): void => {
-            debugger;
             if (assignment.title === formValue.titleAssignment) {
               this.createdAssignments.push(assignment);
             }
