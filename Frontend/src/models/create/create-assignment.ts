@@ -2,6 +2,6 @@ export interface ICreateAssignment {
   title: string;
   description: string;
   content: string;
-  points: number;
+  points: any;
   creator: number;
 }
