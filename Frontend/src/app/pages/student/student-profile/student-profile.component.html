@@ -146,12 +146,13 @@
   <hr/>
 
   <div class="p-20">
-    <form [formGroup]="codeForm" (ngSubmit)="joinRanking()">
-      <label>
-        <input formControlName="code" placeholder="Codigo del Ranking"/>
-      </label>
+    <form class="flex gap-2" [formGroup]="codeForm" (ngSubmit)="joinRanking()">
+      <span class="p-float-label">
+        <input pInputText id="code" formControlName="code" />
+        <label for="code">Codigo</label>
+      </span>
 
-      <button type="submit">Enviar</button>
+      <button pButton pRipple>Enviar</button>
     </form>
 
     <p-card header="Rankings" [ngSwitch]="rankings.length">
