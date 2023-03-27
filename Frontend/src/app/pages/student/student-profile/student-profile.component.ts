@@ -57,6 +57,12 @@ export class StudentProfileComponent implements OnInit{
 
   #b64Avatar: string = '';
 
+  inventory: Object[] = [
+    {qty: 1, name: 'Espada'},
+    {qty: 3, name: 'Diamantes'},
+    {qty: 1, name: 'Mapa'},
+  ];
+
   ngOnInit(): void {
     this.#updateRanks();
   }

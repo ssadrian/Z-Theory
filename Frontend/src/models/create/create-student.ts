@@ -6,5 +6,5 @@ export interface ICreateStudent {
   email: string;
   password: string;
   password_confirmation: string;
-  birth_date: string;
+  birth_date: Date;
 }
