@@ -42,6 +42,7 @@ import {AssignmentComponent } from './pages/assignment/assignment.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     PrimengModule,
     FormsModule,

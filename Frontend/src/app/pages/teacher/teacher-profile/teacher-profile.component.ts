@@ -6,7 +6,6 @@ import {AssignmentService} from 'src/app/services/repository/assignment.service'
 import {RankingService} from 'src/app/services/repository/ranking.service';
 import {StudentService} from 'src/app/services/repository/student.service';
 import {IAssignment} from 'src/models/assignment.model';
-import {ICreateAssignment} from 'src/models/create/create-assignment';
 import {IStudent} from 'src/models/student.model';
 import {IUpdateRanking} from 'src/models/update/update-ranking';
 import {IUpdateRankingStudent} from 'src/models/update/update-ranking-student';
@@ -46,6 +45,12 @@ export class TeacherProfileComponent implements OnInit {
   createdAssignments: IAssignment[] = [];
   isSubmit: boolean = false;
 
+  courses: any[] = [
+    {name: 'DAW', totalStudents: 10},
+    {name: 'DAM', totalStudents: 15},
+    {name: 'SMIX', totalStudents: 5},
+  ];
+
   createRankingForm = this.fb.group({
     name: ['', [Validators.required]],
   });
@@ -61,6 +66,22 @@ export class TeacherProfileComponent implements OnInit {
     contentAssignment: ['', [Validators.required]],
     pointsAssignment: [0, [Validators.required]],
   });
+
+  rankingButtons = [
+    {
+      label: 'Refrescar codigo',
+      command: () => console.log('x')
+    }
+  ];
+
+  createRankingButtonsForRanking(rank: IRanking) {
+    return [
+      {
+        label: 'Refrescar codigo',
+        command: () => this.changeRankingId(rank)
+      }
+    ];
+  }
 
   get formControl(): { [key: string]: AbstractControl } {
     return this.createRankingForm.controls;
@@ -139,6 +160,8 @@ export class TeacherProfileComponent implements OnInit {
     this.b64.toBase64(event).then((b64: string): void => {
       this.#b64Avatar = b64;
     });
+
+    this.updateAvatar();
   }
 
   updateAvatar(): void {
@@ -156,8 +179,8 @@ export class TeacherProfileComponent implements OnInit {
     this.show = false;
   }
 
-  toggle() {
-    this.show = true;
+  toggle(): void {
+    this.show = !this.show;
   }
 
   changeRankingId(ranking: IRanking): void {
@@ -180,7 +203,7 @@ export class TeacherProfileComponent implements OnInit {
     }
   }
 
-  modifyStudentPoints(ranking: IRanking, student: IStudent) {
+  modifyStudentPoints(ranking: IRanking, student: IStudent): void {
     this.inputEnabled = false;
 
     const entity: IUpdateRankingStudent = {
@@ -191,11 +214,11 @@ export class TeacherProfileComponent implements OnInit {
     this.rankingService.updateForStudent(entity).subscribe();
   }
 
-  showAssignmentForm() {
+  showAssignmentForm(): void {
     this.showAssignment = true;
   }
 
-  createAssignment() {
+  createAssignment(): void {
     const formValue = this.assignmentForm.value;
 
     this.assignmentService
@@ -221,4 +244,6 @@ export class TeacherProfileComponent implements OnInit {
 
     this.showAssignment = false;
   }
+
+  protected readonly console = console;
 }

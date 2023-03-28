@@ -24,6 +24,8 @@ import {TableModule} from 'primeng/table';
 import {ToastModule} from 'primeng/toast';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import {ToolbarModule} from 'primeng/toolbar';
+import {InputNumberModule} from "primeng/inputnumber";
+import {SplitButtonModule} from "primeng/splitbutton";
 
 @NgModule({
   declarations: [],
@@ -54,6 +56,8 @@ import {ToolbarModule} from 'primeng/toolbar';
     BadgeModule,
     AvatarModule,
     ImageModule,
+    InputNumberModule,
+    SplitButtonModule
   ],
 })
 export class PrimengModule {
