@@ -4,6 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {MessageService} from 'primeng/api';
+import { AccordionModule } from 'primeng/accordion';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {FooterComponent} from './components/footer/footer.component';
@@ -22,6 +23,8 @@ import {RegistrationService} from './services/registration.service';
 import {RankingService} from './services/repository/ranking.service';
 import {StudentService} from './services/repository/student.service';
 import {TeacherService} from './services/repository/teacher.service';
+import {AssignmentComponent } from './pages/assignment/assignment.component';
+
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import {TeacherService} from './services/repository/teacher.service';
     StudentProfileComponent,
     TeacherProfileComponent,
     RegistrationFormComponent,
+    AssignmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +47,7 @@ import {TeacherService} from './services/repository/teacher.service';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    AccordionModule
   ],
   providers: [
     LoginService,
