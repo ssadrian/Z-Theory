@@ -3,26 +3,42 @@
     <a [routerLink]="['/']" class="flex items-center">
       <app-logo></app-logo>
 
-      <span class="text-3xl font-semibold">
-        Z-Theory
-      </span>
+      <span class="text-3xl font-semibold"> Z-Theory </span>
     </a>
 
     <div class="w-full md:block md:w-auto">
       <ul class="flex flex-row gap-4 text-2xl text-gray-500">
         <li *ngIf="!isLogged" [routerLink]="['/register']">
-          <a [routerLinkActive]="['text-gray-50']">
+          <a class="cursor-pointer" [routerLinkActive]="['text-gray-50']">
             Registro
           </a>
         </li>
 
         <li *ngIf="!isLogged" [routerLink]="['/login']">
-          <a [routerLinkActive]="['text-gray-50']">
+          <a class="cursor-pointer" [routerLinkActive]="['text-gray-50 ']">
             Iniciar sesión
           </a>
         </li>
 
-        <li *ngIf="isLogged" (click)="logOut()">
+        <li
+          *ngIf="isLogged"
+          [routerLinkActive]="['text-gray-50']"
+          [routerLink]="['/assignment']"
+          class="cursor-pointer"
+        >
+          Tareas
+        </li>
+
+        <li
+          *ngIf="isLogged"
+          [routerLinkActive]="['text-gray-50']"
+          [routerLink]="['/profile']"
+          class="cursor-pointer"
+        >
+          Perfil
+        </li>
+
+        <li *ngIf="isLogged" (click)="logOut()" class="cursor-pointer">
           Cerrar sesión
         </li>
       </ul>
