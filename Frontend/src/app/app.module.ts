@@ -22,6 +22,7 @@ import {RegistrationService} from './services/registration.service';
 import {RankingService} from './services/repository/ranking.service';
 import {StudentService} from './services/repository/student.service';
 import {TeacherService} from './services/repository/teacher.service';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -38,11 +39,12 @@ import {TeacherService} from './services/repository/teacher.service';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     PrimengModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [
     LoginService,
