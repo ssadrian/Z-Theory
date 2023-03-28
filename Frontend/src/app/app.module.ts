@@ -23,6 +23,7 @@ import {RegistrationService} from './services/registration.service';
 import {RankingService} from './services/repository/ranking.service';
 import {StudentService} from './services/repository/student.service';
 import {TeacherService} from './services/repository/teacher.service';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {AssignmentComponent } from './pages/assignment/assignment.component';
 
 
@@ -42,6 +43,7 @@ import {AssignmentComponent } from './pages/assignment/assignment.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     PrimengModule,
     FormsModule,
