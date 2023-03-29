@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
-import {MessageService} from 'primeng/api';
+import {MenuItem, MessageService} from 'primeng/api';
 import {Base64Service} from 'src/app/services/base64.service';
 import {AssignmentService} from 'src/app/services/repository/assignment.service';
 import {RankingService} from 'src/app/services/repository/ranking.service';
@@ -36,7 +36,7 @@ export class TeacherProfileComponent implements OnInit {
   ) {
   }
 
-  inputEnabled = false;
+  inputEnabled: boolean = false;
   show: boolean = false;
   showAssignment: boolean = false;
 
@@ -44,6 +44,7 @@ export class TeacherProfileComponent implements OnInit {
   createdRankings: IRanking[] = [];
   createdAssignments: IAssignment[] = [];
   isSubmit: boolean = false;
+  isSidebarVisible: boolean = false;
 
   courses: any[] = [
     {name: 'DAW', totalStudents: 10},
@@ -67,20 +68,12 @@ export class TeacherProfileComponent implements OnInit {
     pointsAssignment: [0, [Validators.required]],
   });
 
-  rankingButtons = [
-    {
-      label: 'Refrescar codigo',
-      command: () => console.log('x')
-    }
-  ];
+  rankingButtons: MenuItem[] = [];
 
-  createRankingButtonsForRanking(rank: IRanking) {
-    return [
-      {
-        label: 'Refrescar codigo',
-        command: () => this.changeRankingId(rank)
-      }
-    ];
+  #selectedRanking?: IRanking;
+
+  setSelectedRanking(ranking: IRanking): void {
+    this.#selectedRanking = ranking;
   }
 
   get formControl(): { [key: string]: AbstractControl } {
@@ -90,6 +83,28 @@ export class TeacherProfileComponent implements OnInit {
   #b64Avatar: string = '';
 
   ngOnInit(): void {
+    this.rankingButtons = [
+      {
+        label: 'Añadir entrega',
+        icon: 'pi pi-plus-circle',
+        styleClass: 'p-button-secondary',
+        command: (): void => {
+          this.showAssignmentForm();
+        }
+      },
+      {
+        label: 'Refrescar codigo',
+        icon: 'pi pi-undo',
+        command: (): void => {
+          if (!this.#selectedRanking) {
+            return;
+          }
+
+          this.changeRankingId(this.#selectedRanking);
+        }
+      }
+    ];
+
     this.#updateCreatedRanks();
 
     this.assignmentService
@@ -192,7 +207,27 @@ export class TeacherProfileComponent implements OnInit {
       creator: ranking.creator,
     };
 
-    this.rankingService.update(entity).subscribe();
+    this.rankingService.update(entity)
+      .subscribe(response => {
+        if (!response.ok || !this.#selectedRanking) {
+          return;
+        }
+
+        this.#selectedRanking.code = newRankingCode;
+      });
+  }
+
+  copyText(event: any): void {
+    navigator
+      .clipboard
+      .writeText(event.target.innerText)
+      .then((): void => {});
+
+    this.messageService.add({
+      key: 'toasts',
+      severity: 'success',
+      summary: 'Copiado en clipboard'
+    });
   }
 
   deleteStudent(student: IUser): void {
@@ -215,6 +250,7 @@ export class TeacherProfileComponent implements OnInit {
   }
 
   showAssignmentForm(): void {
+    this.isSidebarVisible = true;
     this.showAssignment = true;
   }
 

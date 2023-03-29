@@ -26,6 +26,10 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
 import {ToolbarModule} from 'primeng/toolbar';
 import {InputNumberModule} from "primeng/inputnumber";
 import {SplitButtonModule} from "primeng/splitbutton";
+import {OverlayPanelModule} from "primeng/overlaypanel";
+import {InplaceModule} from "primeng/inplace";
+import {FieldsetModule} from "primeng/fieldset";
+import {SidebarModule} from "primeng/sidebar";
 
 @NgModule({
   declarations: [],
@@ -57,7 +61,11 @@ import {SplitButtonModule} from "primeng/splitbutton";
     AvatarModule,
     ImageModule,
     InputNumberModule,
-    SplitButtonModule
+    SplitButtonModule,
+    OverlayPanelModule,
+    InplaceModule,
+    FieldsetModule,
+    SidebarModule
   ],
 })
 export class PrimengModule {
