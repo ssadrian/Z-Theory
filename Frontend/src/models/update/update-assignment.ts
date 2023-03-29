@@ -3,6 +3,6 @@ export interface IUpdateAssignment {
   title: string;
   description: string;
   content: string;
-  points: number;
+  points: any;
   creator: number;
 }

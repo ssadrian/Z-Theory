@@ -9,6 +9,7 @@ import {IUpdateRanking} from '../../../models/update/update-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
 import {ICreateAssignment} from 'src/models/create/create-assignment';
+import { IUpdateAssignment } from 'src/models/update/update-assignment';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +46,7 @@ export class AssignmentService {
     });
   }
 
-  update(id: number, entity: IUpdateRanking): Observable<HttpResponse<Object>> {
+  update(id: number, entity: IUpdateAssignment): Observable<HttpResponse<Object>> {
     const url: string = `${this.#assignmentUrl}/${id}`;
     return this.http.put(url, entity, {
       headers: this.#clientHeaders,
