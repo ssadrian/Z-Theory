@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\{Models\Assignment, Models\Ranking, Models\Student};
 use Illuminate\{Http\Request, Http\Response, Support\Facades\Validator, Validation\ValidationException};
+use PhpParser\Node\Expr\Assign;
 
 class AssignmentController extends Controller
 {
@@ -204,4 +205,46 @@ class AssignmentController extends Controller
                 ->where('teacher_id', $teacherId)
         );
     }
+
+    /**
+     * @param $assignmentId
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     */
+    public function updateForStudent($assignmentId, $studentId, Request $request): Response
+    {
+        // Append ranking's code and student's id from url to request's body
+        $data['student_id'] = $studentId;
+        $data['assignment_id'] = $assignmentId;
+
+        $data = $request->validate([
+            'student_id' => 'required|exists:students,id|exists:assignment_student',
+            'assignment_id' => 'required|exists:assignments,id|exists:assignment_student',
+            'mark' => 'sometimes|nullable|int',
+            'file' => 'sometimes|nullable|string',
+            'status' => 'sometimes|nullable|exists:assignment_statuses'
+        ]);
+
+        $previousTask = Assignment::with(['creator', 'studentsAssigned'])
+            ->find($assignmentId)
+            ->studentsAssigned()
+            ->firstWhere('student_id', $studentId);
+
+        $task = Assignment::with(['students'])
+            ->find($assignmentId)
+            ->studentsAssigned()
+            ->firstWhere('student_id', $studentId);
+
+        $task->pivot->mark = $data['mark'];
+        $task->pivot->file = $data['file'];
+        $task->pivot->status = $data['status'];
+        $success = $task->pivot->save();
+
+        return response(
+            $previousTask,
+            status: $success ? 200 : 400
+        );
+    }
+
 }

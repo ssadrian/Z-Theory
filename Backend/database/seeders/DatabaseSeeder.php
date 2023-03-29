@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\{Models\Ranking, Models\Student, Models\Teacher};
-use Illuminate\{Database\Seeder, Support\Carbon};
+use App\{Models\Assignment, Models\Ranking, Models\Student, Models\Teacher};
+use Illuminate\{Database\Seeder, Support\Carbon, Support\Facades\DB};
 
 class DatabaseSeeder extends Seeder
 {
@@ -49,6 +49,11 @@ class DatabaseSeeder extends Seeder
         Teacher::factory(9)
             ->has(Ranking::factory(), 'rankingsCreated')
             ->create();
+
+        Assignment::factory(10)
+            ->create([
+                'status' => DB::select('SELECT * FROM assignment_statuses ORDER BY RAND() LIMIT 1')
+            ]);
 
         foreach (Student::all() as $student) {
             foreach (range(0, 2) as $ignored) {
