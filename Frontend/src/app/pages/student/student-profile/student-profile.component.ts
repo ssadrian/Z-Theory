@@ -96,13 +96,16 @@ export class StudentProfileComponent implements OnInit{
     this.messageService.clear('passwordChange');
   }
 
-  encodeAvatar(event: Event): void {
+  encodeAvatar(event: any): void {
     this.b64.toBase64(event).then((b64: string): void => {
       this.#b64Avatar = b64;
+      this.updateAvatar();
     });
+
+    this.toggle();
   }
 
-  updateAvatar() {
+  updateAvatar(): void {
     let student: IUpdateStudent = {
       avatar: this.#b64Avatar,
       name: this.student.name!,
@@ -119,7 +122,7 @@ export class StudentProfileComponent implements OnInit{
     this.show = false;
   }
 
-  toggle() {
+  toggle(): void {
     this.show = true;
   }
 

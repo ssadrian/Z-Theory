@@ -4,8 +4,8 @@ import {Injectable} from "@angular/core";
   providedIn: "root",
 })
 export class Base64Service {
-  async toBase64(event: Event): Promise<string> {
-    const files: FileList | null = (event.target as HTMLInputElement)?.files;
+  async toBase64(event: any): Promise<string> {
+    const files: FileList | null = event.files;
 
     if (!files) {
       return "";
@@ -17,7 +17,7 @@ export class Base64Service {
       });
   }
 
-  async #readBase64(file: any): Promise<string> {
+  async #readBase64(file: any): Promise<any> {
     const reader: FileReader = new FileReader();
 
     return new Promise((resolve, reject): void => {

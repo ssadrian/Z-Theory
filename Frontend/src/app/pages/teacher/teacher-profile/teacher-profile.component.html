@@ -56,23 +56,26 @@
 
   <div class="grid grid-cols-2 divide-x">
     <div class="p-8">
-      <button (click)="toggle()" class="">
-        <img
-          [src]="teacher.avatar"
-          alt="Avatar"
-          class="rounded-full w-72 h-72 p-overlay-badge"
-        />
-        <p-badge [value]="'Profesor'"></p-badge>
-      </button>
+      <div class="inline-flex justify-center w-full mb-4">
+        <div>
+          <p-badge [value]="'Profesor'"></p-badge>
 
-      <ng-container *ngIf="show">
-        <input
-          (change)="encodeAvatar($event)"
-          class="mt-5 mb-5 block w-full text-sm text-gray-900 border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          id="file_input"
-          type="file"
-        />
-      </ng-container>
+          <img
+            [src]="teacher.avatar"
+            alt="Avatar"
+            class="rounded-full w-72 h-72 align-self-center"
+            (click)="toggle()"
+          />
+
+          <p-fileUpload
+            *ngIf="show"
+            mode="basic"
+            chooseLabel="Cargar imagen" accept="image/*"
+            [maxFileSize]="1000000"
+            (onSelect)="encodeAvatar($event)"
+          ></p-fileUpload>
+        </div>
+      </div>
 
       <div class="grid grid-cols-2 gap-6">
         <div>Nombre</div>
@@ -278,79 +281,31 @@
   </div>
 
   <p-sidebar [(visible)]="isSidebarVisible" position="right">
-    <div class="p-4">
-      <form [formGroup]="assignmentForm">
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label for="titulo" class="inline-block text-white font-bold mb-2">
-              Título de la entrega
-            </label>
+    <form [formGroup]="assignmentForm" (ngSubmit)="createAssignment()"
+          class="flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <label for="title">Titulo</label>
+        <input pInputText id="title" formControlName="title"/>
+      </div>
 
-            <input
-              id="titulo"
-              type="text"
-              pInputText
-              formControlName="titleAssignment"
-              class="w-full border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:border-blue-300"
-              placeholder="Ingrese el título de la entrega"
-            />
-          </div>
+      <div class="flex flex-col gap-2">
+        <label for="description">Descripción</label>
+        <input pInputText id="description" formControlName="description"/>
+      </div>
 
-          <div>
-            <label
-              for="descripcion"
-              class="inline-block text-white font-bold mb-2"
-            >Descripción de la entrega</label
-            >
-            <input
-              id="descripcion"
-              type="text"
-              pInputText
-              formControlName="descriptionAssignment"
-              class="w-full border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:border-blue-300"
-              placeholder="Ingrese la descripción de la entrega"
-            />
-          </div>
+      <div class="flex flex-col gap-2">
+        <label for="content">Contenido</label>
+        <input id="content" pInputText formControlName="content"/>
+      </div>
 
-          <div>
-            <label
-              for="contenido"
-              class="inline-block text-white font-bold mb-2"
-            >Contenido de la entrega</label
-            >
-            <input
-              id="contenido"
-              type="text"
-              pInputText
-              formControlName="contentAssignment"
-              class="w-full border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:border-blue-300"
-              placeholder="Ingrese el contenido de la entrega"
-            />
-          </div>
+      <div class="flex flex-col gap-2">
+        <label for="points">Puntos</label>
+        <p-inputNumber id="points" formControlName="points" [showButtons]="true" styleClass="w-full"></p-inputNumber>
+      </div>
 
-          <div>
-            <label for="puntos" class="inline-block text-white font-bold mb-2"
-            >Puntos de la entrega</label
-            >
-            <input
-              id="puntos"
-              type="number"
-              pInputNumber
-              formControlName="pointsAssignment"
-              class="w-full border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:border-blue-300"
-              placeholder="Ingrese los puntos de la entrega"
-            />
-          </div>
-        </div>
-      </form>
-    </div>
-
-    <button
-      (click)="createAssignment()"
-      type="button"
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-    >
-      Crear tarea
-    </button>
+      <button pButton pRipple class="w-full">
+        Crear tarea
+      </button>
+    </form>
   </p-sidebar>
 </section>
