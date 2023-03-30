@@ -1,6 +1,6 @@
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {CanMatch, Route, UrlSegment, UrlTree} from '@angular/router';
+import {Route, UrlSegment, UrlTree} from '@angular/router';
 import {map, Observable} from 'rxjs';
 import {ILoginResponse} from '../../models/login-response.model';
 import {IStudent} from '../../models/student.model';
@@ -11,7 +11,7 @@ import {CredentialService} from '../services/credential.service';
 @Injectable({
   providedIn: 'root',
 })
-export class StudentGuard implements CanMatch {
+export class StudentGuard {
   constructor(
     private _http: HttpClient,
     private credentials: CredentialService) {
@@ -22,7 +22,6 @@ export class StudentGuard implements CanMatch {
   canMatch(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return false;
     if (this.credentials.currentUser) {
       return this.credentials.role === 'student';
     }
