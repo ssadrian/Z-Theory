@@ -22,6 +22,7 @@ export class StudentGuard {
   canMatch(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return false;
     if (this.credentials.currentUser) {
       return this.credentials.role === 'student';
     }
