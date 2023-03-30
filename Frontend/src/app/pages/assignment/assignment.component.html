@@ -6,88 +6,96 @@
       </span>
 
       <div class="mt-5">
-        <p-accordion [activeIndex]="0">
-          <p-accordionTab header="Ranking">
-            <p>
-              <p-accordionTab header="Tarea">
-                <div class="card">
-                  <p-table
-                    [value]="[1]"
-                    [tableStyle]="{ 'min-width': '50rem' }"
-                  >
-                    <ng-template pTemplate="header">
-                      <tr>
-                        <th>Titulo</th>
-                        <th>Decripción</th>
-                        <th>Contenido</th>
-                        <th>Puntos</th>
-                        <th>Nota final</th>
-                        <th>Estado de la entrega</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-assignment>
-                      <tr>
-                        <td>
-                          <input
-                            type="text"
-                            pInputText
-                            value="Test"
-                            formControlName="titleAssignment"
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            pInputText
-                            value="test"
-                            formControlName="descriptionAssignment"
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            pInputText
-                            value="test"
-                            formControlName="contentAssignment"
-                          />
-                        </td>
-                        <td>
-                          <p-inputNumber inputId="integeronly" value="0" formControlName="pointsAssignment">
-                          </p-inputNumber>
-                        </td>
-                        <td>
-                          <p-inputNumber inputId="integeronly" value="0">
-                          </p-inputNumber>
-                        </td>
-                        <td>
-                          <input type="text" pInputText value="Entregada" />
-                        </td>
+        <form [formGroup]="assignmentForm">
+          <p-accordion [activeIndex]="0">
+            <p-accordionTab header="Ranking">
+              <p>
+                <p-accordionTab header="Tarea">
+                  <div class="card">
+                    <p-table
+                      [value]="[1]"
+                      [tableStyle]="{ 'min-width': '50rem' }"
+                    >
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th>Titulo</th>
+                          <th>Decripción</th>
+                          <th>Contenido</th>
+                          <th>Puntos</th>
+                          <th>Nota final</th>
+                          <th>Estado de la entrega</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </ng-template>
 
-                        <td>
-                          <div class="flex flex-row gap-5">
-                            <p-button
-                              label="Eliminar tarea"
-                              icon="pi pi-trash"
-                              styleClass="p-button-danger"
-                              (click)="deleteAssignment(assignment)"
-                            ></p-button>
-                            <p-button
-                              label="Guardar cambios"
-                              icon="pi pi-check"
-                              styleClass="p-button-success"
-                              (click)="updateAssignment(assignment)"
-                            ></p-button>
-                          </div>
-                        </td>
-                      </tr>
-                    </ng-template>
-                  </p-table>
-                </div>
-              </p-accordionTab>
-            </p>
-          </p-accordionTab>
-        </p-accordion>
+                      <ng-template pTemplate="body" let-assignment>
+                        <tr>
+                          <td>
+                            <input
+                              type="text"
+                              pInputText
+                              [value]="assignment.title"
+                              formControlName="titleAssignment"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              pInputText
+                              [value]="assignment.description"
+                              formControlName="descriptionAssignment"
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              pInputText
+                              [value]="assignment.content"
+                              formControlName="contentAssignment"
+                            />
+                          </td>
+                          <td>
+                            <p-inputNumber
+                              inputId="integeronly"
+                              (ngModel)="assignment.points"
+                              formControlName="pointsAssignment"
+                            >
+                            </p-inputNumber>
+                          </td>
+                          <td>
+                            <p-inputNumber
+                              inputId="integeronly"
+                              value="0"
+                            ></p-inputNumber>
+                          </td>
+                          <td>
+                            <input type="text" pInputText value="Entregada" />
+                          </td>
+                          <td>
+                            <div class="flex flex-row gap-5">
+                              <p-button
+                                label="Eliminar tarea"
+                                icon="pi pi-trash"
+                                styleClass="p-button-danger"
+                                (click)="deleteAssignment(assignment)"
+                              ></p-button>
+                              <p-button
+                                label="Guardar cambios"
+                                icon="pi pi-check"
+                                styleClass="p-button-success"
+                                (click)="updateAssignment(assignment)"
+                              ></p-button>
+                            </div>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </p-accordionTab>
+              </p>
+            </p-accordionTab>
+          </p-accordion>
+        </form>
       </div>
     </div>
   </div>

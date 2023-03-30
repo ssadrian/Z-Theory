@@ -12,18 +12,28 @@ import { IUpdateAssignment } from 'src/models/update/update-assignment';
   styleUrls: ['./assignment.component.scss'],
 })
 export class AssignmentComponent {
+  assignment!: IAssignment;
+
   constructor(
     private assignmentService: AssignmentService,
     private fb: FormBuilder,
     private credentials: CredentialService
   ) {}
+
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
+
   assignmentForm = this.fb.group({
     titleAssignment: ['', [Validators.required]],
     descriptionAssignment: ['', [Validators.required]],
     contentAssignment: ['', [Validators.required]],
     pointsAssignment: [0, [Validators.required]],
   });
+
+  ngOnInit(): void {
+    this.assignmentService.all().subscribe((data) => {
+      this.assignment = data[0]; // aquí asumimos que el primer registro de la lista es el que queremos mostrar
+    });
+  }
 
   deleteAssignment(assignment: IAssignment): void {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
