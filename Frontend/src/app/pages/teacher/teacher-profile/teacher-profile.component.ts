@@ -62,10 +62,10 @@ export class TeacherProfileComponent implements OnInit {
   });
 
   assignmentForm = this.fb.group({
-    titleAssignment: ['', [Validators.required]],
-    descriptionAssignment: ['', [Validators.required]],
-    contentAssignment: ['', [Validators.required]],
-    pointsAssignment: [0, [Validators.required]],
+    title: ['', [Validators.required]],
+    description: ['', [Validators.required]],
+    content: ['', [Validators.required]],
+    points: ['', [Validators.required]],
   });
 
   rankingButtons: MenuItem[] = [];
@@ -171,12 +171,13 @@ export class TeacherProfileComponent implements OnInit {
       });
   }
 
-  encodeAvatar(event: Event): void {
+  encodeAvatar(event: any): void {
     this.b64.toBase64(event).then((b64: string): void => {
       this.#b64Avatar = b64;
+      this.updateAvatar();
     });
 
-    this.updateAvatar();
+    this.toggle();
   }
 
   updateAvatar(): void {
@@ -259,10 +260,10 @@ export class TeacherProfileComponent implements OnInit {
 
     this.assignmentService
       .create({
-        title: formValue.titleAssignment!,
-        description: formValue.descriptionAssignment!,
-        content: formValue.contentAssignment!,
-        points: formValue.pointsAssignment,
+        title: formValue.title!,
+        description: formValue.description!,
+        content: formValue.content!,
+        points: formValue.points,
         creator: this.teacher.id,
       })
       .subscribe();
@@ -272,7 +273,7 @@ export class TeacherProfileComponent implements OnInit {
       .subscribe((response: IAssignment[]): void => {
         response
           .map((assignment: IAssignment): void => {
-            if (assignment.title === formValue.titleAssignment) {
+            if (assignment.title === formValue.title) {
               this.createdAssignments.push(assignment);
             }
           });

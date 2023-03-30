@@ -1,7 +1,5 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {AvatarModule} from 'primeng/avatar';
-import {BadgeModule} from 'primeng/badge';
 
 import {ButtonModule} from 'primeng/button';
 import {CalendarModule} from 'primeng/calendar';
@@ -30,6 +28,9 @@ import {OverlayPanelModule} from "primeng/overlaypanel";
 import {InplaceModule} from "primeng/inplace";
 import {FieldsetModule} from "primeng/fieldset";
 import {SidebarModule} from "primeng/sidebar";
+import {AvatarModule} from 'primeng/avatar';
+import {BadgeModule} from 'primeng/badge';
+import {MessagesModule} from "primeng/messages";
 
 @NgModule({
   declarations: [],
@@ -65,7 +66,8 @@ import {SidebarModule} from "primeng/sidebar";
     OverlayPanelModule,
     InplaceModule,
     FieldsetModule,
-    SidebarModule
+    SidebarModule,
+    MessagesModule
   ],
 })
 export class PrimengModule {
