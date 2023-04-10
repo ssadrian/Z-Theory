@@ -24,38 +24,30 @@ export class TeacherGuard {
       return this.credentials.role === 'teacher';
     }
 
-    const token: string = '"4|uSFdMS2drOrGY3bTmkaaGC3WodjS7Q7InrsqFx2j"';
-    const role: string = 'teacher';
-    const user: IStudent | ITeacher | undefined = JSON.parse('{"id":1,"name":"Wilhelmine Sporer DVM","surnames":"Bashirian","email":"w@w","password":"$2y$10$oGGoaVO9HIQRwH1Xnc15uuO5BF5XJBzRrUF.xSyxA3x9V0tiLqaF6","nickname":"68949920-307a-3746-9479-14497af9ced1","avatar":"Corrupti.","center":"ipsum","created_at":"2023-03-29T18:15:16.000000Z","updated_at":"2023-03-29T18:15:16.000000Z"}');
+    return this._http
+      .post<ILoginResponse>(this.#loginUrl, JSON.stringify({
+        'email': this.credentials.email,
+        'password': this.credentials.password,
+      }), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        observe: 'response',
+      })
+      .pipe(map((res: HttpResponse<ILoginResponse>): boolean => {
+        const token: string = res.body?.token ?? '';
+        const role: string = res.body?.role ?? '';
+        const user: IStudent | ITeacher | undefined = res.body?.user;
 
-    this.credentials.token = token;
-    this.credentials.role = role;
-    this.credentials.currentUser = user;
-    return true;
+        if (token === '') {
+          return false;
+        }
 
-    return this._http.post<ILoginResponse>(this.#loginUrl, JSON.stringify({
-      'email': this.credentials.email,
-      'password': this.credentials.password,
-    }), {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      observe: 'response',
-    }).pipe(map((response: HttpResponse<ILoginResponse>): boolean => {
-      if (response.status !== 200) {
-        return false;
-      }
+        this.credentials.token = token;
+        this.credentials.role = role;
+        this.credentials.currentUser = user;
 
-      const token: string = response.body?.token ?? '';
-      const role: string = response.body?.role ?? '';
-      const user: IStudent | ITeacher | undefined = response.body?.user;
-
-      this.credentials.token = token;
-      this.credentials.role = role;
-      this.credentials.currentUser = user;
-
-      console.log(JSON.stringify(user));
-      return role === 'teacher';
-    }));
+        return role === 'teacher';
+      }));
   }
 }

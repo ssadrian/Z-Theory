@@ -3,38 +3,60 @@
     <a [routerLink]="['/']" class="flex items-center">
       <app-logo></app-logo>
 
-      <span class="text-3xl font-semibold"> Z-Theory </span>
+      <span class="text-3xl font-semibold">Z-Theory</span>
     </a>
 
+    <!--    <p-menubar-->
+    <!--      [model]="menuOptions"-->
+    <!--      [autoDisplay]="true"-->
+    <!--      [autoHide]="true"-->
+    <!--      [autoHideDelay]="25"-->
+    <!--    ></p-menubar>-->
+
     <div class="w-full md:block md:w-auto">
-      <ul class="flex flex-row gap-4 text-2xl text-gray-500 cursor-pointer">
-        <li *ngIf="!isLogged" [routerLink]="['/register']">
-          <a [routerLinkActive]="['text-gray-50']">
-            Registro
-          </a>
-        </li>
+      <ul
+        class="flex flex-row gap-4 text-2xl text-gray-500 cursor-pointer"
+        [ngSwitch]="isLogged()"
+      >
+        <ng-container *ngSwitchDefault>
+          <ng-container *ngIf="credentials.role === 'teacher'">
+            <li [routerLink]="['/queues']">
+              <a [routerLinkActive]="[ 'text-gray-50' ]">
+                Rankings
+              </a>
+            </li>
 
-        <li *ngIf="!isLogged" [routerLink]="['/login']">
-          <a [routerLinkActive]="['text-gray-50']">
-            Iniciar sesión
-          </a>
-        </li>
+            <li [routerLink]="['/assignments']">
+              <a [routerLinkActive]="[ 'text-gray-50' ]">
+                Tareas
+              </a>
+            </li>
+          </ng-container>
 
-        <li *ngIf="isLogged" [routerLink]="['/assignment']">
-          <a [routerLinkActive]="[ 'text-gray-50' ]">
-            Tareas
-          </a>
-        </li>
+          <li [routerLink]="['/profile']">
+            <a [routerLinkActive]="[ 'text-gray-50' ]">
+              Perfil
+            </a>
+          </li>
 
-        <li *ngIf="isLogged" [routerLink]="['/profile']">
-          <a [routerLinkActive]="[ 'text-gray-50' ]">
-            Perfil
-          </a>
-        </li>
+          <li (click)="logOut()">
+            Cerrar sesión
+          </li>
+        </ng-container>
 
-        <li *ngIf="isLogged" (click)="logOut()">
-          Cerrar sesión
-        </li>
+        <ng-container *ngSwitchCase="false">
+          <li [routerLink]="['/register']">
+            <a [routerLinkActive]="['text-gray-50']">
+              Registro
+            </a>
+          </li>
+
+          <li [routerLink]="['/login']">
+            <a [routerLinkActive]="['text-gray-50']">
+              Iniciar sesión
+            </a>
+          </li>
+        </ng-container>
       </ul>
     </div>
   </div>

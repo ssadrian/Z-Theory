@@ -4,7 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import {MessageService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {AccordionModule} from 'primeng/accordion';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -24,7 +24,9 @@ import {RegistrationService} from './services/registration.service';
 import {RankingService} from './services/repository/ranking.service';
 import {StudentService} from './services/repository/student.service';
 import {TeacherService} from './services/repository/teacher.service';
-import {AssignmentComponent} from './pages/assignment/assignment.component';
+import {AssignmentComponent} from './pages/teacher/assignment/assignment.component';
+import {MiscService} from "./services/misc.service";
+import {QueuesListComponent} from './pages/teacher/queues-list/queues-list.component';
 
 
 @NgModule({
@@ -40,6 +42,7 @@ import {AssignmentComponent} from './pages/assignment/assignment.component';
     TeacherProfileComponent,
     RegistrationFormComponent,
     AssignmentComponent,
+    QueuesListComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +62,8 @@ import {AssignmentComponent} from './pages/assignment/assignment.component';
     TeacherService,
     RankingService,
     MessageService,
+    ConfirmationService,
+    MiscService
   ],
   bootstrap: [AppComponent],
 })

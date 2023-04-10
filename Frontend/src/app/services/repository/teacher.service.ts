@@ -43,10 +43,11 @@ export class TeacherService {
     });
   }
 
-  updatePassword(entity: IUpdatePassword) {
+  updatePassword(entity: IUpdatePassword): Observable<HttpResponse<Object>> {
     const url: string = `${this.#teacherUrl}/password`;
     return this.http.post(url, entity, {
       headers: this.#clientHeaders,
+      observe: 'response'
     });
   }
 

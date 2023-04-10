@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
                 'avatar' => fake()->text(10)
             ]);
 
-        // Test teacher
+        // Test user
         Teacher::factory()
             ->has(Ranking::factory(), 'rankingsCreated')
             ->create(attributes: [

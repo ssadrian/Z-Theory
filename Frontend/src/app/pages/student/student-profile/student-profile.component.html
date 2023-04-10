@@ -1,34 +1,4 @@
 <section>
-  <p-toast position="center" key="passwordChange" (onClose)="onReject()" [baseZIndex]="5000">
-    <ng-template let-message pTemplate="message">
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-        <div class="flex flex-column">
-          <div class="text-center">
-            <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
-
-            <h4>{{message.summary}}</h4>
-
-            <label for="password">Contraseña Actual</label>
-            <p-password id="password" [toggleMask]="true" formControlName="password"></p-password>
-
-            <label for="new_password">Contraseña Nueva</label>
-            <p-password id="new_password" [toggleMask]="true" formControlName="new_password"></p-password>
-          </div>
-
-          <div class="grid p-fluid">
-            <div class="col-6">
-              <button type="submit" pButton label="Cambiar contraseña" class="p-button-success"></button>
-            </div>
-
-            <div class="col-6">
-              <button type="button" pButton (click)="onReject()" label="Cancelar" class="p-button-secondary"></button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </ng-template>
-  </p-toast>
-
   <div class="grid grid-cols-2 divide-x">
     <div>
       <div class="w-full px-5 mx-auto">
@@ -37,13 +7,13 @@
         >
           <div class="px-10">
             <div class="inline-flex justify-center w-full mb-4">
-              <div>
+              <div><div>
                 <p-badge [value]="'Estudiante'"></p-badge>
 
                 <img
                   [src]="student.avatar"
                   alt="Avatar"
-                  class="rounded-full w-72 h-72 align-self-center"
+                  class="rounded-full w-72 h-72 align-self-center bg-gradient-to-br from-cyan-300"
                   (click)="toggle()"
                 />
 
@@ -54,7 +24,7 @@
                   [maxFileSize]="1000000"
                   (onSelect)="encodeAvatar($event)"
                 ></p-fileUpload>
-              </div>
+              </div></div>
             </div>
 
             <div class="grid grid-cols-2 gap-6">
@@ -76,6 +46,60 @@
                 (click)="showPasswordChangeForm()">
                 Cambiar contraseña
               </button>
+              <p-dialog
+                [(visible)]="showPasswordChangeDialog"
+                (onHide)="onShowPasswordDialogReject()"
+              >
+                <ng-template pTemplate="header">
+                  <i class="pi pi-exclamation-triangle text-xl"></i>
+                  Cambiar Contraseña
+                </ng-template>
+
+                <form
+                  [formGroup]="passwordForm"
+                  (ngSubmit)="changePassword()"
+                  class="flex flex-col gap-5 mt-5"
+                >
+            <span class="p-float-label">
+              <input
+                id="password"
+                pPassword
+                type="password"
+                [feedback]="true"
+                autocomplete="current-password"
+                formControlName="password"
+              />
+              <label for="password">Contraseña Actual</label>
+            </span>
+
+                  <span class="p-float-label">
+              <input
+                id="new_password"
+                pPassword
+                type="password"
+                autocomplete="new-password"
+                formControlName="new_password"
+              />
+              <label for="password">Contraseña Nueva</label>
+            </span>
+
+                  <span class="p-buttonset">
+              <button
+                pButton pRipple
+                label="Cambiar"
+                class="p-button-success"
+              ></button>
+
+              <button
+                type="button"
+                pButton pRipple
+                (click)="onShowPasswordDialogReject()"
+                label="Cancelar"
+                class="p-button-secondary"
+              ></button>
+            </span>
+                </form>
+              </p-dialog>
             </div>
           </div>
         </div>

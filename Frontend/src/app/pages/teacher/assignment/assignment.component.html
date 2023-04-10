@@ -1,0 +1,114 @@
+<p-confirmPopup></p-confirmPopup>
+<p-toast key="toasts"></p-toast>
+
+<p-card>
+  <ng-container *ngFor="let ranking of rankings; last as isLast">
+    <p-table
+      [id]="ranking.code"
+      [loading]="areAssignmentsLoading"
+      [value]="ranking.assignments"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      [scrollable]="true" scrollHeight="400px"
+    >
+      <ng-template pTemplate="caption">
+        <div class="table-header flex flex-col">
+          <a [href]="'#' + ranking.code"
+             class="text-xl"
+          >
+            {{ ranking.name }}
+          </a>
+
+          <a (click)="miscService.copyText($event)"
+             class="cursor-pointer text-sm"
+          >
+            {{ ranking.code }}
+          </a>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Titulo</th>
+          <th>Decripción</th>
+          <th>Contenido</th>
+          <th>Puntos</th>
+          <th pFrozenColumn></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-assignment>
+        <tr>
+          <td>
+            <input
+              pInputText
+              [(ngModel)]="assignment.title"
+            />
+          </td>
+
+          <td>
+            <input
+              pInputText
+              [(ngModel)]="assignment.description"
+            />
+          </td>
+
+          <td>
+            <input
+              pInputText
+              [(ngModel)]="assignment.content"
+            />
+          </td>
+
+          <td>
+            <p-inputNumber
+              incrementButtonClass="p-button-outlined"
+              decrementButtonClass="p-button-outlined"
+              [showButtons]="true"
+              [(ngModel)]="assignment.points"
+            >
+            </p-inputNumber>
+          </td>
+
+          <td pFrozenColumn>
+            <span class="flex p-buttonset">
+              <button
+                pButton pRipple
+                label="Guardar"
+                icon="pi pi-check"
+                class="p-button-success"
+                (click)="updateAssignment(assignment)"
+              ></button>
+
+              <button
+                pButton pRipple
+                label="Eliminar"
+                icon="pi pi-eraser"
+                [pTooltip]="'Quita la tarea para este ranking'"
+                class="p-button-warning"
+                (click)="removeFromRanking(ranking, assignment.id, $event)"
+              ></button>
+
+              <button
+                pButton pRipple
+                label="Borrar"
+                icon="pi pi-trash"
+                [pTooltip]="'Elimina definitivamente esta tarea'"
+                class="p-button-danger"
+                (click)="deleteAssignment(ranking, assignment.id, $event)"
+              ></button>
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6" class="text-lg">
+            Ninguna tarea asignada
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <p-divider *ngIf="!isLast"></p-divider>
+  </ng-container>
+</p-card>

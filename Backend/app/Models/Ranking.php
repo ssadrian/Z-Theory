@@ -68,8 +68,8 @@ class Ranking extends Model
      * @var array
      */
     protected $touches = [
-        'queues',
-        'assignments'
+        //'queues',
+        //'assignments'
     ];
 
     /**
@@ -93,7 +93,7 @@ class Ranking extends Model
             ->belongsTo(Teacher::class, 'creator');
     }
 
-    public function queues(): BelongsToMany
+    public function queue(): BelongsToMany
     {
         return $this
             ->belongsToMany(Student::class, 'ranking_join_queue',

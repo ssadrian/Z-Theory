@@ -31,6 +31,10 @@ import {SidebarModule} from "primeng/sidebar";
 import {AvatarModule} from 'primeng/avatar';
 import {BadgeModule} from 'primeng/badge';
 import {MessagesModule} from "primeng/messages";
+import {MenubarModule} from "primeng/menubar";
+import {ConfirmPopupModule} from "primeng/confirmpopup";
+import {DividerModule} from "primeng/divider";
+import {DataViewModule} from "primeng/dataview";
 
 @NgModule({
   declarations: [],
@@ -67,7 +71,12 @@ import {MessagesModule} from "primeng/messages";
     InplaceModule,
     FieldsetModule,
     SidebarModule,
-    MessagesModule
+    MessagesModule,
+    MenubarModule,
+    ConfirmPopupModule,
+    ContextMenuModule,
+    DividerModule,
+    DataViewModule
   ],
 })
 export class PrimengModule {

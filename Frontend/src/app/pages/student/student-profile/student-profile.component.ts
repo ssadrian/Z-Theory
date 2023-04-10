@@ -10,13 +10,15 @@ import {RankingService} from '../../../services/repository/ranking.service';
 import {ICreateStudentAssignation} from '../../../../models/create/create-student-assignation';
 import {MessageService} from 'primeng/api';
 import {IUpdatePassword} from '../../../../models/update/update-password';
+import {catchError, throwError} from "rxjs";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-student-profile',
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.scss'],
 })
-export class StudentProfileComponent implements OnInit{
+export class StudentProfileComponent implements OnInit {
   constructor(
     private credentials: CredentialService,
     private studentService: StudentService,
@@ -30,6 +32,8 @@ export class StudentProfileComponent implements OnInit{
   show: boolean = false;
 
   loading: boolean = true;
+
+  showPasswordChangeDialog: boolean = true;
 
   codeForm = this.fb.group({
     code: ['', [Validators.required]],
@@ -67,35 +71,6 @@ export class StudentProfileComponent implements OnInit{
     this.#updateRanks();
   }
 
-  showPasswordChangeForm(): void {
-    console.log('Test');
-    this.messageService.add({
-      key: 'passwordChange',
-      sticky: true,
-      severity: 'info',
-      summary: 'Cambiar Contraseña'
-    });
-  }
-
-  changePassword(): void {
-    const formValues = this.passwordForm.value;
-    const entity: IUpdatePassword = {
-      id: this.credentials.currentUser?.id!,
-      password: formValues.password!,
-      new_password: formValues.new_password!,
-    };
-
-    this.studentService.updatePassword(entity)
-      .subscribe(response => {
-        this.messageService.clear('passwordChange');
-        this.passwordForm.reset();
-      });
-  }
-
-  onReject(): void {
-    this.messageService.clear('passwordChange');
-  }
-
   encodeAvatar(event: any): void {
     this.b64.toBase64(event).then((b64: string): void => {
       this.#b64Avatar = b64;
@@ -116,7 +91,7 @@ export class StudentProfileComponent implements OnInit{
 
     this.studentService
       .update(this.student.id, student)
-      .subscribe((response) => {});
+      .subscribe((): void => {});
     this.student.avatar = this.#b64Avatar;
 
     this.show = false;
@@ -139,7 +114,7 @@ export class StudentProfileComponent implements OnInit{
     };
 
     this.rankingService.assignStudent(entity)
-      .subscribe(response => {
+      .subscribe((): void => {
         this.#updateRanks();
         this.codeForm.reset();
       });
@@ -170,5 +145,48 @@ export class StudentProfileComponent implements OnInit{
 
         this.loading = false;
       });
+  }
+
+  showPasswordChangeForm(): void {
+    this.showPasswordChangeDialog = true;
+  }
+
+  changePassword(): void {
+    const formValues = this.passwordForm.value;
+    const entity: IUpdatePassword = {
+      id: this.credentials.currentUser?.id!,
+      password: formValues.password!,
+      new_password: formValues.new_password!,
+    };
+
+    this.studentService
+      .updatePassword(entity)
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (!err.ok) {
+            this.messageService.add({
+              key: 'toasts',
+              severity: 'error',
+              summary: 'No se pudo cambiar la contraseña'
+            });
+          }
+
+          return throwError(() => new Error('Ignore the error'));
+        })
+      )
+      .subscribe((): void => {
+        this.passwordForm.reset();
+
+        this.messageService.add({
+          key: 'toasts',
+          severity: 'success',
+          summary: 'Contraseña cambiada!'
+        });
+        this.onShowPasswordDialogReject();
+      });
+  }
+
+  onShowPasswordDialogReject(): void {
+    this.showPasswordChangeDialog = false;
   }
 }

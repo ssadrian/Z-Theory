@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import {MenuItem, MessageService} from 'primeng/api';
 import {Base64Service} from 'src/app/services/base64.service';
 import {AssignmentService} from 'src/app/services/repository/assignment.service';
@@ -17,6 +17,9 @@ import {ITeacher} from '../../../../models/teacher.model';
 import {IUpdatePassword} from '../../../../models/update/update-password';
 import {CredentialService} from '../../../services/credential.service';
 import {TeacherService} from '../../../services/repository/teacher.service';
+import {MiscService} from "../../../services/misc.service";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {catchError, throwError} from "rxjs";
 
 @Component({
   selector: 'app-teacher-profile',
@@ -33,6 +36,7 @@ export class TeacherProfileComponent implements OnInit {
     private b64: Base64Service,
     private studentService: StudentService,
     private assignmentService: AssignmentService,
+    public miscService: MiscService
   ) {
   }
 
@@ -45,6 +49,7 @@ export class TeacherProfileComponent implements OnInit {
   createdAssignments: IAssignment[] = [];
   isSubmit: boolean = false;
   isSidebarVisible: boolean = false;
+  showPasswordChangeDialog: boolean = false;
 
   courses: any[] = [
     {name: 'DAW', totalStudents: 10},
@@ -74,10 +79,6 @@ export class TeacherProfileComponent implements OnInit {
 
   setSelectedRanking(ranking: IRanking): void {
     this.#selectedRanking = ranking;
-  }
-
-  get formControl(): { [key: string]: AbstractControl } {
-    return this.createRankingForm.controls;
   }
 
   #b64Avatar: string = '';
@@ -114,7 +115,7 @@ export class TeacherProfileComponent implements OnInit {
       });
   }
 
-  submit(): void {
+  createRankingSubmit(): void {
     this.isSubmit = true;
 
     const formValue = this.createRankingForm.value;
@@ -125,33 +126,6 @@ export class TeacherProfileComponent implements OnInit {
         name: formValue.name!,
       })
       .subscribe(this.#updateCreatedRanks);
-  }
-
-  showPasswordChangeForm(): void {
-    this.messageService.add({
-      key: 'passwordChange',
-      sticky: true,
-      severity: 'info',
-      summary: 'Cambiar Contraseña',
-    });
-  }
-
-  changePassword(): void {
-    const formValues = this.passwordForm.value;
-    const entity: IUpdatePassword = {
-      id: this.credentials.currentUser?.id!,
-      password: formValues.password!,
-      new_password: formValues.new_password!,
-    };
-
-    this.teacherService.updatePassword(entity).subscribe((): void => {
-      this.messageService.clear('passwordChange');
-      this.passwordForm.reset();
-    });
-  }
-
-  onReject(): void {
-    this.messageService.clear('passwordChange');
   }
 
   #updateCreatedRanks(): void {
@@ -209,7 +183,7 @@ export class TeacherProfileComponent implements OnInit {
     };
 
     this.rankingService.update(entity)
-      .subscribe(response => {
+      .subscribe((response: HttpResponse<Object>): void => {
         if (!response.ok || !this.#selectedRanking) {
           return;
         }
@@ -218,25 +192,16 @@ export class TeacherProfileComponent implements OnInit {
       });
   }
 
-  copyText(event: any): void {
-    navigator
-      .clipboard
-      .writeText(event.target.innerText)
-      .then((): void => {});
-
-    this.messageService.add({
-      key: 'toasts',
-      severity: 'success',
-      summary: 'Copiado en clipboard'
-    });
-  }
-
-  deleteStudent(student: IUser): void {
-    if (
-      window.confirm('¿Estás seguro de que deseas eliminar este estudiante?')
-    ) {
-      this.studentService.delete(student.id).subscribe();
-    }
+  deleteStudent(student: IUser, event: Event): void {
+    this.miscService.confirmAction(
+      '¿Estás seguro de que deseas eliminar este estudiante?',
+      event.target!,
+      (): void => {
+        this.studentService
+          .delete(student.id)
+          .subscribe();
+      }
+    );
   }
 
   modifyStudentPoints(ranking: IRanking, student: IStudent): void {
@@ -282,5 +247,46 @@ export class TeacherProfileComponent implements OnInit {
     this.showAssignment = false;
   }
 
-  protected readonly console = console;
+  showPasswordChangeForm(): void {
+    this.showPasswordChangeDialog = true;
+  }
+
+  changePassword(): void {
+    const formValues = this.passwordForm.value;
+    const entity: IUpdatePassword = {
+      id: this.credentials.currentUser?.id!,
+      password: formValues.password!,
+      new_password: formValues.new_password!,
+    };
+
+    this.teacherService
+      .updatePassword(entity)
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (!err.ok) {
+            this.messageService.add({
+              key: 'toasts',
+              severity: 'error',
+              summary: 'No se pudo cambiar la contraseña'
+            });
+          }
+
+          return throwError(() => new Error('Ignore the error'));
+        })
+      )
+      .subscribe((): void => {
+        this.passwordForm.reset();
+
+        this.messageService.add({
+          key: 'toasts',
+          severity: 'success',
+          summary: 'Contraseña cambiada!'
+        });
+        this.onShowPasswordDialogReject();
+      });
+  }
+
+  onShowPasswordDialogReject(): void {
+    this.showPasswordChangeDialog = false;
+  }
 }

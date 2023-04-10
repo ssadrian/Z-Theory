@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\{Models\Assignment, Models\Ranking, Models\Student};
 use Illuminate\{Http\Request, Http\Response, Support\Facades\Validator, Validation\ValidationException};
-use PhpParser\Node\Expr\Assign;
 
 class AssignmentController extends Controller
 {
@@ -118,6 +117,12 @@ class AssignmentController extends Controller
         );
     }
 
+    /**
+     * @param $rankCode
+     * @param Request $request
+     * @return Response
+     * @throws ValidationException
+     */
     public function assignToRanking($rankCode, Request $request): Response
     {
         // Append rank's code from url to request's body
@@ -148,28 +153,34 @@ class AssignmentController extends Controller
                 ]);
         }
 
-        $assignment = Assignment::with(['creator', 'rankingsAssigned'])
+        $assignments = Assignment::with(['creator', 'rankingsAssigned'])
             ->find($data['id']);
-        $assignment->rankingsAssigned->makeHidden('pivot');
+        $assignments->rankingsAssigned->makeHidden('pivot');
 
         return response(
-            $assignment
+            $assignments
         );
     }
 
-    public function removeFromRanking($rankCode, Request $request): Response
+    /**
+     * @param $id
+     * @param $rankCode
+     * @return Response
+     * @throws ValidationException
+     */
+    public function removeFromRanking($id, $rankCode): Response
     {
         // Append rank's code from url to request's body
-        $validator = Validator::make(['code' => $rankCode], [
+        $validator = Validator::make([
+            'id' => $id,
+            'code' => $rankCode
+        ], [
+            'id' => 'required|exists:assignments',
             'code' => 'required|exists:rankings'
         ]);
         $this->throwIfInvalid($validator);
 
-        $data = $request->validate([
-            'id' => 'required|exists:assignments',
-        ]);
-
-        Assignment::find($data['id'])
+        Assignment::find($id)
             ->rankingsAssigned()
             ->detach(Ranking::all()->firstWhere('code', $rankCode));
 
@@ -180,7 +191,7 @@ class AssignmentController extends Controller
         foreach ($ranking->students as $student) {
             Student::find($student->id)
                 ->assignments()
-                ->detach($data['id']);
+                ->detach($id);
         }
 
         return response(

@@ -1,15 +1,13 @@
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {ICreateRanking} from '../../../models/create/create-ranking';
 import {IAssignment} from '../../../models/assignment.model';
 import {IAssignRanking} from '../../../models/misc/assign-ranking';
 import {IRemoveAssignRanking} from '../../../models/misc/remove-assign-ranking';
-import {IUpdateRanking} from '../../../models/update/update-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
 import {ICreateAssignment} from 'src/models/create/create-assignment';
-import { IUpdateAssignment } from 'src/models/update/update-assignment';
+import {IUpdateAssignment} from 'src/models/update/update-assignment';
 
 @Injectable({
   providedIn: 'root',
@@ -76,10 +74,11 @@ export class AssignmentService {
     });
   }
 
-  removeFromRank(entity: IRemoveAssignRanking): Observable<any> {
-    const url: string = `${this.#assignmentUrl}/remove/ranking/${entity.url_rankCode}`;
-    return this.http.post(url, entity, {
+  removeFromRank(entity: IRemoveAssignRanking): Observable<HttpResponse<Object>> {
+    const url: string = `${this.#assignmentUrl}/${entity.url_assignmentId}/remove/ranking/${entity.url_rankCode}`;
+    return this.http.get(url, {
       headers: this.#clientHeaders,
+      observe: 'response'
     });
   }
 }

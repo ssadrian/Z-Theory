@@ -12,7 +12,7 @@
       </span>
       <span class="p-float-label">
         <input id="nickname" pInputText formControlName="nickname"
-               class="w-full"/>
+               autocomplete="username" class="w-full"/>
         <label for="nickname">Nickname</label>
       </span>
 
@@ -55,7 +55,7 @@
         <i class="pi pi-key"></i>
       </span>
       <span class="p-float-label">
-        <input id="password" pPassword type="password" formControlName="password"/>
+        <input id="password" pPassword type="password" autocomplete="new-password" formControlName="password"/>
         <label for="password">Contraseña</label>
       </span>
 
@@ -66,7 +66,8 @@
       </div>
 
       <span class="p-float-label">
-        <input id="password_confirmation" pPassword type="password" formControlName="password_confirmation"/>
+        <input id="password_confirmation" pPassword type="password" autocomplete="new-password"
+               formControlName="password_confirmation"/>
         <label for="password_confirmation">Confirmar Contraseña</label>
       </span>
 
@@ -83,7 +84,7 @@
       </span>
 
       <span class="p-float-label">
-        <input pInputText type="email" id="email" formControlName="email"/>
+        <input id="email" pInputText type="email" autocomplete="email" formControlName="email"/>
         <label for="email">Email</label>
       </span>
 
@@ -98,10 +99,11 @@
       </div>
     </div>
 
-    <p-toggleButton formControlName="isStudent"
-                    onLabel="Soy un estudiante" onIcon="pi pi-book"
-                    offLabel="Soy un profesor" offIcon="pi pi-users"
-                    styleClass="w-full"
+    <p-toggleButton
+      onLabel="Soy un estudiante" onIcon="pi pi-book"
+      offLabel="Soy un profesor" offIcon="pi pi-users"
+      styleClass="w-full"
+      formControlName="isStudent"
     >
     </p-toggleButton>
 
