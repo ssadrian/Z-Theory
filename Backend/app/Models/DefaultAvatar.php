@@ -21,6 +21,7 @@ use Illuminate\{Database\Eloquent\Factories\HasFactory, Database\Eloquent\Model}
  * @method static \Illuminate\Database\Eloquent\Builder|DefaultAvatar whereUpdatedAt($value)
  * @mixin \Eloquent
  * @noinspection PhpFullyQualifiedNameUsageInspection
+ * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
  */
 class DefaultAvatar extends Model
 {

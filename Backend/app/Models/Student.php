@@ -64,18 +64,23 @@ class Student extends Authenticatable
     ];
 
     /**
-     * All the relationships to be touched.
+     * Indicates if the model should be timestamped.
      *
-     * @var array
+     * @var bool
      */
-    protected $touches = [
-        'rankings'
-    ];
+    public $timestamps = true;
 
     public function rankings(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Ranking::class, 'ranking_student', 'student_id', 'ranking_id')
+            ->belongsToMany(Ranking::class)
             ->withPivot('points');
+    }
+
+    public function assignments(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Assignment::class)
+            ->withPivot(['status', 'mark']);
     }
 }

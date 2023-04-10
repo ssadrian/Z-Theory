@@ -68,10 +68,16 @@ class Ranking extends Model
      * @var array
      */
     protected $touches = [
-        'students',
-        'queues',
-        'assignments'
+        //'queues',
+        //'assignments'
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
 
     public function students(): BelongsToMany
     {
@@ -87,7 +93,7 @@ class Ranking extends Model
             ->belongsTo(Teacher::class, 'creator');
     }
 
-    public function queues(): BelongsToMany
+    public function queue(): BelongsToMany
     {
         return $this
             ->belongsToMany(Student::class, 'ranking_join_queue',
@@ -100,6 +106,6 @@ class Ranking extends Model
     public function assignments(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Assignment::class, 'ranking_assignment');
+            ->belongsToMany(Assignment::class);
     }
 }

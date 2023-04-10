@@ -1,294 +1,264 @@
-<section class="pt-16 pb-16 bg-gray-900 mx-auto text-center">
-  <p-toast
-    position="center"
-    key="passwordChange"
-    (onClose)="onReject()"
-    [baseZIndex]="5000"
-  >
-    <ng-template let-message pTemplate="message">
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-        <div class="flex flex-column" style="flex: 1">
-          <div class="text-center">
-            <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+<section>
+  <p-toast key="toasts"></p-toast>
 
-            <h4>{{ message.summary }}</h4>
+  <div class="grid grid-cols-2 divide-x">
+    <p-card class="p-8">
+      <div class="inline-flex justify-center w-full mb-4">
+        <div>
+          <p-badge [value]="'Profesor'"></p-badge>
 
-            <label for="password">Contraseña Actual</label>
-            <p-password
-              id="password"
-              [toggleMask]="true"
-              formControlName="password"
-            ></p-password>
+          <img
+            [src]="teacher.avatar"
+            alt="Avatar"
+            class="rounded-full w-72 h-72 align-self-center bg-gradient-to-br from-cyan-300"
+            (click)="toggle()"
+          />
 
-            <label for="new_password">Contraseña Nueva</label>
-            <p-password
-              id="new_password"
-              [toggleMask]="true"
-              formControlName="new_password"
-            ></p-password>
-          </div>
+          <p-fileUpload
+            *ngIf="show"
+            mode="basic"
+            chooseLabel="Cargar imagen" accept="image/*"
+            [maxFileSize]="1000000"
+            (onSelect)="encodeAvatar($event)"
+          ></p-fileUpload>
+        </div>
+      </div>
 
-          <div class="grid p-fluid">
-            <div class="col-6">
+      <div class="grid grid-cols-2 gap-6">
+        <div>Nombre</div>
+        <div>{{ teacher.name }}</div>
+
+        <div>Apellidos</div>
+        <div>{{ teacher.surnames }}</div>
+
+        <div>Email</div>
+        <div>{{ teacher.email }}</div>
+
+        <div>Centro</div>
+        <div>{{ teacher.center }}</div>
+
+        <button
+          pButton pRipple
+          class="p-button-raised col-span-2"
+          (click)="showPasswordChangeForm()">
+          Cambiar contraseña
+        </button>
+        <p-dialog
+          [(visible)]="showPasswordChangeDialog"
+          (onHide)="onShowPasswordDialogReject()"
+        >
+          <ng-template pTemplate="header">
+            <i class="pi pi-exclamation-triangle text-xl"></i>
+            Cambiar Contraseña
+          </ng-template>
+
+          <form
+            [formGroup]="passwordForm"
+            (ngSubmit)="changePassword()"
+            class="flex flex-col gap-5 mt-5"
+          >
+            <span class="p-float-label">
+              <input
+                id="password"
+                pPassword
+                type="password"
+                [feedback]="true"
+                autocomplete="current-password"
+                formControlName="password"
+              />
+              <label for="password">Contraseña Actual</label>
+            </span>
+
+            <span class="p-float-label">
+              <input
+                id="new_password"
+                pPassword
+                type="password"
+                autocomplete="new-password"
+                formControlName="new_password"
+              />
+              <label for="password">Contraseña Nueva</label>
+            </span>
+
+            <span class="p-buttonset">
               <button
-                type="submit"
-                pButton
-                label="Cambiar contraseña"
+                pButton pRipple
+                label="Cambiar"
                 class="p-button-success"
               ></button>
-            </div>
 
-            <div class="col-6">
               <button
                 type="button"
-                pButton
-                (click)="onReject()"
+                pButton pRipple
+                (click)="onShowPasswordDialogReject()"
                 label="Cancelar"
                 class="p-button-secondary"
               ></button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </ng-template>
-  </p-toast>
-
-  <div class="grid grid-cols-2 divide-x">
-    <div>
-      <div class="w-full px-5 mx-auto">
-        <div
-          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
-        >
-          <div class="px-10">
-            <div class="flex flex-wrap justify-center">
-              <div class="w-full px-4 flex justify-center">
-                <div class="relative">
-                  <button (click)="toggle()">
-                    <img
-                      [src]="teacher.avatar"
-                      alt="Avatar"
-                      class="shadow-xl rounded-full align-middle w-72 h-72 mt-3"
-                    />
-                  </button>
-
-                  <ng-container *ngIf="show">
-                    <input
-                      (change)="encodeAvatar($event)"
-                      class="mt-5 mb-5 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                      id="file_input"
-                      type="file"
-                    />
-
-                    <div class="text-center">
-                      <button
-                        (click)="updateAvatar()"
-                        type="button"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                      >
-                        Guardar cambios
-                      </button>
-                    </div>
-                  </ng-container>
-                  <span
-                    class="mt-3 Fbg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-                    >Profesor</span
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="text-start mt-5">
-              <h3
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Nombre: {{ teacher.name }}
-              </h3>
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Apellidos: {{ teacher.surnames }}
-              </h2>
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Email: {{ teacher.email }}
-              </h2>
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Centro: {{ teacher.center }}
-              </h2>
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Contraseña
-                <button
-                  type="button"
-                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                >
-                  Cambiar contraseña
-                </button>
-              </h2>
-              <div
-                class="text-sm leading-normal mt-0 mb-6 text-blue-400 font-bold uppercase"
-              ></div>
-            </div>
-          </div>
-        </div>
+            </span>
+          </form>
+        </p-dialog>
       </div>
-    </div>
+    </p-card>
 
-    <div>
-      <div class="w-full px-5 mx-auto">
-        <div
-          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
-        >
-          <div class="px-10">
-            <div class="text-center mt-5">
-              <h2 class="mb-2 text-lg font-semibold text-black">Cursos:</h2>
-              <ul class="max-w-md space-y-1 text-black list-disc list-inside">
-                <li>DAW</li>
-                <li>DAM</li>
-                <li>SMX</li>
-              </ul>
+    <div class="flex flex-col gap-4 p-8">
+      <p-table [value]="courses">
+        <ng-template pTemplate="caption">
+          <div class="table-header">Cursos</div>
+        </ng-template>
 
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Alumnos: 52
-              </h2>
-              <div
-                class="text-sm leading-normal mt-0 mb-6 text-blue-400 font-bold uppercase"
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Curso</th>
+            <th>Total Alumnos</th>
+          </tr>
+        </ng-template>
 
-      <div class="w-full px-5 mx-auto">
-        <div
-          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
-        >
-          <div class="px-10">
-            <div class="text-center mt-5">
-              <h2 class="mb-2 text-lg font-semibold text-black">
-                Añadir RANKING:
-              </h2>
+        <ng-template pTemplate="body" let-curso>
+          <tr>
+            <td>{{ curso.name }}</td>
+            <td>{{ curso.totalStudents }}</td>
+          </tr>
+        </ng-template>
 
-              <form [formGroup]="createRankingForm" (ngSubmit)="submit()">
-                <div class="mb-6">
-                  <label
-                    for="name"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >Nombre del Ranking</label
-                  >
-                  <input
-                    id="name"
-                    formControlName="name"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Añadir nombre del Ranking"
-                    required
-                  />
-                </div>
+        <ng-template pTemplate="summary">
+          Total <span class="underline decoration-wavy">30</span>
+        </ng-template>
+      </p-table>
 
-                <button
-                  type="submit"
-                  class="text-white mb-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Añadir Ranking
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      <p-card header="Crear Ranking">
+        <form [formGroup]="createRankingForm" (ngSubmit)="createRankingSubmit()" class="flex flex-row gap-2">
+          <span class="p-float-label">
+            <input
+              id="ranking-name" pInputText
+              formControlName="name"
+              required/>
+
+            <label for="ranking-name">Nombre del Ranking</label>
+          </span>
+
+          <button pButton pRipple>
+            Añadir Ranking
+          </button>
+        </form>
+      </p-card>
     </div>
   </div>
 
-  <hr />
-  <div class="p-20">
+  <p-divider></p-divider>
+
+  <div class="p-8">
     <p-card header="Rankings Creados" [ngSwitch]="createdRankings.length">
-      <div *ngSwitchCase="0">No create ningun ranking</div>
+      <div *ngSwitchCase="0">Ningun ranking creado</div>
 
-      <div *ngSwitchDefault>
-        <p-table
-          *ngFor="let ranking of createdRankings"
-          [value]="ranking.students"
-          [loading]="loading"
-          [rowHover]="true"
-          [paginator]="true"
-          [rowsPerPageOptions]="[3, 5, 10, 25]"
-          [rows]="3"
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        >
-          <ng-template pTemplate="caption">
-            <div class="table-header">
-              {{ ranking.name }} - {{ ranking.code }}
-            </div>
-          </ng-template>
+      <div *ngSwitchDefault class="flex flex-col gap-8">
+        <p-fieldset [legend]="ranking.name" [toggleable]="true" [collapsed]="true"
+                    *ngFor="let ranking of createdRankings">
+          <p-table
+            [value]="ranking.students"
+            [rowHover]="true"
+            [paginator]="true"
+            [rowsPerPageOptions]="[3, 5, 10, 25]"
+            [rows]="3"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Mostrando desde {first} a {last} del total {totalRecords} de estudiantes"
+          >
+            <ng-template pTemplate="caption">
+              <div class="table-header flex justify-between">
+                <p-splitButton
+                  [label]="ranking.code"
+                  styleClass="p-button-secondary"
+                  (onClick)="miscService.copyText($event)"
+                  (onDropdownClick)="setSelectedRanking(ranking)"
+                  [model]="rankingButtons"
+                ></p-splitButton>
+              </div>
+            </ng-template>
 
-          <ng-template pTemplate="header">
-            <tr>
-              <th>#</th>
-              <th>Nickname del estudiante</th>
-              <th>Nombre del estudiante</th>
-              <th>Puntos</th>
-              <th>Acciones</th>
-              <th class="grid gap-4 grid-cols-3">
-                <button
-                  pButton
-                  pRipple
-                  label="Añadir entrega"
-                  icon="pi pi-plus-circle"
-                ></button>
-                <button
-                  pButton
-                  pRipple
-                  class="p-button-danger"
-                  label="Borrar Entrega"
-                  icon="pi pi-trash"
-                ></button>
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Nickname</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Puntos</th>
+                <th></th>
+              </tr>
+            </ng-template>
 
-                <button
-                  pButton
-                  pRipple
-                  class="p-button-help"
-                  label="Generar Nuevo Código de Ranking"
-                  icon="pi pi-undo"
-                  (click)="changeRankingId(ranking)"
-                ></button>
-              </th>
-            </tr>
-          </ng-template>
+            <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
+              <tr class="p-selectable-row w-full">
+                <td>{{ rowIndex + 1 }}</td>
+                <td>{{ student.nickname }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.surnames }}</td>
 
-          <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
-            <tr class="p-selectable-row w-full">
-              <td>{{ rowIndex + 1 }}</td>
-              <td>{{ student.nickname }}</td>
-              <td>{{ student.name }}</td>
-              <td>{{ student.pivot.points }}</td>
-              <td class="grid gap-4 grid-cols-2">
-                <button
-                  pButton
-                  pRipple
-                  class="p-button-warning"
-                  label="Modificar Puntuación"
-                  icon="pi pi-pencil"
-                ></button>
-                <button
-                  pButton
-                  pRipple
-                  class="p-button-danger"
-                  label="Borrar Alumno"
-                  icon="pi pi-trash"
-                  (click)="deleteStudent(student)"
-                ></button>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+                <td>
+                  <p-inplace [closable]="true" (onDeactivate)="modifyStudentPoints(ranking, student)">
+                    <ng-template pTemplate="display">
+                      {{ student.pivot.points }}
+                    </ng-template>
+
+                    <ng-template pTemplate="content">
+                      <p-inputNumber
+                        incrementButtonClass="p-button-outlined"
+                        decrementButtonClass="p-button-outlined"
+                        [showButtons]="true"
+                        [(ngModel)]="student.pivot.points"
+                      ></p-inputNumber>
+                    </ng-template>
+                  </p-inplace>
+                </td>
+
+                <td class="flex justify-end">
+                  <p-button
+                    icon="pi pi-trash"
+                    styleClass="p-button-danger"
+                    label="Borrar alumno"
+                    (onClick)="deleteStudent(student, $event)"
+                  ></p-button>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6" class="text-lg">
+                  Ningun estudiante asignado
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-fieldset>
       </div>
     </p-card>
   </div>
-</section>
 
+  <p-sidebar [(visible)]="isSidebarVisible" position="right">
+    <form [formGroup]="assignmentForm" (ngSubmit)="createAssignment()"
+          class="flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <label for="title">Titulo</label>
+        <input pInputText id="title" formControlName="title"/>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="description">Descripción</label>
+        <input pInputText id="description" formControlName="description"/>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="content">Contenido</label>
+        <input id="content" pInputText formControlName="content"/>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="points">Puntos</label>
+        <p-inputNumber id="points" formControlName="points" [showButtons]="true" styleClass="w-full"></p-inputNumber>
+      </div>
+
+      <button pButton pRipple class="w-full">
+        Crear tarea
+      </button>
+    </form>
+  </p-sidebar>
+</section>

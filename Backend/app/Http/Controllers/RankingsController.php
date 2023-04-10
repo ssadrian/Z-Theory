@@ -14,7 +14,9 @@ class RankingsController extends Controller
      */
     public function index(): Response
     {
-        return response(Ranking::with(['students', 'queues'])->get());
+        return response(
+            Ranking::with(['students', 'queue', 'assignments', 'creator'])->get()
+        );
     }
 
     /**
@@ -55,7 +57,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Ranking::with('students')
+            Ranking::with(['queue', 'students', 'assignments', 'creator'])
                 ->firstWhere('code', $code)
         );
     }
@@ -63,15 +65,15 @@ class RankingsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param $code
+     * @param $oldRankCode
      * @param Request $request
      * @return Response
      * @throws ValidationException
      */
-    public function update($code, Request $request): Response
+    public function update($oldRankCode, Request $request): Response
     {
         // Append ranking's id from url to request's body
-        $validator = Validator::make(['code' => $code], [
+        $validator = Validator::make(['code' => $oldRankCode], [
             'code' => 'required|exists:rankings'
         ]);
         $this->throwIfInvalid($validator);
@@ -82,11 +84,11 @@ class RankingsController extends Controller
             'creator' => 'sometimes|nullable|exists:teachers,id'
         ]);
 
-        $previousRanking = Ranking::with(['creator', 'students', 'queues'])
-            ->firstWhere('code', $code);
+        $previousRanking = Ranking::with(['creator', 'students', 'queue'])
+            ->firstWhere('code', $oldRankCode);
 
-        $ranking = Ranking::with(['creator', 'students', 'queues'])
-            ->firstWhere('code', $code);
+        $ranking = Ranking::with(['creator', 'students', 'queue'])
+            ->firstWhere('code', $oldRankCode);
 
         foreach ($data as $key => $value) {
             if (empty($value)) {
@@ -99,7 +101,7 @@ class RankingsController extends Controller
 
         return response(
             $previousRanking,
-            status: $success ? 200 : 422
+            status: $success ? 200 : 400
         );
     }
 
@@ -131,7 +133,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Ranking::with(['students'])
+            Ranking::with(['students', 'queue', 'assignments'])
                 ->where('creator', $teacherId)
                 ->get()
         );
@@ -150,7 +152,7 @@ class RankingsController extends Controller
         $this->throwIfInvalid($validator);
 
         $leaderboards = [];
-        $rankings = Ranking::with('students')->get();
+        $rankings = Ranking::with(['students', 'assignments'])->get();
 
         foreach ($rankings as $ranking) {
             if (!$ranking->students->contains($studentId)) {
@@ -165,10 +167,10 @@ class RankingsController extends Controller
             $leaderboards[] = $ranking;
         }
 
-        return response($leaderboards);
+        return response(
+            $leaderboards
+        );
     }
-
-    private $data = [];
 
     /**
      * @param $studentId
@@ -180,89 +182,189 @@ class RankingsController extends Controller
         // Append student's id from url to request's body
         $request['student_id'] = $studentId;
 
-        $this->data = $request->validate([
+        $data = $request->validate([
             'student_id' => 'required|exists:students,id',
             'code' => 'required|exists:rankings'
         ]);
 
-        $ranking = Ranking::with(['students', 'queues'])
-            ->firstWhere('code', $this->data['code']);
-
-        // Needed for the queues relationship
-        $this->data['ranking_id'] = $ranking->id;
+        $ranking = Ranking::with(['students', 'queue'])
+            ->firstWhere('code', $data['code']);
 
         // Don't repeat same pending/accepted queue for student and ranking
         if (
-            Ranking::with([
-                'queues' => function ($query) {
-                    return $query
-                        ->where('student_id', $this->data['student_id'])
-                        ->where('ranking_id', $this->data['ranking_id'])
-                        ->where('join_status_id', '<=', JoinStatus::Pending->value);
-                }
-            ])
-                ->firstWhere('code', $this->data['code'])
-                ->queues
+            Ranking::with(['queue'])
+                ->firstWhere('code', $data['code'])
+                ->queue()
+                ->where('student_id', $data['student_id'])
                 ->count() !== 0
         ) {
-            return response(status: 422);
+            return response(
+                status: 400
+            );
         }
 
-        $ranking->queues()->attach($studentId, [
+        $ranking->queue()->attach($studentId, [
             'join_status_id' => JoinStatus::Pending->value,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
-        $ranking->students()->attach($studentId, [
-            'points' => 0,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]);
 
-        return response($ranking);
+        return response(
+            $ranking
+        );
     }
 
+    /**
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     */
     public function acceptStudent($studentId, Request $request): Response
     {
         // Append student's id from url to request's body
         $request['student_id'] = $studentId;
 
-        $this->data = $request->validate([
+        $data = $request->validate([
             'student_id' => 'required|exists:students,id',
             'code' => 'required|exists:rankings'
         ]);
 
-        $ranking = Ranking::with(['queues'])
-            ->firstWhere('code', $this->data['code']);
-
-        // Needed for the queues relationship
-        $this->data['ranking_id'] = $ranking->id;
+        $ranking = Ranking::with(['queue', 'students'])
+            ->firstWhere('code', $data['code']);
 
         // Don't repeat same pending/accepted queue for student and ranking
         if (
-            Ranking::with([
-                'queues' => function ($query) {
-                    return $query
-                        ->where('student_id', $this->data['student_id'])
-                        ->where('ranking_id', $this->data['ranking_id'])
-                        ->where('join_status_id', '<=', JoinStatus::Pending->value);
-                }
-            ])
-                ->firstWhere('code', $this->data['code'])
-                ->queues
+            Ranking::with(['queue'])
+                ->firstWhere('code', $data['code'])
+                ->queue()
+                ->where('student_id', $data['student_id'])
+                ->where('join_status_id', JoinStatus::Pending)
                 ->count() === 0
         ) {
-            return response(status: 422);
+            return response(
+                status: 400
+            );
         }
 
-        $queue = $ranking->queues()
-            ->where('student_id', 1)
-            ->where('ranking_id', 1)
+        $queue = $ranking->queue()
+            ->where('student_id', $data['student_id'])
             ->firstWhere('join_status_id', JoinStatus::Pending->value);
+
         $queue->pivot->join_status_id = JoinStatus::Accepted->value;
+        $ranking->students()->attach($data['student_id'], [
+            'points' => 0
+        ]);
+
+        // Update and save queue and refresh the ranking with the new values
+        $queue->push();
+        $ranking->refresh();
+
+        return response(
+            $ranking
+        );
+    }
+
+    /**
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     */
+    public function declineStudent($studentId, Request $request): Response
+    {
+        // Append student's id from url to request's body
+        $request['student_id'] = $studentId;
+
+        $data = $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'code' => 'required|exists:rankings'
+        ]);
+
+        $ranking = Ranking::with(['queue'])
+            ->firstWhere('code', $data['code']);
+
+        // Don't repeat same pending/accepted queue for student and ranking
+        if (
+            Ranking::with(['queue'])
+                ->firstWhere('code', $data['code'])
+                ->queue()
+                ->where('student_id', $data['student_id'])
+                ->where('join_status_id', JoinStatus::Pending)
+                ->count() === 0
+        ) {
+            return response(
+                status: 400
+            );
+        }
+
+        $queue = $ranking->queue()
+            ->where([
+                'student_id' => $data['student_id'],
+                'ranking_id' => $data['ranking_id']
+            ])
+            ->firstWhere('join_status_id', JoinStatus::Pending->value);
+        $queue->pivot->join_status_id = JoinStatus::Declined->value;
         $queue->push();
 
         $ranking->refresh();
-        return response($ranking);
+        return response(
+            $ranking
+        );
+    }
+
+    /**
+     * @param $rankingCode
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     * @throws ValidationException
+     */
+    public function updateForStudent($rankingCode, $studentId, Request $request): Response
+    {
+        // Append ranking's code and student's id from url to request's body
+        $validator = Validator::make([
+            'code' => $rankingCode,
+            'id' => $studentId
+        ], [
+            'code' => 'required|exists:rankings',
+            'id' => 'required|exists:students|exists:ranking_student,student_id'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        $data = $request->validate([
+            'points' => 'sometimes|nullable|int'
+        ]);
+
+        $previousRanking = Ranking::with(['students'])
+            ->firstWhere('code', $rankingCode)
+            ->students()
+            ->firstWhere('student_id', $studentId);
+
+        $ranking = Ranking::with(['students'])
+            ->firstWhere('code', $rankingCode)
+            ->students()
+            ->firstWhere('student_id', $studentId);
+
+        $ranking->pivot->points = $data['points'];
+        $success = $ranking->pivot->save();
+
+        return response(
+            $previousRanking,
+            status: $success ? 200 : 400
+        );
+    }
+
+    public function queuesForTeacher($teacherId): Response
+    {
+        $data = Validator::validate([
+            'id' => $teacherId
+        ], [
+            'id' => 'required|exists:teachers'
+        ]);
+
+        return response(
+            Ranking::with(['queue'])
+                ->where('creator', $data['id'])
+                ->get()
+        );
     }
 }

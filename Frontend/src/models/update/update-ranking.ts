@@ -1,6 +1,6 @@
 export interface IUpdateRanking {
+  url_oldCode: string;
   code: string;
-  old_code: string;
   name: string;
   creator: number;
 }

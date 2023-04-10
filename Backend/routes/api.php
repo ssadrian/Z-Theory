@@ -42,14 +42,21 @@ Route::prefix('teacher')->group(function () {
 Route::apiResource('ranking', RankingsController::class);
 Route::prefix('ranking')->group(function () {
     Route::get('for/{studentId}', [RankingsController::class, 'forStudent']);
+    Route::get('created_by/{teacherId}', [RankingsController::class, 'createdBy']);
+    Route::get('queues/for/{teacherId}', [RankingsController::class, 'queuesForTeacher']);
 
-    Route::post('created_by/{teacherId}', [RankingsController::class, 'createdBy']);
     Route::post('assign/{studentId}', [RankingsController::class, 'assignStudent']);
     Route::post('accept/{studentId}', [RankingsController::class, 'acceptStudent']);
+    Route::post('decline/{studentId}', [RankingsController::class, 'declineStudent']);
+
+    Route::put('{code}/for/{studentId}', [RankingsController::class, 'updateForStudent']);
 });
 
 Route::apiResource('assignment', AssignmentController::class);
 Route::prefix('assignment')->group(function () {
+    Route::get('creator/{teacherId}', [AssignmentController::class, 'createdBy']);
+    Route::get('{id}/remove/ranking/{rankCode}', [AssignmentController::class, 'removeFromRanking']);
+
     Route::post('assign/ranking/{rankCode}', [AssignmentController::class, 'assignToRanking']);
 });
 
