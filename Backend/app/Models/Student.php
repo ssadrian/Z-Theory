@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\{
-    Database\Eloquent\Factories\HasFactory,
+use Illuminate\{Database\Eloquent\Factories\HasFactory,
     Database\Eloquent\Relations\BelongsToMany,
-    Foundation\Auth\User as Authenticatable
-};
+    Foundation\Auth\User as Authenticatable};
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -82,5 +80,12 @@ class Student extends Authenticatable
         return $this
             ->belongsToMany(Assignment::class)
             ->withPivot(['status', 'mark']);
+    }
+
+    public function skills(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Skill::class, 'student_skill')
+            ->withPivot(['points', 'image']);
     }
 }

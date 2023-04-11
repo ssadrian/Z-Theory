@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\{Models\Assignment, Models\Ranking, Models\Student, Models\Teacher};
-use Illuminate\{Database\Seeder, Support\Carbon, Support\Facades\DB};
+use Illuminate\{Database\Seeder, Support\Carbon};
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            DefaultAvatarSeeder::class
+            DefaultAvatarSeeder::class,
+            SkillSeeder::class
         ]);
 
         // Test student

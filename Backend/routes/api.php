@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\AssignmentController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RankingsController;
-use App\Http\Controllers\StudentsController;
-use App\Http\Controllers\TeachersController;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Route;
+use App\{Http\Controllers\AssignmentController,
+    Http\Controllers\AuthController,
+    Http\Controllers\RankingsController,
+    Http\Controllers\StudentsController,
+    Http\Controllers\TeachersController};
+use Illuminate\{Support\Facades\Request, Support\Facades\Route};
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +30,8 @@ Route::prefix('register')->group(function () {
 
 Route::apiResource('student', StudentsController::class);
 Route::prefix('student')->group(function () {
+    Rouget::get('', [StudentsController::class, 'giveKudos']);
+
     Route::post('password', [StudentsController::class, 'changePassword']);
 });
 

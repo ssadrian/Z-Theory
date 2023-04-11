@@ -21,7 +21,7 @@ class StudentsController extends Controller
     public function index(): Response
     {
         return response(
-            Student::with(['rankings', 'assignments'])->get()
+            Student::with(['rankings', 'assignments', 'skills'])->get()
         );
     }
 
@@ -64,7 +64,7 @@ class StudentsController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Student::with(['rankings', 'assignments'])
+            Student::with(['rankings', 'assignments', 'skills'])
                 ->find($id)
         );
     }
@@ -156,6 +156,24 @@ class StudentsController extends Controller
 
         // Ok
         return response(
+            status: 200
+        );
+    }
+
+    public function giveKudos($evaluator, $subject, $kudos)
+    {
+        $data = Validator::make([
+            'evaluator' => $evaluator,
+            'subject' => $subject,
+            'kudos' => $kudos
+        ], [
+            'evaluator' => 'required|exists:students,id',
+            'subject' => 'required|exists:students,id',
+            'kudos' => 'required|int|gt:0'
+        ]);
+
+        // Ok
+        return reponse(
             status: 200
         );
     }
