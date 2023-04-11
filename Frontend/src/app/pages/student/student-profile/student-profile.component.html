@@ -23,7 +23,8 @@
                   <p-fileUpload
                     *ngIf="show"
                     mode="basic"
-                    chooseLabel="Cargar imagen" accept="image/*"
+                    chooseLabel="Cargar imagen"
+                    accept="image/*"
                     [maxFileSize]="1000000"
                     (onSelect)="encodeAvatar($event)"
                   ></p-fileUpload>
@@ -45,9 +46,11 @@
               <div>{{ student.email }}</div>
 
               <button
-                pButton pRipple
+                pButton
+                pRipple
                 class="p-button-raised col-span-2"
-                (click)="showPasswordChangeForm()">
+                (click)="showPasswordChangeForm()"
+              >
                 Cambiar contraseña
               </button>
               <p-dialog
@@ -89,14 +92,16 @@
 
                   <span class="p-buttonset">
                     <button
-                      pButton pRipple
+                      pButton
+                      pRipple
                       label="Cambiar"
                       class="p-button-success"
                     ></button>
 
                     <button
                       type="button"
-                      pButton pRipple
+                      pButton
+                      pRipple
                       (click)="onShowPasswordDialogReject()"
                       label="Cancelar"
                       class="p-button-secondary"
@@ -131,13 +136,14 @@
           </div>
         </div>
 
-        <p-table [value]="inventory"
-                 styleClass="p-datatable-striped" [tableStyle]="{'min-width': '50rem'}"
-                 class="p-5">
+        <p-table
+          [value]="inventory"
+          styleClass="p-datatable-striped"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          class="p-5"
+        >
           <ng-template pTemplate="caption">
-            <div class="table-header">
-              Inventario
-            </div>
+            <div class="table-header">Inventario</div>
           </ng-template>
 
           <ng-template pTemplate="header">
@@ -158,7 +164,7 @@
     </div>
   </div>
 
-  <hr/>
+  <hr />
 
   <div class="p-20">
     <form class="flex gap-2" [formGroup]="codeForm" (ngSubmit)="joinRanking()">
@@ -171,9 +177,7 @@
     </form>
 
     <p-card header="Rankings" [ngSwitch]="rankings.length">
-      <div *ngSwitchCase="0">
-        No estas dentro de nigun ranking
-      </div>
+      <div *ngSwitchCase="0">No estas dentro de nigun ranking</div>
 
       <div *ngSwitchDefault>
         <p-table
@@ -182,7 +186,8 @@
           [loading]="loading"
           [rowHover]="true"
           [paginator]="true"
-          [rowsPerPageOptions]="[3, 5, 10, 25]" [rows]="3"
+          [rowsPerPageOptions]="[3, 5, 10, 25]"
+          [rows]="3"
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         >
@@ -197,6 +202,7 @@
               <th>#</th>
               <th>Estudiante</th>
               <th>Puntos</th>
+              <th>Medallas</th>
             </tr>
           </ng-template>
 
@@ -205,6 +211,7 @@
               <td>{{ rowIndex + 1 }}</td>
               <td>{{ student.nickname }}</td>
               <td>{{ student.pivot.points }}</td>
+              <td></td>
             </tr>
           </ng-template>
         </p-table>
