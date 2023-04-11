@@ -51,9 +51,7 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         Assignment::factory(10)
-            ->create([
-                'status' => DB::select('SELECT * FROM assignment_statuses ORDER BY RAND() LIMIT 1')
-            ]);
+            ->create();
 
         foreach (Student::all() as $student) {
             foreach (range(0, 2) as $ignored) {
