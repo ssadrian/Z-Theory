@@ -7,24 +7,27 @@
         >
           <div class="px-10">
             <div class="inline-flex justify-center w-full mb-4">
-              <div><div>
-                <p-badge [value]="'Estudiante'"></p-badge>
+              <div>
+                <div>
+                  <p-badge [value]="'Estudiante'"></p-badge>
 
-                <img
-                  [src]="student.avatar"
-                  alt="Avatar"
-                  class="rounded-full w-72 h-72 align-self-center bg-gradient-to-br from-cyan-300"
-                  (click)="toggle()"
-                />
+                  <img
+                    [src]="student.avatar"
+                    alt="Avatar"
+                    class="rounded-full w-72 h-72 align-self-center bg-gradient-to-br from-cyan-300"
+                    (click)="toggle()"
+                  />
 
-                <p-fileUpload
-                  *ngIf="show"
-                  mode="basic"
-                  chooseLabel="Cargar imagen" accept="image/*"
-                  [maxFileSize]="1000000"
-                  (onSelect)="encodeAvatar($event)"
-                ></p-fileUpload>
-              </div></div>
+                  <p-fileUpload
+                    *ngIf="show"
+                    mode="basic"
+                    chooseLabel="Cargar imagen"
+                    accept="image/*"
+                    [maxFileSize]="1000000"
+                    (onSelect)="encodeAvatar($event)"
+                  ></p-fileUpload>
+                </div>
+              </div>
             </div>
 
             <div class="grid grid-cols-2 gap-6">
@@ -41,9 +44,11 @@
               <div>{{ student.email }}</div>
 
               <button
-                pButton pRipple
+                pButton
+                pRipple
                 class="p-button-raised col-span-2"
-                (click)="showPasswordChangeForm()">
+                (click)="showPasswordChangeForm()"
+              >
                 Cambiar contraseña
               </button>
               <p-dialog
@@ -60,44 +65,46 @@
                   (ngSubmit)="changePassword()"
                   class="flex flex-col gap-5 mt-5"
                 >
-            <span class="p-float-label">
-              <input
-                id="password"
-                pPassword
-                type="password"
-                [feedback]="true"
-                autocomplete="current-password"
-                formControlName="password"
-              />
-              <label for="password">Contraseña Actual</label>
-            </span>
+                  <span class="p-float-label">
+                    <input
+                      id="password"
+                      pPassword
+                      type="password"
+                      [feedback]="true"
+                      autocomplete="current-password"
+                      formControlName="password"
+                    />
+                    <label for="password">Contraseña Actual</label>
+                  </span>
 
                   <span class="p-float-label">
-              <input
-                id="new_password"
-                pPassword
-                type="password"
-                autocomplete="new-password"
-                formControlName="new_password"
-              />
-              <label for="password">Contraseña Nueva</label>
-            </span>
+                    <input
+                      id="new_password"
+                      pPassword
+                      type="password"
+                      autocomplete="new-password"
+                      formControlName="new_password"
+                    />
+                    <label for="password">Contraseña Nueva</label>
+                  </span>
 
                   <span class="p-buttonset">
-              <button
-                pButton pRipple
-                label="Cambiar"
-                class="p-button-success"
-              ></button>
+                    <button
+                      pButton
+                      pRipple
+                      label="Cambiar"
+                      class="p-button-success"
+                    ></button>
 
-              <button
-                type="button"
-                pButton pRipple
-                (click)="onShowPasswordDialogReject()"
-                label="Cancelar"
-                class="p-button-secondary"
-              ></button>
-            </span>
+                    <button
+                      type="button"
+                      pButton
+                      pRipple
+                      (click)="onShowPasswordDialogReject()"
+                      label="Cancelar"
+                      class="p-button-secondary"
+                    ></button>
+                  </span>
                 </form>
               </p-dialog>
             </div>
@@ -127,13 +134,14 @@
           </div>
         </div>
 
-        <p-table [value]="inventory"
-                 styleClass="p-datatable-striped" [tableStyle]="{'min-width': '50rem'}"
-                 class="p-5">
+        <p-table
+          [value]="inventory"
+          styleClass="p-datatable-striped"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          class="p-5"
+        >
           <ng-template pTemplate="caption">
-            <div class="table-header">
-              Inventario
-            </div>
+            <div class="table-header">Inventario</div>
           </ng-template>
 
           <ng-template pTemplate="header">
@@ -154,7 +162,7 @@
     </div>
   </div>
 
-  <hr/>
+  <hr />
 
   <div class="p-20">
     <form class="flex gap-2" [formGroup]="codeForm" (ngSubmit)="joinRanking()">
@@ -167,9 +175,7 @@
     </form>
 
     <p-card header="Rankings" [ngSwitch]="rankings.length">
-      <div *ngSwitchCase="0">
-        No estas dentro de nigun ranking
-      </div>
+      <div *ngSwitchCase="0">No estas dentro de nigun ranking</div>
 
       <div *ngSwitchDefault>
         <p-table
@@ -178,7 +184,8 @@
           [loading]="loading"
           [rowHover]="true"
           [paginator]="true"
-          [rowsPerPageOptions]="[3, 5, 10, 25]" [rows]="3"
+          [rowsPerPageOptions]="[3, 5, 10, 25]"
+          [rows]="3"
           [showCurrentPageReport]="true"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         >
@@ -193,6 +200,7 @@
               <th>#</th>
               <th>Estudiante</th>
               <th>Puntos</th>
+              <th>Medallas</th>
             </tr>
           </ng-template>
 
@@ -201,6 +209,7 @@
               <td>{{ rowIndex + 1 }}</td>
               <td>{{ student.nickname }}</td>
               <td>{{ student.pivot.points }}</td>
+              <td></td>
             </tr>
           </ng-template>
         </p-table>
