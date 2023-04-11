@@ -7,8 +7,7 @@ const routes: Routes = [
   { path: '', component: LandPageComponent },
   {
     path: '',
-    loadChildren: () =>
-      import('./pages/pages-routing.module').then((m) => m.PagesRoutingModule),
+    loadChildren: () => import('./pages/pages-routing.module').then(m => m.PagesRoutingModule),
   },
   { path: '**', component: NotFoundComponent },
 ];

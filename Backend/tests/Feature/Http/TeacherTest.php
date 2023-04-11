@@ -10,8 +10,8 @@ class TeacherTest extends TestCase
 {
     use DatabaseTransactions;
 
-    private string $endpoint = '/api/teacher';
-    private string $allEndpoint = '/api/teacher/all';
+    private string $endpoint = '/api/user';
+    private string $allEndpoint = '/api/user/all';
 
     protected function setUp(): void
     {
@@ -29,11 +29,11 @@ class TeacherTest extends TestCase
 
     public function test_get_valid_id_succeeds()
     {
-        $teacher = Teacher::all()->first();
+        $user = Teacher::all()->first();
 
         $response = $this->json('GET', $this->endpoint,
             data: [
-                'id' => $teacher->id
+                'id' => $user->id
             ]);
 
         $response->assertOk();
@@ -56,10 +56,10 @@ class TeacherTest extends TestCase
 
     public function test_update_valid_teacher_succeeds()
     {
-        $teacher = Teacher::all()->first();
+        $user = Teacher::all()->first();
 
         $response = $this->putJson($this->endpoint, [
-            'id' => $teacher->id,
+            'id' => $user->id,
             'nickname' => 'Test',
             'name' => 'Test',
             'surnames' => 'Test',
@@ -73,10 +73,10 @@ class TeacherTest extends TestCase
 
     public function test_delete_valid_id_succeeds()
     {
-        $teacher = Teacher::all()->first();
+        $user = Teacher::all()->first();
 
         $response = $this->deleteJson($this->endpoint, [
-            'id' => $teacher->id
+            'id' => $user->id
         ]);
 
         $response->assertOk();

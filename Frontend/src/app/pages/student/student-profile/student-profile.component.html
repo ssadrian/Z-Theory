@@ -1,34 +1,4 @@
-<section class="pt-16 pb-16 bg-gray-900">
-  <p-toast position="center" key="passwordChange" (onClose)="onReject()" [baseZIndex]="5000">
-    <ng-template let-message pTemplate="message">
-      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-        <div class="flex flex-column" style="flex: 1">
-          <div class="text-center">
-            <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
-
-            <h4>{{message.summary}}</h4>
-
-            <label for="password">Contraseña Actual</label>
-            <p-password id="password" [toggleMask]="true" formControlName="password"></p-password>
-
-            <label for="new_password">Contraseña Nueva</label>
-            <p-password id="new_password" [toggleMask]="true" formControlName="new_password"></p-password>
-          </div>
-
-          <div class="grid p-fluid">
-            <div class="col-6">
-              <button type="submit" pButton label="Cambiar contraseña" class="p-button-success"></button>
-            </div>
-
-            <div class="col-6">
-              <button type="button" pButton (click)="onReject()" label="Cancelar" class="p-button-secondary"></button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </ng-template>
-  </p-toast>
-
+<section>
   <div class="grid grid-cols-2 divide-x">
     <div>
       <div class="w-full px-5 mx-auto">
@@ -36,128 +6,150 @@
           class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
         >
           <div class="px-10">
-            <div class="flex flex-wrap justify-center">
-              <div class="w-full px-4 flex justify-center">
-                <div class="relative">
-                  <button (click)="toggle()">
-                    <img
-                      [src]="student.avatar"
-                      alt="Avatar"
-                      class="shadow-xl rounded-full align-middle w-72 h-72 mt-3"
-                    />
-                  </button>
+            <div class="inline-flex justify-center w-full mb-4">
+              <div><div>
+                <p-badge [value]="'Estudiante'"></p-badge>
 
-                  <ng-container *ngIf="show">
-                    <input
-                      (change)="encodeAvatar($event)"
-                      class="mt-5 mb-5 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                      id="file_input"
-                      type="file"
-                    />
+                <img
+                  [src]="student.avatar"
+                  alt="Avatar"
+                  class="rounded-full w-72 h-72 align-self-center bg-gradient-to-br from-cyan-300"
+                  (click)="toggle()"
+                />
 
-                    <div class="text-center">
-                      <button
-                        (click)="updateAvatar()"
-                        type="button"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                      >
-                        Guardar cambios
-                      </button>
-                    </div>
-                  </ng-container>
-
-                  <div class="text-center">
-                    <span
-                      class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-                    >Estudiante</span
-                    >
-                  </div>
-                </div>
-              </div>
+                <p-fileUpload
+                  *ngIf="show"
+                  mode="basic"
+                  chooseLabel="Cargar imagen" accept="image/*"
+                  [maxFileSize]="1000000"
+                  (onSelect)="encodeAvatar($event)"
+                ></p-fileUpload>
+              </div></div>
             </div>
-            <div class="text-start">
-              <h3
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
+
+            <div class="grid grid-cols-2 gap-6">
+              <div>Nombre</div>
+              <div>{{ student.nickname }}</div>
+
+              <div>Apellidos</div>
+              <div>{{ student.surnames }}</div>
+
+              <div>Fecha de Nacimiento</div>
+              <div>{{ student.birth_date }}</div>
+
+              <div>Email</div>
+              <div>{{ student.email }}</div>
+
+              <button
+                pButton pRipple
+                class="p-button-raised col-span-2"
+                (click)="showPasswordChangeForm()">
+                Cambiar contraseña
+              </button>
+              <p-dialog
+                [(visible)]="showPasswordChangeDialog"
+                (onHide)="onShowPasswordDialogReject()"
               >
-                Nombre: {{ student.nickname }}
-              </h3>
-              <h3
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Fecha de nacimiento: {{ student.birth_date }}
-              </h3>
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Apellidos: {{ student.surnames }}
-              </h2>
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Email: {{ student.email }}
-              </h2>
-              <h2
-                class="text-xl font-semibold leading-normal text-gray-700 mb-2"
-              >
-                Contraseña
-                <button
-                  type="button"
-                  (click)="showPasswordChangeForm()"
-                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                <ng-template pTemplate="header">
+                  <i class="pi pi-exclamation-triangle text-xl"></i>
+                  Cambiar Contraseña
+                </ng-template>
+
+                <form
+                  [formGroup]="passwordForm"
+                  (ngSubmit)="changePassword()"
+                  class="flex flex-col gap-5 mt-5"
                 >
-                  Cambiar contraseña
-                </button>
-              </h2>
-              <div
-                class="text-sm leading-normal mt-0 mb-6 text-blue-400 font-bold uppercase"
-              ></div>
+            <span class="p-float-label">
+              <input
+                id="password"
+                pPassword
+                type="password"
+                [feedback]="true"
+                autocomplete="current-password"
+                formControlName="password"
+              />
+              <label for="password">Contraseña Actual</label>
+            </span>
+
+                  <span class="p-float-label">
+              <input
+                id="new_password"
+                pPassword
+                type="password"
+                autocomplete="new-password"
+                formControlName="new_password"
+              />
+              <label for="password">Contraseña Nueva</label>
+            </span>
+
+                  <span class="p-buttonset">
+              <button
+                pButton pRipple
+                label="Cambiar"
+                class="p-button-success"
+              ></button>
+
+              <button
+                type="button"
+                pButton pRipple
+                (click)="onShowPasswordDialogReject()"
+                label="Cancelar"
+                class="p-button-secondary"
+              ></button>
+            </span>
+                </form>
+              </p-dialog>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div>
-      <div class="w-full px-5 mx-auto">
-        <div
-          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
-        >
-          <div class="px-10">
-            <div class="flex justify-center py-4 lg:pt-4 pt-8">
-              <div class="mr-4 p-3 text-center">
-                <span
-                  class="text-xl font-bold block uppercase tracking-wide text-blue-600"
-                >
-                  22
-                </span>
-                <span class="text-sm text-gray-400">Experiencia</span>
-              </div>
-              <div class="mr-4 p-3 text-center">
-                <span
-                  class="text-xl font-bold block uppercase tracking-wide text-blue-600"
-                >
-                  10
-                </span>
-                <span class="text-sm text-gray-400">Gemas</span>
-              </div>
-              <div class="lg:mr-4 p-3 text-center">
-                <span
-                  class="text-xl font-bold block uppercase tracking-wide text-blue-600"
-                >
-                  89
-                </span>
-                <span class="text-sm text-gray-400">Nivel</span>
-              </div>
-            </div>
+    <div class="w-full px-5 mx-auto">
+      <div
+        class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-xl rounded-lg mt-16"
+      >
+        <div class="flex justify-evenly text-center">
+          <div>
+            <p class="text-xl font-bold">22</p>
+            <p>Experiencia</p>
           </div>
 
-          <div class="grid grid-cols-1 divide-y p-5">
-            <span>Inventario:</span>
-            <div>1 Espada</div>
-            <div>3 Diamantes</div>
-            <div>1 Mapa</div>
+          <div>
+            <p class="text-xl font-bold">10</p>
+            <p>Gemas</p>
+          </div>
+
+          <div>
+            <p class="text-xl font-bold">22</p>
+            <p>Nivel</p>
           </div>
         </div>
+
+        <p-table [value]="inventory"
+                 styleClass="p-datatable-striped" [tableStyle]="{'min-width': '50rem'}"
+                 class="p-5">
+          <ng-template pTemplate="caption">
+            <div class="table-header">
+              Inventario
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Cantidad</th>
+              <th>Objeto</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>{{ item.qty }}</td>
+              <td>{{ item.name }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </div>
   </div>
@@ -165,52 +157,14 @@
   <hr/>
 
   <div class="p-20">
-    <form [formGroup]="codeForm" (ngSubmit)="joinRanking()">
-      <label>
-        <input formControlName="code" placeholder="Codigo del Ranking"/>
-      </label>
+    <form class="flex gap-2" [formGroup]="codeForm" (ngSubmit)="joinRanking()">
+      <span class="p-float-label">
+        <input pInputText id="code" formControlName="code" />
+        <label for="code">Codigo</label>
+      </span>
 
-      <button type="submit">Enviar</button>
+      <button pButton pRipple>Enviar</button>
     </form>
-
-    <!-- <div class="grid grid-cols-4 gap-4 w-full">
-      <div *ngFor="let ranking of rankings"
-          class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-      >
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <caption [innerText]="ranking.code"></caption>
-
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" class="px-6 py-3">#</th>
-                <th scope="col" class="px-6 py-3">Estudiante</th>
-                <th scope="col" class="px-6 py-3">Puntos</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr
-                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                *ngFor="let student of ranking.students; index as i"
-              >
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {{ i + 1 }}
-                </th>
-
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {{ student.nickname }}
-                </th>
-
-                <td class="px-6 py-4">
-                  {{ student.pivot.points }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div> -->
 
     <p-card header="Rankings" [ngSwitch]="rankings.length">
       <div *ngSwitchCase="0">

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Models\Assignment, Models\Ranking};
+use App\{Models\Assignment, Models\Ranking, Models\Student};
 use Illuminate\{Http\Request, Http\Response, Support\Facades\Validator, Validation\ValidationException};
 
 class AssignmentController extends Controller
@@ -15,7 +15,7 @@ class AssignmentController extends Controller
     public function index(): Response
     {
         return response(
-            Assignment::with(['creator'])->get()
+            Assignment::with(['creator', 'rankingsAssigned', 'studentsAssigned'])->get()
         );
     }
 
@@ -29,10 +29,10 @@ class AssignmentController extends Controller
     {
         $data = $request->validate([
             'creator' => 'required|exists:teachers,id',
-            'title' => 'required|string',
+            'title' => 'required|string|unique:assignments',
             'points' => 'required|int',
             'description' => 'sometimes|nullable|string',
-            'content' => 'sometimes|nullable|string'
+            'content' => 'sometimes|nullable|string',
         ]);
 
         // Model requires the teacher's id, however the user must see it as creator
@@ -79,7 +79,7 @@ class AssignmentController extends Controller
 
         $data = $request->validate([
             'id' => 'required|exists:assignments',
-            'title' => 'sometimes|nullable|string',
+            'title' => 'sometimes|nullable|string|unique:assignments',
             'description' => 'sometimes|nullable|string',
             'content' => 'sometimes|nullable|string',
             'points' => 'sometimes|nullable|int',
@@ -100,7 +100,7 @@ class AssignmentController extends Controller
 
         return response(
             $previousAssignment,
-            status: $success ? 200 : 422
+            status: $success ? 200 : 400
         );
     }
 
@@ -113,24 +113,149 @@ class AssignmentController extends Controller
     public function destroy($id): Response
     {
         return response(
-            status: Assignment::destroy($id) ? 200 : 422
+            status: Assignment::destroy($id) ? 200 : 400
         );
     }
 
+    /**
+     * @param $rankCode
+     * @param Request $request
+     * @return Response
+     * @throws ValidationException
+     */
     public function assignToRanking($rankCode, Request $request): Response
     {
         // Append rank's code from url to request's body
-        $request['rank_code'] = $rankCode;
+        $validator = Validator::make(['code' => $rankCode], [
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
 
         $data = $request->validate([
-            'id' => 'required|exists:assignments',
-            'rank_code' => 'required|exists:rankings,code'
+            'id' => 'required|exists:assignments'
         ]);
 
         Assignment::find($data['id'])
             ->rankingsAssigned()
-            ->attach(Ranking::all()->firstWhere('code', $rankCode));
+            ->syncWithoutDetaching(Ranking::all()->firstWhere('code', $rankCode));
 
-        return response(Assignment::with(['creator'])->find($data['id']));
+        $ranking = Ranking::with('students')
+            ->firstWhere('code', $rankCode);
+
+        // Each member of the ranking with the assignment should have their assignments
+        foreach ($ranking->students as $student) {
+            Student::find($student->id)
+                ->assignments()
+                ->syncWithoutDetaching([
+                    $data['id'] => [
+                        'status' => 'Pending'
+                    ],
+                ]);
+        }
+
+        $assignments = Assignment::with(['creator', 'rankingsAssigned'])
+            ->find($data['id']);
+        $assignments->rankingsAssigned->makeHidden('pivot');
+
+        return response(
+            $assignments
+        );
     }
+
+    /**
+     * @param $id
+     * @param $rankCode
+     * @return Response
+     * @throws ValidationException
+     */
+    public function removeFromRanking($id, $rankCode): Response
+    {
+        // Append rank's code from url to request's body
+        $validator = Validator::make([
+            'id' => $id,
+            'code' => $rankCode
+        ], [
+            'id' => 'required|exists:assignments',
+            'code' => 'required|exists:rankings'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        Assignment::find($id)
+            ->rankingsAssigned()
+            ->detach(Ranking::all()->firstWhere('code', $rankCode));
+
+        $ranking = Ranking::with('students')
+            ->firstWhere('code', $rankCode);
+
+        // Each member of the ranking with the assignment should have their assignments
+        foreach ($ranking->students as $student) {
+            Student::find($student->id)
+                ->assignments()
+                ->detach($id);
+        }
+
+        return response(
+            status: 200
+        );
+    }
+
+    /**
+     * @param $teacherId
+     * @return Response
+     * @throws ValidationException
+     */
+    public function createdBy($teacherId): Response
+    {
+        $validator = Validator::make(['id' => $teacherId], [
+            'id' => 'required|exists:teachers'
+        ]);
+        $this->throwIfInvalid($validator);
+
+        return response(
+            Assignment::all()
+                ->where('teacher_id', $teacherId)
+        );
+    }
+
+    /**
+     * @param $assignmentId
+     * @param $studentId
+     * @param Request $request
+     * @return Response
+     */
+    public function updateForStudent($assignmentId, $studentId, Request $request): Response
+    {
+        // Append ranking's code and student's id from url to request's body
+        $data['student_id'] = $studentId;
+        $data['assignment_id'] = $assignmentId;
+
+        $data = $request->validate([
+            'student_id' => 'required|exists:students,id|exists:assignment_student',
+            'assignment_id' => 'required|exists:assignments,id|exists:assignment_student',
+            'mark' => 'sometimes|nullable|int',
+            'file' => 'sometimes|nullable|string',
+            'status' => 'sometimes|nullable|exists:assignment_statuses'
+        ]);
+
+        $previousTask = Assignment::with(['creator', 'studentsAssigned'])
+            ->find($assignmentId)
+            ->studentsAssigned()
+            ->firstWhere('student_id', $studentId);
+
+        $task = Assignment::with(['students'])
+            ->find($assignmentId)
+            ->studentsAssigned()
+            ->firstWhere('student_id', $studentId);
+
+        $task->pivot->mark = $data['mark'];
+        $task->pivot->file = $data['file'];
+        $task->pivot->status = $data['status'];
+        $success = $task->pivot->save();
+
+        return response(
+            $previousTask,
+            status: $success ? 200 : 400
+        );
+    }
+
 }

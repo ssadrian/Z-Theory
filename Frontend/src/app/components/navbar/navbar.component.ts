@@ -1,17 +1,20 @@
-import {Component} from "@angular/core";
-import {LoginService} from "../../services/login.service";
-import {CredentialService} from "../../services/credential.service";
+import {Component} from '@angular/core';
+import {LoginService} from '../../services/login.service';
+import {CredentialService} from '../../services/credential.service';
 
 @Component({
-  selector: "app-navbar",
-  templateUrl: "./navbar.component.html",
-  styleUrls: ["./navbar.component.scss"],
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  constructor(private loginService: LoginService, private credentials: CredentialService) {
+  constructor(
+    private loginService: LoginService,
+    public credentials: CredentialService
+  ) {
   }
 
-  get isLogged(): boolean {
+  isLogged(): boolean {
     return this.credentials.currentUser !== undefined;
   }
 

@@ -20,7 +20,9 @@ class TeachersController extends Controller
      */
     public function index(): Response
     {
-        return response(Teacher::with('rankingsCreated')->get());
+        return response(
+            Teacher::with('rankingsCreated')->get()
+        );
     }
 
     /**
@@ -41,7 +43,10 @@ class TeachersController extends Controller
             'avatar' => 'sometimes|string'
         ]);
 
-        return response(Teacher::create($data), 201);
+        return response(
+            Teacher::create($data)
+            , 201
+        );
     }
 
     /**
@@ -101,7 +106,7 @@ class TeachersController extends Controller
 
         return response(
             $previousTeacher,
-            status: $success ? 200 : 422
+            status: $success ? 200 : 400
         );
     }
 
@@ -139,14 +144,18 @@ class TeachersController extends Controller
         $teacher = Teacher::find($data['id']);
 
         if (!Hash::check($data['password'], $teacher->password)) {
-            // Unprocessable Content
-            return response(status: 422);
+            // Bad Request
+            return response(
+                status: 400
+            );
         }
 
         $teacher->password = Hash::make($data['new_password']);
         $teacher->save();
 
         // Ok
-        return response(status: 200);
+        return response(
+            status: 200
+        );
     }
 }

@@ -67,13 +67,11 @@ class Assignment extends Model
     ];
 
     /**
-     * All the relationships to be touched.
+     * Indicates if the model should be timestamped.
      *
-     * @var array
+     * @var bool
      */
-    protected $touches = [
-        'rankingsAssigned'
-    ];
+    public $timestamps = true;
 
     public function creator(): BelongsTo
     {
@@ -84,6 +82,12 @@ class Assignment extends Model
     public function rankingsAssigned(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Ranking::class, 'ranking_assignment');
+            ->belongsToMany(Ranking::class);
+    }
+
+    public function studentsAssigned(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Student::class);
     }
 }

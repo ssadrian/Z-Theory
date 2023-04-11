@@ -13,12 +13,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ranking_join_queue', function (Blueprint $table) {
-            $table->foreignId('student_id')->onDelete('cascade')->constrained();
-            $table->foreignId('ranking_id')->onDelete('cascade')->constrained();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('ranking_id')->constrained()->onDelete('cascade');
             $table->foreignId('join_status_id')
                 ->default(JoinStatus::Pending->value)
-                ->onDelete('cascade')
-                ->constrained();
+                ->constrained()
+                ->onDelete('cascade');
 
             $table->primary(['student_id', 'ranking_id']);
             $table->timestamps();
