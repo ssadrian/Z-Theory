@@ -144,6 +144,10 @@ export class StudentProfileComponent implements OnInit {
           detail: 'Petición registrada.'
         });
       });
+    this.rankingService.assignStudent(entity).subscribe((): void => {
+      this.#updateRanks();
+      this.codeForm.reset();
+    });
   }
 
   #isValidUuid(uuid: string): boolean {
