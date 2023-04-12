@@ -30,9 +30,8 @@ Route::prefix('register')->group(function () {
 
 Route::apiResource('student', StudentsController::class);
 Route::prefix('student')->group(function () {
-    Rouget::get('', [StudentsController::class, 'giveKudos']);
-
     Route::post('password', [StudentsController::class, 'changePassword']);
+    Route::post('give', [StudentsController::class, 'giveKudos']);
 });
 
 Route::apiResource('teacher', TeachersController::class);

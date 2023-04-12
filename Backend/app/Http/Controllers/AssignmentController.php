@@ -212,8 +212,7 @@ class AssignmentController extends Controller
         $this->throwIfInvalid($validator);
 
         return response(
-            Assignment::all()
-                ->where('teacher_id', $teacherId)
+            Assignment::where('teacher_id', $teacherId)->get()
         );
     }
 

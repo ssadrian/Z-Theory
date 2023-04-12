@@ -6,6 +6,9 @@ use Illuminate\{Database\Eloquent\Factories\HasFactory,
     Database\Eloquent\Model,
     Database\Eloquent\Relations\BelongsToMany};
 
+/**
+ * @mixin IdeHelperSkill
+ */
 class Skill extends Model
 {
     use HasFactory;

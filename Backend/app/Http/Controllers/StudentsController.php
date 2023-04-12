@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Skill;
 use App\Models\Student;
 use Illuminate\{
     Http\Request,
@@ -43,8 +44,23 @@ class StudentsController extends Controller
             'avatar' => 'sometimes|nullable|string'
         ]);
 
+        // Default value for kudos required field
+        $data['kudos'] = 1_000;
+        $data['password'] = Hash::make($data['password']);
+
+        $student = Student::create($data)
+            ->with('skills');
+
+        $allSkills = Skill::all('id');
+        foreach ($allSkills as $skill) {
+            // BUG: skills isn't a valid method and a property
+            $student->skills->syncWithoutDetaching(
+                $skill->id, [ 'kudos' => 0 ]
+            );
+        }
+
         return response(
-            Student::create($data)
+            $student
             , 201
         );
     }
@@ -160,20 +176,32 @@ class StudentsController extends Controller
         );
     }
 
-    public function giveKudos($evaluator, $subject, $kudos)
+    public function giveKudos(Request $request): Response
     {
-        $data = Validator::make([
-            'evaluator' => $evaluator,
-            'subject' => $subject,
-            'kudos' => $kudos
-        ], [
+        $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|exists:students,id',
             'kudos' => 'required|int|gt:0'
         ]);
 
+        $evaluator = Student::find($data['evaluator']);
+        $subject = Student::with(['skills'])
+            ->find($data['subject']);
+
+        $availableKudos = $evaluator->kudos;
+
+        if (empty($availableKudos)
+            || $availableKudos < $data['kudos']) {
+            // Bad Request
+            return response(
+                status: 400
+            );
+        }
+
+        $subjectSkills = $subject->skills();
+
         // Ok
-        return reponse(
+        return response(
             status: 200
         );
     }

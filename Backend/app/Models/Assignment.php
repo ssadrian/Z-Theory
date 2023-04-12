@@ -39,6 +39,7 @@ use Illuminate\{
  * @mixin \Eloquent
  * @noinspection PhpFullyQualifiedNameUsageInspection
  * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+ * @mixin IdeHelperAssignment
  */
 class Assignment extends Model
 {

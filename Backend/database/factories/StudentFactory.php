@@ -23,7 +23,8 @@ class StudentFactory extends Factory
             'password' => bcrypt(fake()->password()),
             'nickname' => fake()->uuid(),
             'birth_date' => Carbon::now()->format('Y-m-d'),
-            'avatar' => fake()->text(10)
+            'avatar' => fake()->text(10),
+            'kudos' => fake()->numberBetween(int2: 1_000)
         ];
     }
 }

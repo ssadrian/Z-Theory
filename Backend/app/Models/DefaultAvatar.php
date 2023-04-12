@@ -22,6 +22,7 @@ use Illuminate\{Database\Eloquent\Factories\HasFactory, Database\Eloquent\Model}
  * @mixin \Eloquent
  * @noinspection PhpFullyQualifiedNameUsageInspection
  * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+ * @mixin IdeHelperDefaultAvatar
  */
 class DefaultAvatar extends Model
 {

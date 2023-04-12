@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
-            $table->id()->onDeleteCascade();
+            $table->id();
             $table->string('name');
             $table->string('surnames');
             $table->string('email')->unique();
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('nickname')->unique();
             $table->longText('avatar')->nullable();
             $table->date('birth_date');
+            $table->unsignedInteger('kudos');
             $table->timestamps();
         });
     }

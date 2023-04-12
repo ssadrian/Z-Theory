@@ -41,6 +41,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @mixin \Eloquent
  * @noinspection PhpFullyQualifiedNameUsageInspection
  * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+ * @mixin IdeHelperStudent
  */
 class Student extends Authenticatable
 {
@@ -59,6 +60,7 @@ class Student extends Authenticatable
         'name',
         'surnames',
         'birth_date',
+        'kudos'
     ];
 
     /**
@@ -86,6 +88,6 @@ class Student extends Authenticatable
     {
         return $this
             ->belongsToMany(Skill::class, 'student_skill')
-            ->withPivot(['points', 'image']);
+            ->withPivot(['kudos', 'image']);
     }
 }
