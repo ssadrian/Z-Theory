@@ -231,17 +231,31 @@ export class TeacherProfileComponent implements OnInit {
         points: formValue.points,
         creator: this.teacher.id,
       })
-      .subscribe();
+      .subscribe(() => {
+      });
 
     this.assignmentService
       .createdByTeacher(this.teacher.id)
-      .subscribe((response: IAssignment[]): void => {
-        response
-          .map((assignment: IAssignment): void => {
-            if (assignment.title === formValue.title) {
-              this.createdAssignments.push(assignment);
-            }
+      .subscribe((res: IAssignment[]): void => {
+        for (let assignment of res) {
+          if (assignment.title !== formValue.title) {
+            continue;
+          }
+
+          this.createdAssignments.push(assignment);
+
+          // Create assignment-ranking relation
+          this.assignmentService.assignToRank({
+            id: assignment.id,
+            url_rankCode: this.#selectedRanking?.code!
+          }).subscribe(() => {
+            this.messageService.add({
+              key: 'toasts',
+              severity: 'success',
+              detail: 'Tarea asignada.'
+            })
           });
+        }
       });
 
     this.showAssignment = false;

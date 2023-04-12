@@ -104,9 +104,14 @@ export class StudentProfileComponent implements OnInit {
   joinRanking(): void {
     const code: string = this.codeForm.value.code ?? '';
 
-    if (!this.#isValidUuid(code)) {
-      return;
-    }
+    // if (!this.#isValidUuid(code)) {
+    //   this.messageService.add({
+    //     key: 'toasts',
+    //     severity: 'error',
+    //     detail: `El UUID no es valido.`
+    //   });
+    //   return;
+    // }
 
     const entity: ICreateStudentAssignation = {
       code: code,
@@ -117,6 +122,12 @@ export class StudentProfileComponent implements OnInit {
       .subscribe((): void => {
         this.#updateRanks();
         this.codeForm.reset();
+
+        this.messageService.add({
+          key: 'toasts',
+          severity: 'success',
+          detail: 'Petición registrada.'
+        });
       });
   }
 
