@@ -211,7 +211,95 @@
               <td>{{ rowIndex + 1 }}</td>
               <td>{{ student.nickname }}</td>
               <td>{{ student.pivot.points }}</td>
-              <td></td>
+              <td>
+                <div class="flex flex-row gap-5">
+                  <img
+                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad1.png"
+                    alt="medal"
+                    class="w-16 h-16"
+                    (click)="showDialog()"
+                    pTooltip="Nivel 1-Responsabilidad"
+                    tooltipPosition="bottom"
+                  />
+
+                  <img
+                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad2.png"
+                    alt="medal"
+                    class="w-16 h-16"
+                    (click)="showDialog()"
+                    pTooltip="Nivel 2"
+                    tooltipPosition="bottom"
+                  />
+
+                  <img
+                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad3.png"
+                    alt="medal"
+                    class="w-16 h-16"
+                    (click)="showDialog()"
+                    pTooltip="Nivel 3"
+                    tooltipPosition="bottom"
+                  />
+
+                  <img
+                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad4.png"
+                    alt="medal"
+                    class="w-16 h-16"
+                    (click)="showDialog()"
+                    pTooltip="Nivel 4"
+                    tooltipPosition="bottom"
+                  />
+
+                  <img
+                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad5.png"
+                    alt="medal"
+                    class="w-16 h-16"
+                    (click)="showDialog()"
+                    pTooltip="Nivel 5"
+                    tooltipPosition="bottom"
+                  />
+                </div>
+
+                <p-dialog
+                  [modal]="true"
+                  header="Las Pentabilities"
+                  [(visible)]="visible"
+                  [style]="{ width: '50vw' }"
+                >
+                  <p>
+                    Las pentabilidades son las cinco grandes habilidades
+                    sociales y emocionales de Pentabilities: Responsabilidad,
+                    Cooperación, Autonomía e iniciativa, Gestión emocional y
+                    Habilidades de pensamiento.
+                  </p>
+
+                  <br />
+
+                  <p>
+                    Las definiciones de las pentabilidades propuestas recogen
+                    los conceptos básicos y prioritarios de cada habilidad, pero
+                    con una visión global y holística. El objetivo es crear un
+                    lenguaje común y concreto, alejado de los tecnicismos, la
+                    polisemia y la abstracción.
+                  </p>
+
+                  <br />
+
+                  <p>
+                    Las pentabilidades se dirigen hacia una finalidad tangible
+                    para garantizar una comunicación orientadora y un buen
+                    feedback constructivo, imprescindibles en todo aprendizaje.
+                  </p>
+
+                  <br />
+
+                  <p>
+                    La conexión entre las diferentes habilidades es tan
+                    relevante que a menudo son vasos comunicantes. Por eso, a
+                    veces, para mejorar una, será necesario y más efectivo
+                    potenciar otra.
+                  </p>
+                </p-dialog>
+              </td>
             </tr>
           </ng-template>
         </p-table>

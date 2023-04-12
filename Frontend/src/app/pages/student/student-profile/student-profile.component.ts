@@ -1,17 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {CredentialService} from '../../../services/credential.service';
-import {IStudent} from '../../../../models/student.model';
-import {StudentService} from 'src/app/services/repository/student.service';
-import {FormBuilder, Validators} from '@angular/forms';
-import {Base64Service} from 'src/app/services/base64.service';
-import {IUpdateStudent} from 'src/models/update/update-student';
-import {IRanking} from '../../../../models/ranking.model';
-import {RankingService} from '../../../services/repository/ranking.service';
-import {ICreateStudentAssignation} from '../../../../models/create/create-student-assignation';
-import {MessageService} from 'primeng/api';
-import {IUpdatePassword} from '../../../../models/update/update-password';
-import {catchError, throwError} from "rxjs";
-import {HttpErrorResponse} from "@angular/common/http";
+import { Component, OnInit } from '@angular/core';
+import { CredentialService } from '../../../services/credential.service';
+import { IStudent } from '../../../../models/student.model';
+import { StudentService } from 'src/app/services/repository/student.service';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Base64Service } from 'src/app/services/base64.service';
+import { IUpdateStudent } from 'src/models/update/update-student';
+import { IRanking } from '../../../../models/ranking.model';
+import { RankingService } from '../../../services/repository/ranking.service';
+import { ICreateStudentAssignation } from '../../../../models/create/create-student-assignation';
+import { MessageService } from 'primeng/api';
+import { IUpdatePassword } from '../../../../models/update/update-password';
+import { catchError, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-student-profile',
@@ -26,14 +26,14 @@ export class StudentProfileComponent implements OnInit {
     private fb: FormBuilder,
     private messageService: MessageService,
     private b64: Base64Service
-  ) {
-  }
+  ) {}
 
   show: boolean = false;
 
   loading: boolean = true;
 
   showPasswordChangeDialog: boolean = true;
+  visible!: boolean;
 
   codeForm = this.fb.group({
     code: ['', [Validators.required]],
@@ -62,9 +62,9 @@ export class StudentProfileComponent implements OnInit {
   #b64Avatar: string = '';
 
   inventory: Object[] = [
-    {qty: 1, name: 'Espada'},
-    {qty: 3, name: 'Diamantes'},
-    {qty: 1, name: 'Mapa'},
+    { qty: 1, name: 'Espada' },
+    { qty: 3, name: 'Diamantes' },
+    { qty: 1, name: 'Mapa' },
   ];
 
   ngOnInit(): void {
@@ -129,6 +129,10 @@ export class StudentProfileComponent implements OnInit {
           detail: 'Petición registrada.'
         });
       });
+    this.rankingService.assignStudent(entity).subscribe((): void => {
+      this.#updateRanks();
+      this.codeForm.reset();
+    });
   }
 
   #isValidUuid(uuid: string): boolean {
@@ -148,8 +152,8 @@ export class StudentProfileComponent implements OnInit {
         this.rankings.forEach((rank: IRanking): void => {
           rank.students.sort((a: IStudent, b: IStudent) => {
             return (
-              b.pivot.points - a.pivot.points
-              || a.nickname.localeCompare(b.nickname)
+              b.pivot.points - a.pivot.points ||
+              a.nickname.localeCompare(b.nickname)
             );
           });
         });
@@ -178,7 +182,7 @@ export class StudentProfileComponent implements OnInit {
             this.messageService.add({
               key: 'toasts',
               severity: 'error',
-              summary: 'No se pudo cambiar la contraseña'
+              summary: 'No se pudo cambiar la contraseña',
             });
           }
 
@@ -191,7 +195,7 @@ export class StudentProfileComponent implements OnInit {
         this.messageService.add({
           key: 'toasts',
           severity: 'success',
-          summary: 'Contraseña cambiada!'
+          summary: 'Contraseña cambiada!',
         });
         this.onShowPasswordDialogReject();
       });
@@ -199,5 +203,9 @@ export class StudentProfileComponent implements OnInit {
 
   onShowPasswordDialogReject(): void {
     this.showPasswordChangeDialog = false;
+  }
+
+  showDialog() {
+    this.visible = true;
   }
 }
