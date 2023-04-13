@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\{Models\Assignment, Models\Ranking, Models\Student, Models\Teacher};
+use App\{Models\Assignment, Models\Ranking, Models\Skill, Models\Student, Models\Teacher};
 use Illuminate\{Database\Seeder, Support\Carbon};
 
 class DatabaseSeeder extends Seeder
@@ -55,6 +55,17 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         foreach (Student::all() as $student) {
+            $i = Skill::all()->count();
+
+            // Add the needed relationships with the skills
+            while ($i > 0) {
+                $student->skills()->syncWithoutDetaching(
+                    [$i => ['kudos' => 0]]
+                );
+
+                $i -= 1;
+            }
+
             foreach (range(0, 2) as $ignored) {
                 $randomRank = Ranking::all()->random();
                 $pivot = [

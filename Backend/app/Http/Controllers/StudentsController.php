@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Skill;
 use App\Models\Student;
-use Illuminate\{
-    Http\Request,
+use Illuminate\{Http\Request,
     Http\Response,
     Support\Facades\Hash,
     Support\Facades\Validator,
@@ -48,17 +47,17 @@ class StudentsController extends Controller
         $data['kudos'] = 1_000;
         $data['password'] = Hash::make($data['password']);
 
-        $student = Student::create($data)
-            ->with('skills');
+        $student = Student::create($data);
+        $student = Student::with(['skills'])->find($student->id);
 
         $allSkills = Skill::all('id');
         foreach ($allSkills as $skill) {
-            // BUG: skills isn't a valid method and a property
-            $student->skills->syncWithoutDetaching(
-                $skill->id, [ 'kudos' => 0 ]
-            );
+            $student->skills()->syncWithoutDetaching([
+                $skill->id => ['kudos' => 0]
+            ]);
         }
 
+        $student->refresh();
         return response(
             $student
             , 201
@@ -74,10 +73,9 @@ class StudentsController extends Controller
      */
     public function show($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:students'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Student::with(['rankings', 'assignments', 'skills'])
@@ -104,6 +102,7 @@ class StudentsController extends Controller
             'surnames' => 'sometimes|nullable|string',
             'birth_date' => 'sometimes|nullable|date',
             'avatar' => 'sometimes|nullable|string',
+            'kudos' => 'sometimes|nullable|int|gte:0',
         ]);
 
         $previousStudent = Student::with(['rankings'])
@@ -136,10 +135,9 @@ class StudentsController extends Controller
      */
     public function destroy($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:students'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             status: Student::destroy($id) ? 200 : 204
@@ -181,17 +179,18 @@ class StudentsController extends Controller
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|exists:students,id',
+            'skill_id' => 'required|exists:skills,id',
             'kudos' => 'required|int|gt:0'
         ]);
 
         $evaluator = Student::find($data['evaluator']);
-        $subject = Student::with(['skills'])
-            ->find($data['subject']);
+        $subject = Student::find($data['subject']);
 
         $availableKudos = $evaluator->kudos;
 
         if (empty($availableKudos)
-            || $availableKudos < $data['kudos']) {
+            || $availableKudos < $data['kudos']
+        ) {
             // Bad Request
             return response(
                 status: 400
@@ -199,6 +198,13 @@ class StudentsController extends Controller
         }
 
         $subjectSkills = $subject->skills();
+        $targetSkill = $subjectSkills->find($data['skill_id']);
+
+        $evaluator->kudos -= $data['kudos'];
+        $targetSkill->pivot->kudos += $data['kudos'];
+
+        $evaluator->save();
+        $targetSkill->pivot->save();
 
         // Ok
         return response(
