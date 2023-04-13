@@ -54,10 +54,9 @@ class AssignmentController extends Controller
      */
     public function show($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:assignments'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Assignment::with(['creator'])
@@ -126,10 +125,9 @@ class AssignmentController extends Controller
     public function assignToRanking($rankCode, Request $request): Response
     {
         // Append rank's code from url to request's body
-        $validator = Validator::make(['code' => $rankCode], [
+        Validator::validate(['code' => $rankCode], [
             'code' => 'required|exists:rankings'
         ]);
-        $this->throwIfInvalid($validator);
 
         $data = $request->validate([
             'id' => 'required|exists:assignments'
@@ -170,15 +168,13 @@ class AssignmentController extends Controller
      */
     public function removeFromRanking($id, $rankCode): Response
     {
-        // Append rank's code from url to request's body
-        $validator = Validator::make([
+        Validator::validate([
             'id' => $id,
             'code' => $rankCode
         ], [
             'id' => 'required|exists:assignments',
             'code' => 'required|exists:rankings'
         ]);
-        $this->throwIfInvalid($validator);
 
         Assignment::find($id)
             ->rankingsAssigned()
@@ -206,10 +202,9 @@ class AssignmentController extends Controller
      */
     public function createdBy($teacherId): Response
     {
-        $validator = Validator::make(['id' => $teacherId], [
+        Validator::validate(['id' => $teacherId], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Assignment::where('teacher_id', $teacherId)->get()
@@ -256,5 +251,4 @@ class AssignmentController extends Controller
             status: $success ? 200 : 400
         );
     }
-
 }

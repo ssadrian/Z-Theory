@@ -58,10 +58,9 @@ class TeachersController extends Controller
      */
     public function show($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Teacher::with('rankings_created')
@@ -119,10 +118,9 @@ class TeachersController extends Controller
      */
     public function destroy($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             status: Teacher::destroy($id) ? 200 : 204
