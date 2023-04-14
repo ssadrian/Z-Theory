@@ -37,8 +37,9 @@ export class StudentProfileComponent implements OnInit {
 
   isRankingsTableLoading: boolean = true;
 
-  showPasswordChangeDialog: boolean = false;
-  isPentabilitiesDialogVisible: boolean = false;
+  showPasswordChangeDialog: boolean = true;
+  visible!: boolean;
+  sidebarVisible!: boolean;
 
   sidebarVisible = false;
 
