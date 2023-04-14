@@ -111,13 +111,12 @@ class RankingsController extends Controller
     public function destroy($code): Response
     {
         Validator::validate(['code' => $code], [
-            'code' => 'required|exists,rankings'
+            'code' => 'required|exists:rankings'
         ]);
 
+        Ranking::firstWhere('code', $code)->delete();
         return response(
-            status: Ranking::all()
-                ->firstWhere('code', $code)
-                ->delete() ? 200 : 204
+            status: 200
         );
     }
 

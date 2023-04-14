@@ -114,8 +114,9 @@ export class TeacherProfileComponent implements OnInit {
 
           this.rankingService
             .delete(this.#selectedRanking.code)
-            .subscribe(res => {
-              this.createdRankings = this.createdRankings.filter(x => x.id !== this.#selectedRanking?.id);
+            .subscribe(() => {
+              this.createdRankings = this.createdRankings.filter(x => x.code !== this.#selectedRanking?.code);
+
               this.messageService.add({
                 key: 'toasts',
                 severity: 'success',
@@ -145,7 +146,14 @@ export class TeacherProfileComponent implements OnInit {
         creator: this.teacher.id,
         name: formValue.name!,
       })
-      .subscribe(this.#updateCreatedRanks);
+      .subscribe(() => {
+        this.messageService.add({
+          key: 'toasts',
+          severity: 'success',
+          detail: 'Ranking creado!'
+        });
+        this.#updateCreatedRanks();
+      });
   }
 
   #updateCreatedRanks(): void {
