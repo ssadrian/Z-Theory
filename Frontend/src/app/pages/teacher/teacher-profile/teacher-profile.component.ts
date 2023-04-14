@@ -50,6 +50,7 @@ export class TeacherProfileComponent implements OnInit {
   isSubmit: boolean = false;
   isSidebarVisible: boolean = false;
   showPasswordChangeDialog: boolean = false;
+  showRankingUpdateDialog: boolean = false;
 
   courses: any[] = [
     {name: 'DAW', totalStudents: 10},
@@ -75,10 +76,10 @@ export class TeacherProfileComponent implements OnInit {
 
   rankingButtons: MenuItem[] = [];
 
-  #selectedRanking?: IRanking;
+  selectedRanking?: IRanking;
 
   setSelectedRanking(ranking: IRanking): void {
-    this.#selectedRanking = ranking;
+    this.selectedRanking = ranking;
   }
 
   #b64Avatar: string = '';
@@ -88,34 +89,45 @@ export class TeacherProfileComponent implements OnInit {
       {
         label: 'Añadir entrega',
         icon: 'pi pi-plus-circle',
-        styleClass: 'p-button-secondary',
         command: (): void => {
           this.showAssignmentForm();
+        }
+      },
+      {
+        label: 'Modificar',
+        icon: 'pi pi-pencil',
+        command: () => {
+          if (!this.selectedRanking) {
+            return;
+          }
+
+
         }
       },
       {
         label: 'Refrescar codigo',
         icon: 'pi pi-undo',
         command: (): void => {
-          if (!this.#selectedRanking) {
+          if (!this.selectedRanking) {
             return;
           }
 
-          this.changeRankingId(this.#selectedRanking);
+          this.changeRankingId(this.selectedRanking);
         }
       },
       {
         label: 'Eliminar',
         icon: 'pi pi-minus-circle',
+        styleClass: 'bg-red-600',
         command: (): void => {
-          if (!this.#selectedRanking) {
+          if (!this.selectedRanking) {
             return;
           }
 
           this.rankingService
-            .delete(this.#selectedRanking.code)
+            .delete(this.selectedRanking.code)
             .subscribe(() => {
-              this.createdRankings = this.createdRankings.filter(x => x.code !== this.#selectedRanking?.code);
+              this.createdRankings = this.createdRankings.filter(x => x.code !== this.selectedRanking?.code);
 
               this.messageService.add({
                 key: 'toasts',
@@ -173,6 +185,17 @@ export class TeacherProfileComponent implements OnInit {
       });
   }
 
+  updateRanking() {
+    if (!this.selectedRanking) {
+      return;
+    }
+
+    const entity: IUpdateRanking = {
+      url_oldCode: this.selectedRanking.code,
+      name: this.selectedRanking.name
+    };
+  }
+
   encodeAvatar(event: any): void {
     this.b64.toBase64(event).then((b64: string): void => {
       this.#b64Avatar = b64;
@@ -214,11 +237,11 @@ export class TeacherProfileComponent implements OnInit {
 
     this.rankingService.update(entity)
       .subscribe((response: HttpResponse<Object>): void => {
-        if (!response.ok || !this.#selectedRanking) {
+        if (!response.ok || !this.selectedRanking) {
           return;
         }
 
-        this.#selectedRanking.code = newRankingCode;
+        this.selectedRanking.code = newRankingCode;
       });
   }
 
@@ -277,7 +300,7 @@ export class TeacherProfileComponent implements OnInit {
           // Create assignment-ranking relation
           this.assignmentService.assignToRank({
             id: assignment.id,
-            url_rankCode: this.#selectedRanking?.code!
+            url_rankCode: this.selectedRanking?.code!
           }).subscribe(() => {
             this.messageService.add({
               key: 'toasts',

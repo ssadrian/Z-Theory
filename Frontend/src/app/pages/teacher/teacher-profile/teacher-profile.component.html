@@ -17,7 +17,8 @@
           <p-fileUpload
             *ngIf="show"
             mode="basic"
-            chooseLabel="Cargar imagen" accept="image/*"
+            chooseLabel="Cargar imagen"
+            accept="image/*"
             [maxFileSize]="1000000"
             (onSelect)="encodeAvatar($event)"
           ></p-fileUpload>
@@ -38,9 +39,11 @@
         <div>{{ teacher.center }}</div>
 
         <button
-          pButton pRipple
+          pButton
+          pRipple
           class="p-button-raised col-span-2"
-          (click)="showPasswordChangeForm()">
+          (click)="showPasswordChangeForm()"
+        >
           Cambiar contraseña
         </button>
         <p-dialog
@@ -82,14 +85,16 @@
 
             <span class="p-buttonset">
               <button
-                pButton pRipple
+                pButton
+                pRipple
                 label="Cambiar"
                 class="p-button-success"
               ></button>
 
               <button
                 type="button"
-                pButton pRipple
+                pButton
+                pRipple
                 (click)="onShowPasswordDialogReject()"
                 label="Cancelar"
                 class="p-button-secondary"
@@ -126,19 +131,23 @@
       </p-table>
 
       <p-card header="Crear Ranking">
-        <form [formGroup]="createRankingForm" (ngSubmit)="createRankingSubmit()" class="flex flex-row gap-2">
+        <form
+          [formGroup]="createRankingForm"
+          (ngSubmit)="createRankingSubmit()"
+          class="flex flex-row gap-2"
+        >
           <span class="p-float-label">
             <input
-              id="ranking-name" pInputText
+              id="ranking-name"
+              pInputText
               formControlName="name"
-              required/>
+              required
+            />
 
             <label for="ranking-name">Nombre del Ranking</label>
           </span>
 
-          <button pButton pRipple>
-            Añadir Ranking
-          </button>
+          <button pButton pRipple>Añadir Ranking</button>
         </form>
       </p-card>
     </div>
@@ -151,8 +160,12 @@
       <div *ngSwitchCase="0">Ningun ranking creado</div>
 
       <div *ngSwitchDefault class="flex flex-col gap-8">
-        <p-fieldset [legend]="ranking.name" [toggleable]="true" [collapsed]="true"
-                    *ngFor="let ranking of createdRankings">
+        <p-fieldset
+          [legend]="ranking.name"
+          [toggleable]="true"
+          [collapsed]="true"
+          *ngFor="let ranking of createdRankings"
+        >
           <p-table
             [value]="ranking.students"
             [rowHover]="true"
@@ -193,7 +206,10 @@
                 <td>{{ student.surnames }}</td>
 
                 <td>
-                  <p-inplace [closable]="true" (onDeactivate)="modifyStudentPoints(ranking, student)">
+                  <p-inplace
+                    [closable]="true"
+                    (onDeactivate)="modifyStudentPoints(ranking, student)"
+                  >
                     <ng-template pTemplate="display">
                       {{ student.pivot.points }}
                     </ng-template>
@@ -222,9 +238,7 @@
 
             <ng-template pTemplate="emptymessage">
               <tr>
-                <td colspan="6" class="text-lg">
-                  Ningun estudiante asignado
-                </td>
+                <td colspan="6" class="text-lg">Ningun estudiante asignado</td>
               </tr>
             </ng-template>
           </p-table>
@@ -234,31 +248,48 @@
   </div>
 
   <p-sidebar [(visible)]="isSidebarVisible" position="right">
-    <form [formGroup]="assignmentForm" (ngSubmit)="createAssignment()"
-          class="flex flex-col gap-6">
+    <form
+      [formGroup]="assignmentForm"
+      (ngSubmit)="createAssignment()"
+      class="flex flex-col gap-6"
+    >
       <div class="flex flex-col gap-2">
         <label for="title">Titulo</label>
-        <input pInputText id="title" formControlName="title"/>
+        <input pInputText id="title" formControlName="title" />
       </div>
 
       <div class="flex flex-col gap-2">
         <label for="description">Descripción</label>
-        <input pInputText id="description" formControlName="description"/>
+        <input pInputText id="description" formControlName="description" />
       </div>
 
       <div class="flex flex-col gap-2">
         <label for="content">Contenido</label>
-        <input id="content" pInputText formControlName="content"/>
+        <input id="content" pInputText formControlName="content" />
       </div>
 
       <div class="flex flex-col gap-2">
         <label for="points">Puntos</label>
-        <p-inputNumber id="points" formControlName="points" [showButtons]="true" styleClass="w-full"></p-inputNumber>
+        <p-inputNumber
+          id="points"
+          formControlName="points"
+          [showButtons]="true"
+          styleClass="w-full"
+        ></p-inputNumber>
       </div>
 
-      <button pButton pRipple class="w-full">
-        Crear tarea
-      </button>
+      <button pButton pRipple class="w-full">Crear tarea</button>
     </form>
   </p-sidebar>
 </section>
+
+<p-dialog [(visible)]="showRankingUpdateDialog">
+  <ng-template pTemplate="header"> Actualizar Ranking </ng-template>
+
+  <span class="p-float-label">
+    <input pInputText id="ranking-name" [(ngModel)]="selectedRanking!.name"/>
+    <label htmlFor="ranking-name">Nombre</label>
+  </span>
+
+  <p-button label="Actualizar" styleClass="p-button-warning" icon="pi pi"></p-button>
+</p-dialog>
