@@ -34,6 +34,7 @@ export class StudentProfileComponent implements OnInit {
 
   showPasswordChangeDialog: boolean = true;
   visible!: boolean;
+  sidebarVisible!: boolean;
 
   codeForm = this.fb.group({
     code: ['', [Validators.required]],
@@ -57,6 +58,14 @@ export class StudentProfileComponent implements OnInit {
     tos: [false, [Validators.requiredTrue]],
     birth_date: [''],
     center: [''],
+  });
+
+  formEvaluateStudent = this.fb.group({
+    responsibility: [' ', [Validators.required]],
+    cooperation: [' ', [Validators.required]],
+    autonomy_and_initiative: [' ', [Validators.required]],
+    emotional_managment: [' ', [Validators.required]],
+    thinking_skills: [' ', [Validators.required]],
   });
 
   #b64Avatar: string = '';
@@ -191,5 +200,9 @@ export class StudentProfileComponent implements OnInit {
 
   showDialog() {
     this.visible = true;
+  }
+
+  evaluateStudent() {
+    this.sidebarVisible = false
   }
 }

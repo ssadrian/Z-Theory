@@ -200,6 +200,7 @@
               <th>#</th>
               <th>Estudiante</th>
               <th>Puntos</th>
+              <th>Soft Skills</th>
               <th>Medallas</th>
             </tr>
           </ng-template>
@@ -209,6 +210,16 @@
               <td>{{ rowIndex + 1 }}</td>
               <td>{{ student.nickname }}</td>
               <td>{{ student.pivot.points }}</td>
+
+              <td>
+                <p-button
+                  icon="pi pi-heart"
+                  styleClass="p-button-warning"
+                  label="Evaluar"
+                  (click)="sidebarVisible = true"
+                ></p-button>
+              </td>
+
               <td>
                 <div class="flex flex-row gap-5">
                   <img
@@ -217,42 +228,6 @@
                     class="w-16 h-16"
                     (click)="showDialog()"
                     pTooltip="Nivel 1-Responsabilidad"
-                    tooltipPosition="bottom"
-                  />
-
-                  <img
-                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad2.png"
-                    alt="medal"
-                    class="w-16 h-16"
-                    (click)="showDialog()"
-                    pTooltip="Nivel 2"
-                    tooltipPosition="bottom"
-                  />
-
-                  <img
-                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad3.png"
-                    alt="medal"
-                    class="w-16 h-16"
-                    (click)="showDialog()"
-                    pTooltip="Nivel 3"
-                    tooltipPosition="bottom"
-                  />
-
-                  <img
-                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad4.png"
-                    alt="medal"
-                    class="w-16 h-16"
-                    (click)="showDialog()"
-                    pTooltip="Nivel 4"
-                    tooltipPosition="bottom"
-                  />
-
-                  <img
-                    src="http://127.0.0.1:8000/storage/medals/responsibility/Responsabilidad5.png"
-                    alt="medal"
-                    class="w-16 h-16"
-                    (click)="showDialog()"
-                    pTooltip="Nivel 5"
                     tooltipPosition="bottom"
                   />
                 </div>
@@ -305,3 +280,81 @@
     </p-card>
   </div>
 </section>
+
+<!-- Evaluar compañeros -->
+
+<div class="card flex justify-content-center">
+  <p-sidebar [(visible)]="sidebarVisible">
+    <h3>Evaluar alumnos</h3>
+    <br />
+    <p>
+      En esta parte podrás evaluar a tus compañeros de clase dependiendo de sus
+      5 habilidades. Cada semana dispones de 1000 puntos a repartir entre todos
+      tus compañeros. ¡Elige sabiamente a quien dar tus puntos!
+    </p>
+
+    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+
+    <div class="flex flex-col gap-3">
+      <form [formGroup]="formEvaluateStudent">
+        <span class="p-float-label">
+          <p-inputNumber
+            inputId="responsibility"
+            [max]="1000"
+            formControlName="responsibility"
+          >
+          </p-inputNumber>
+          <label htmlFor="responsibility">Responsabilidad</label>
+        </span>
+
+        <span class="p-float-label">
+          <p-inputNumber
+            inputId="cooperation"
+            [max]="1000"
+            formControlName="cooperation"
+          >
+          </p-inputNumber>
+          <label htmlFor="cooperation">Cooperación</label>
+        </span>
+
+        <span class="p-float-label">
+          <p-inputNumber
+            inputId="autonomy_and_initiative"
+            [max]="1000"
+            formControlName="autonomy_and_initiative"
+          >
+          </p-inputNumber>
+          <label htmlFor="autonomy_and_initiative"
+            >Autonomía e iniciativa</label
+          >
+        </span>
+
+        <span class="p-float-label">
+          <p-inputNumber
+            inputId="emotional_managment"
+            [max]="1000"
+            formControlName="emotional_managment"
+          >
+          </p-inputNumber>
+          <label htmlFor="emotional_managment">Gestión emocional</label>
+        </span>
+
+        <span class="p-float-label">
+          <p-inputNumber
+            inputId="thinking_skills"
+            [max]="1000"
+            formControlName="thinking_skills"
+          >
+          </p-inputNumber>
+          <label htmlFor="thinking_skills">Hab. de Pensamiento</label>
+        </span>
+      </form>
+
+      <p-button
+        styleClass="p-button-success"
+        label="Enviar"
+        (click)="evaluateStudent()"
+      ></p-button>
+    </div>
+  </p-sidebar>
+</div>

@@ -29,6 +29,8 @@ import { MiscService } from './services/misc.service';
 import { QueuesListComponent } from './pages/teacher/queues-list/queues-list.component';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
+import { SidebarModule } from 'primeng/sidebar';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { TooltipModule } from 'primeng/tooltip';
     HttpClientModule,
     AccordionModule,
     DialogModule,
-    TooltipModule
+    TooltipModule,
+    ButtonModule,
+    SidebarModule
   ],
   providers: [
     LoginService,
