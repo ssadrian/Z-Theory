@@ -103,6 +103,26 @@ export class TeacherProfileComponent implements OnInit {
 
           this.changeRankingId(this.#selectedRanking);
         }
+      },
+      {
+        label: 'Eliminar',
+        icon: 'pi pi-minus-circle',
+        command: (): void => {
+          if (!this.#selectedRanking) {
+            return;
+          }
+
+          this.rankingService
+            .delete(this.#selectedRanking.code)
+            .subscribe(res => {
+              this.createdRankings = this.createdRankings.filter(x => x.id !== this.#selectedRanking?.id);
+              this.messageService.add({
+                key: 'toasts',
+                severity: 'success',
+                detail: 'Ranking eliminado!'
+              });
+            });
+        }
       }
     ];
 
@@ -163,7 +183,9 @@ export class TeacherProfileComponent implements OnInit {
       center: this.teacher.center!,
     };
 
-    this.teacherService.update(this.teacher.id, entity).subscribe();
+    this.teacherService
+      .update(this.teacher.id, entity)
+      .subscribe(() => {});
     this.teacher.avatar = this.#b64Avatar;
 
     this.show = false;
