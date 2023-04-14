@@ -178,8 +178,8 @@ class StudentsController extends Controller
     {
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
-            'subject' => 'required|exists:students,id',
-            'skill_id' => 'required|exists:skills,id',
+            'subject' => 'required|different:evaluator|exists:students,id',
+            'skill' => 'required|exists:skills,id',
             'kudos' => 'required|int|gt:0'
         ]);
 
@@ -198,7 +198,7 @@ class StudentsController extends Controller
         }
 
         $subjectSkills = $subject->skills();
-        $targetSkill = $subjectSkills->find($data['skill_id']);
+        $targetSkill = $subjectSkills->find($data['skill']);
 
         $evaluator->kudos -= $data['kudos'];
         $targetSkill->pivot->kudos += $data['kudos'];
