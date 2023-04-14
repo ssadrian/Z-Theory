@@ -81,10 +81,11 @@ class TeachersController extends Controller
         $request['id'] = $id;
 
         $data = $request->validate([
-            'nickname' => 'required|string|unique:students|unique:teachers',
-            'name' => 'required|string',
-            'surnames' => 'required|string',
-            'avatar' => 'required|string',
+            'id' => 'required|exists:students',
+            'nickname' => 'sometimes|nullable|string',
+            'name' => 'sometimes|nullable|string',
+            'surnames' => 'sometimes|nullable|string',
+            'avatar' => 'sometimes|nullable|string',
             'center' => 'required|string',
         ]);
 
