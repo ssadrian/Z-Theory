@@ -1,0 +1,15 @@
+###
+# Get all students
+GET http://localhost:8000/api/student HTTP/1.1
+Accept: application/json
+
+
+###
+# Get all rankings
+GET http://localhost:8000/api/ranking HTTP/1.1
+Accept: application/json
+
+
+###
+# Delete a ranking
+DELETE http://localhost:8000/api/ranking/1234 HTTP/1.1
