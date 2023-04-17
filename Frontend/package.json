@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^15.2.4",
     "@angular/router": "^15.2.6",
     "primeicons": "latest",
-    "primeng": "15.2.1",
+    "primeng": "15.3.0",
     "rxjs": "latest",
     "uuid": "latest",
     "zone.js": "~0.13.0"
