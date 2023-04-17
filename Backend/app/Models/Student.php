@@ -90,4 +90,10 @@ class Student extends Authenticatable
             ->belongsToMany(Skill::class, 'student_skill')
             ->withPivot(['kudos', 'image']);
     }
+
+    public function evaluationHistory(): BelongsToMany {
+        return $this
+            ->belongsToMany(Skill::class, 'evaluation_history', 'evaluator')
+            ->withPivot(['id', 'subject', 'kudos']);
+    }
 }

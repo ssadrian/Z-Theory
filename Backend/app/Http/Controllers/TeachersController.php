@@ -106,7 +106,7 @@ class TeachersController extends Controller
 
         return response(
             $previousTeacher,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -145,7 +145,7 @@ class TeachersController extends Controller
         if (!Hash::check($data['password'], $teacher->password)) {
             // Bad Request
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -154,7 +154,7 @@ class TeachersController extends Controller
 
         // Ok
         return response(
-            status: 200
+            status: Response::HTTP_OK
         );
     }
 }

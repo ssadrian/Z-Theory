@@ -122,7 +122,7 @@ class StudentsController extends Controller
 
         return response(
             $previousStudent,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -161,7 +161,7 @@ class StudentsController extends Controller
         if (!Hash::check($data['password'], $student->password)) {
             // Bad Request
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -170,45 +170,7 @@ class StudentsController extends Controller
 
         // Ok
         return response(
-            status: 200
-        );
-    }
-
-    public function giveKudos(Request $request): Response
-    {
-        $data = $request->validate([
-            'evaluator' => 'required|exists:students,id',
-            'subject' => 'required|different:evaluator|exists:students,id',
-            'skill' => 'required|exists:skills,id',
-            'kudos' => 'required|int|gt:0'
-        ]);
-
-        $evaluator = Student::find($data['evaluator']);
-        $subject = Student::find($data['subject']);
-
-        $availableKudos = $evaluator->kudos;
-
-        if (empty($availableKudos)
-            || $availableKudos < $data['kudos']
-        ) {
-            // Bad Request
-            return response(
-                status: 400
-            );
-        }
-
-        $subjectSkills = $subject->skills();
-        $targetSkill = $subjectSkills->find($data['skill']);
-
-        $evaluator->kudos -= $data['kudos'];
-        $targetSkill->pivot->kudos += $data['kudos'];
-
-        $evaluator->save();
-        $targetSkill->pivot->save();
-
-        // Ok
-        return response(
-            status: 200
+            status: Response::HTTP_OK
         );
     }
 }

@@ -38,7 +38,7 @@ class RankingsController extends Controller
         return response(
             Ranking::with(['creator'])
                 ->find($ranking->id)
-            , 201
+            , Response::HTTP_CREATED
         );
     }
 
@@ -97,7 +97,7 @@ class RankingsController extends Controller
 
         return response(
             $previousRanking,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -116,7 +116,7 @@ class RankingsController extends Controller
 
         Ranking::firstWhere('code', $code)->delete();
         return response(
-            status: 200
+            status: Response::HTTP_OK
         );
     }
 
@@ -197,7 +197,7 @@ class RankingsController extends Controller
                 ->count() !== 0
         ) {
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -240,7 +240,7 @@ class RankingsController extends Controller
                 ->count() === 0
         ) {
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -290,7 +290,7 @@ class RankingsController extends Controller
                 ->count() === 0
         ) {
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -346,7 +346,7 @@ class RankingsController extends Controller
 
         return response(
             $previousRanking,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 

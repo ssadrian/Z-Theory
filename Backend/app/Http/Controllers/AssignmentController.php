@@ -41,7 +41,7 @@ class AssignmentController extends Controller
         $assignment = Assignment::create($data);
         return response(
             Assignment::with(['creator'])->find($assignment->id)
-            , 201
+            , Response::HTTP_CREATED
         );
     }
 
@@ -99,7 +99,7 @@ class AssignmentController extends Controller
 
         return response(
             $previousAssignment,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -112,7 +112,7 @@ class AssignmentController extends Controller
     public function destroy($id): Response
     {
         return response(
-            status: Assignment::destroy($id) ? 200 : 400
+            status: Assignment::destroy($id) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -191,7 +191,7 @@ class AssignmentController extends Controller
         }
 
         return response(
-            status: 200
+            Response::HTTP_OK
         );
     }
 
@@ -248,7 +248,7 @@ class AssignmentController extends Controller
 
         return response(
             $previousTask,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 }

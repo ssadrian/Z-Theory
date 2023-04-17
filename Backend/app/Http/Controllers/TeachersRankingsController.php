@@ -56,10 +56,9 @@ class TeachersRankingsController extends Controller
      */
     public function show($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Teacher::with('rankings_created')
@@ -104,7 +103,7 @@ class TeachersRankingsController extends Controller
 
         return response(
             $previousTeacher,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -117,10 +116,9 @@ class TeachersRankingsController extends Controller
      */
     public function destroy($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             status: Teacher::destroy($id) ? 200 : 204
@@ -144,7 +142,7 @@ class TeachersRankingsController extends Controller
         if (!Hash::check($data['password'], $teacher->password)) {
             // Bad Request
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -153,7 +151,7 @@ class TeachersRankingsController extends Controller
 
         // Ok
         return response(
-            status: 200
+            status: Response::HTTP_OK
         );
     }
 }

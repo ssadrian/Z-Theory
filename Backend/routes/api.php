@@ -4,7 +4,8 @@ use App\{Http\Controllers\AssignmentController,
     Http\Controllers\AuthController,
     Http\Controllers\RankingsController,
     Http\Controllers\StudentsController,
-    Http\Controllers\TeachersController};
+    Http\Controllers\TeachersController,
+    Http\Controllers\EvaluationController};
 use Illuminate\{Support\Facades\Request, Support\Facades\Route};
 
 /*
@@ -31,7 +32,7 @@ Route::prefix('register')->group(function () {
 Route::apiResource('student', StudentsController::class);
 Route::prefix('student')->group(function () {
     Route::post('password', [StudentsController::class, 'changePassword']);
-    Route::post('give', [StudentsController::class, 'giveKudos']);
+    Route::post('give', [EvaluationController::class, 'store']);
 });
 
 Route::apiResource('teacher', TeachersController::class);
