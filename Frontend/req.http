@@ -1,7 +1,53 @@
 ###
+# Login test student
+POST http://localhost:8000/api/login/student HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "q@q",
+  "password": "q"
+}
+
+
+###
+# Login test student
+POST http://localhost:8000/api/login/teacher HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "w@w",
+  "password": "w"
+}
+
+
+
+###
 # Get all students
 GET http://localhost:8000/api/student HTTP/1.1
 Accept: application/json
+
+
+###
+# Get a student
+GET http://localhost:8000/api/student/1 HTTP/1.1
+Accept: application/json
+
+
+###
+# Give kudos
+POST http://localhost:8000/api/student/give HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "evaluator": "1",
+  "subject": "2",
+  "skill": "3",
+  "kudos": "500"
+}
+
 
 
 ###
@@ -13,3 +59,4 @@ Accept: application/json
 ###
 # Delete a ranking
 DELETE http://localhost:8000/api/ranking/1234 HTTP/1.1
+Accept: application/json
