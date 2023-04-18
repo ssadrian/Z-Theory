@@ -33,6 +33,7 @@ Route::apiResource('student', StudentsController::class);
 Route::prefix('student')->group(function () {
     Route::post('password', [StudentsController::class, 'changePassword']);
     Route::post('give', [EvaluationController::class, 'store']);
+    Route::post('undo', [EvaluationController::class, 'destroy']);
 });
 
 Route::apiResource('teacher', TeachersController::class);

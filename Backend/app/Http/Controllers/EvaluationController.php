@@ -98,24 +98,30 @@ class EvaluationController extends Controller
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|different:evaluator|exists:students,id',
-            'skill' => 'required|exists:skills,id',
-            'kudos' => 'required|int|gt:0'
+            'skill' => 'required|exists:skills,id'
         ]);
 
         $evaluator = Student::find($data['evaluator']);
         $subject = Student::find($data['subject']);
 
-        // TODO: Implement
+        $targetHistory = $evaluator
+            ->evaluationHistory()->get()
+            ->where('pivot.skill_id', $data['skill'])
+            ->where('pivot.subject', $data['subject'])
+            ->last();
+
         $subjectSkills = $subject->skills();
         $targetSkill = $subjectSkills->find($data['skill']);
 
-        $evaluator->kudos -= $data['kudos'];
-        $targetSkill->pivot->kudos += $data['kudos'];
+        // Remove the given points, these points will be lost forever
+        $targetSkill->pivot->kudos -= $targetHistory->pivot->kudos;
 
-        $evaluator->save();
+        $targetHistory->pivot->delete();
         $targetSkill->pivot->save();
 
         // Ok
-        return response(Response::HTTP_OK);
+        return response(
+            status: Response::HTTP_OK
+        );
     }
 }
