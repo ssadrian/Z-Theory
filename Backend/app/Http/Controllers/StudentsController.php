@@ -114,6 +114,7 @@ class StudentsController extends Controller
         foreach ($data as $key => $value) {
             if (empty($value)) {
                 $student->makeHidden($key);
+                unset($data[$key]);
             }
         }
 
