@@ -36,6 +36,29 @@ Accept: application/json
 
 
 ###
+# Update a student
+PUT http://localhost:8000/api/student/1 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Cookie: XDEBUG_SESSION=TRUE
+
+{
+  "nickname": "John",
+  "name": "",
+  "surnames": "",
+  "birth_date": "",
+  "avatar": "",
+  "kudos": 0
+}
+
+
+###
+# Delete a student
+DELETE http://localhost:8000/api/student/1 HTTP/1.1
+Accept: application/json
+
+
+###
 # Give kudos
 POST http://localhost:8000/api/student/give HTTP/1.1
 Accept: application/json
