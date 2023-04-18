@@ -18,12 +18,14 @@ return new class extends Migration {
             $table->unsignedBigInteger('evaluator');
             $table->foreign('evaluator')
                 ->on('students')
-                ->references('id');
+                ->references('id')
+                ->cascadeOnDelete();
 
             $table->unsignedBigInteger('subject');
             $table->foreign('subject')
                 ->on('students')
-                ->references('id');
+                ->references('id')
+                ->cascadeOnDelete();
 
             $table->unsignedInteger('kudos');
 
