@@ -31,7 +31,7 @@ export class StudentProfileComponent implements OnInit {
     private fb: FormBuilder,
     private messageService: MessageService,
     private b64: Base64Service
-  ) {}
+  ) { }
 
   showImageUpload: boolean = false;
 
@@ -84,7 +84,9 @@ export class StudentProfileComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+
     this.#updateRanks();
+
   }
 
   encodeAvatar(event: any): void {
@@ -107,7 +109,7 @@ export class StudentProfileComponent implements OnInit {
 
     this.studentService
       .update(this.student.id, student)
-      .subscribe((): void => {});
+      .subscribe((): void => { });
     this.student.avatar = this.#b64Avatar;
 
     this.showImageUpload = false;
