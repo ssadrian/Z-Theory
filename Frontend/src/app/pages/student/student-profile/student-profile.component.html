@@ -21,7 +21,7 @@
                   />
 
                   <p-fileUpload
-                    *ngIf="show"
+                    *ngIf="showImageUpload"
                     mode="basic"
                     chooseLabel="Cargar imagen"
                     accept="image/*"
@@ -183,7 +183,7 @@
         <p-table
           *ngFor="let ranking of rankings"
           [value]="ranking.students"
-          [loading]="loading"
+          [loading]="isRankingsTableLoading"
           [rowHover]="true"
           [paginator]="true"
           [rowsPerPageOptions]="[3, 5, 10, 25]"
@@ -238,7 +238,7 @@
                 <p-dialog
                   [modal]="true"
                   header="Las Pentabilities"
-                  [(visible)]="visible"
+                  [(visible)]="isPentabilitiesDialogVisible"
                   [style]="{ width: '50vw' }"
                 >
                   <p>
@@ -326,9 +326,9 @@
 
         <span class="p-float-label">
           <p-inputNumber
-            inputId="autonomy_and_initiative"
+            inputId="autonomyInitiative"
             [max]="1000"
-            formControlName="autonomy_and_initiative"
+            formControlName="autonomyInitiative"
           >
           </p-inputNumber>
           <label>Autonomía e iniciativa</label>
@@ -336,9 +336,9 @@
 
         <span class="p-float-label">
           <p-inputNumber
-            inputId="emotional_managment"
+            inputId="emotionalManagment"
             [max]="1000"
-            formControlName="emotional_managment"
+            formControlName="emotionalManagment"
           >
           </p-inputNumber>
           <label>Gestión emocional</label>
@@ -346,9 +346,9 @@
 
         <span class="p-float-label">
           <p-inputNumber
-            inputId="thinking_skills"
+            inputId="thinkingSkills"
             [max]="1000"
-            formControlName="thinking_skills"
+            formControlName="thinkingSkills"
           >
           </p-inputNumber>
           <label>Hab. de Pensamiento</label>
