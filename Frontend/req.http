@@ -63,12 +63,13 @@ Accept: application/json
 POST http://localhost:8000/api/student/give HTTP/1.1
 Accept: application/json
 Content-Type: application/json
+Cookie: XDEBUG_SESSION=TRUE
 
 {
-  "evaluator": "1",
-  "subject": "2",
-  "skill": "3",
-  "kudos": "500"
+  "evaluator": 1,
+  "subject": 2,
+  "skill": 3,
+  "kudos": 3000
 }
 
 
@@ -77,6 +78,7 @@ Content-Type: application/json
 POST http://localhost:8000/api/student/undo HTTP/1.1
 Accept: application/json
 Content-Type: application/json
+Cookie: XDEBUG_SESSION=TRUE
 
 {
   "evaluator": "1",
