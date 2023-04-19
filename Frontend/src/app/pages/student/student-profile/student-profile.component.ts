@@ -34,7 +34,8 @@ export class StudentProfileComponent implements OnInit {
 
   showPasswordChangeDialog: boolean = true;
   visible!: boolean;
-  sidebarVisible!: boolean;
+
+  sidebarVisible = false;
 
   codeForm = this.fb.group({
     code: ['', [Validators.required]],
@@ -203,7 +204,6 @@ export class StudentProfileComponent implements OnInit {
   showDialog() {
     this.visible = true;
   }
-
   sumFields() {
     const { responsibility, cooperation, autonomy_and_initiative, emotional_managment, thinking_skills } = this.formEvaluateStudent.value;
     const total = responsibility! + cooperation! + autonomy_and_initiative! + emotional_managment! + thinking_skills!;
@@ -220,4 +220,14 @@ export class StudentProfileComponent implements OnInit {
     console.log("funca");
 
   }
+
+
+  showEvaluationSideBarForStudent(studentId: number) {
+    if (studentId == this.student.id) {
+      return;
+    }
+    this.sidebarVisible = true;
+  }
+
+
 }

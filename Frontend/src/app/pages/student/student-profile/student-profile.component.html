@@ -205,18 +205,19 @@
             </tr>
           </ng-template>
 
-          <ng-template pTemplate="body" let-student let-rowIndex="rowIndex">
+          <ng-template pTemplate="body" let-rowStudent let-rowIndex="rowIndex">
             <tr class="p-selectable-row">
               <td>{{ rowIndex + 1 }}</td>
-              <td>{{ student.nickname }}</td>
-              <td>{{ student.pivot.points }}</td>
+              <td>{{ rowStudent.nickname }}</td>
+              <td>{{ rowStudent.pivot.points }}</td>
 
               <td>
                 <p-button
                   icon="pi pi-heart"
                   styleClass="p-button-warning"
                   label="Evaluar"
-                  (click)="sidebarVisible = true"
+                  (click)="showEvaluationSideBarForStudent(rowStudent.id)"
+                  [disabled]="rowStudent.id == student.id"
                 ></p-button>
               </td>
 
