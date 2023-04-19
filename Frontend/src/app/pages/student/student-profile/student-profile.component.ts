@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CredentialService } from '../../../services/credential.service';
 import { IStudent } from '../../../../models/student.model';
 import { StudentService } from 'src/app/services/repository/student.service';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Base64Service } from 'src/app/services/base64.service';
 import { IUpdateStudent } from 'src/models/update/update-student';
 import { IRanking } from '../../../../models/ranking.model';
@@ -26,14 +31,14 @@ export class StudentProfileComponent implements OnInit {
     private fb: FormBuilder,
     private messageService: MessageService,
     private b64: Base64Service
-  ) { }
+  ) {}
 
-  show: boolean = false;
+  showImageUpload: boolean = false;
 
-  loading: boolean = true;
+  isRankingsTableLoading: boolean = true;
 
-  showPasswordChangeDialog: boolean = true;
-  visible!: boolean;
+  showPasswordChangeDialog: boolean = false;
+  isPentabilitiesDialogVisible: boolean = false;
 
   sidebarVisible = false;
 
@@ -64,9 +69,9 @@ export class StudentProfileComponent implements OnInit {
   formEvaluateStudent = new FormGroup({
     responsibility: new FormControl(0),
     cooperation: new FormControl(0),
-    autonomy_and_initiative: new FormControl(0),
-    emotional_managment: new FormControl(0),
-    thinking_skills: new FormControl(0),
+    autonomyInitiative: new FormControl(0),
+    emotionalManagment: new FormControl(0),
+    thinkingSkills: new FormControl(0),
   });
 
   #b64Avatar: string = '';
@@ -78,9 +83,7 @@ export class StudentProfileComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-
     this.#updateRanks();
-
   }
 
   encodeAvatar(event: any): void {
@@ -103,14 +106,14 @@ export class StudentProfileComponent implements OnInit {
 
     this.studentService
       .update(this.student.id, student)
-      .subscribe((): void => { });
+      .subscribe((): void => {});
     this.student.avatar = this.#b64Avatar;
 
-    this.show = false;
+    this.showImageUpload = false;
   }
 
   toggle(): void {
-    this.show = true;
+    this.showImageUpload = true;
   }
 
   joinRanking(): void {
@@ -138,7 +141,7 @@ export class StudentProfileComponent implements OnInit {
   }
 
   #updateRanks(): void {
-    this.loading = true;
+    this.isRankingsTableLoading = true;
 
     this.rankingService
       .leaderboardsForStudent(this.student.id)
@@ -154,7 +157,7 @@ export class StudentProfileComponent implements OnInit {
           });
         });
 
-        this.loading = false;
+        this.isRankingsTableLoading = false;
       });
   }
 
@@ -202,32 +205,47 @@ export class StudentProfileComponent implements OnInit {
   }
 
   showDialog() {
-    this.visible = true;
+    this.isPentabilitiesDialogVisible = true;
   }
+
   sumFields() {
-    const { responsibility, cooperation, autonomy_and_initiative, emotional_managment, thinking_skills } = this.formEvaluateStudent.value;
-    const total = responsibility! + cooperation! + autonomy_and_initiative! + emotional_managment! + thinking_skills!;
+    const {
+      responsibility,
+      cooperation,
+      autonomyInitiative,
+      emotionalManagment,
+      thinkingSkills,
+    } = this.formEvaluateStudent.value;
+
+    const total =
+      responsibility! +
+      cooperation! +
+      autonomyInitiative! +
+      emotionalManagment! +
+      thinkingSkills!;
 
     if (total > 1000) {
-      alert("La suma de todos los campos no puede dar más de 1000");
-    } else {
-      this.evaluateStudent()
+      this.messageService.add({
+        key: 'toasts',
+        severity: 'error',
+        summary: 'La suma de todos los campos no puede dar más de 1000',
+      });
+
+      return;
     }
+
+    this.evaluateStudent();
   }
 
   evaluateStudent() {
-
-    console.log("funca");
-
+    console.log('funca');
   }
-
 
   showEvaluationSideBarForStudent(studentId: number) {
-    if (studentId == this.student.id) {
+    if (studentId === this.student.id) {
       return;
     }
+
     this.sidebarVisible = true;
   }
-
-
 }
