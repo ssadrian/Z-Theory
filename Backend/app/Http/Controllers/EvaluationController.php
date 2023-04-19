@@ -39,7 +39,6 @@ class EvaluationController extends Controller
             empty($availableKudos)
             || $availableKudos < $data['kudos']
         ) {
-            // Bad Request
             return response(
                 status: Response::HTTP_BAD_REQUEST
             );
@@ -68,7 +67,6 @@ class EvaluationController extends Controller
         // Save a new history
         EvaluationHistoryController::store($data);
 
-        // Ok
         return response(
             status: Response::HTTP_OK
         );
@@ -119,7 +117,6 @@ class EvaluationController extends Controller
         $targetHistory->pivot->delete();
         $targetSkill->pivot->save();
 
-        // Ok
         return response(
             status: Response::HTTP_OK
         );

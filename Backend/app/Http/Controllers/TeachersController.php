@@ -45,7 +45,7 @@ class TeachersController extends Controller
 
         return response(
             Teacher::create($data)
-            , 201
+            , Response::HTTP_CREATED
         );
     }
 
@@ -125,7 +125,7 @@ class TeachersController extends Controller
         ]);
 
         return response(
-            status: Teacher::destroy($id) ? 200 : 204
+            status: Teacher::destroy($id) ? Response::HTTP_OK : Response::HTTP_NO_CONTENT
         );
     }
 
@@ -144,7 +144,6 @@ class TeachersController extends Controller
         $teacher = Teacher::find($data['id']);
 
         if (!Hash::check($data['password'], $teacher->password)) {
-            // Bad Request
             return response(
                 status: Response::HTTP_BAD_REQUEST
             );
@@ -153,7 +152,6 @@ class TeachersController extends Controller
         $teacher->password = Hash::make($data['new_password']);
         $teacher->save();
 
-        // Ok
         return response(
             status: Response::HTTP_OK
         );

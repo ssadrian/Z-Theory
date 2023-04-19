@@ -60,7 +60,11 @@ class DatabaseSeeder extends Seeder
             // Add the needed relationships with the skills
             while ($i > 0) {
                 $student->skills()->syncWithoutDetaching(
-                    [$i => ['kudos' => 0]]
+                    [ $i =>[
+                        'kudos' => 0,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]]
                 );
 
                 $i -= 1;
