@@ -7,6 +7,7 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class EvaluationController extends Controller
 {
@@ -52,6 +53,8 @@ class EvaluationController extends Controller
 
         $evaluator->save();
         $targetSkill->pivot->save();
+
+        EvaluationController::updateSkillImage($data['subject'], $data['skill']);
 
         Student::find($data['evaluator'])
             ->evaluationHistory()
@@ -117,8 +120,42 @@ class EvaluationController extends Controller
         $targetHistory->pivot->delete();
         $targetSkill->pivot->save();
 
+        EvaluationController::updateSkillImage($data['subject'], $data['skill']);
+
         return response(
             status: Response::HTTP_OK
         );
+    }
+
+    public static function updateSkillImage($studentId, $skillId)
+    {
+        Validator::validate(['student_id' => $studentId, 'skill_id' => $skillId], [
+            'student_id' => 'required|exists:students,id',
+            'skill_id' => 'required|exists:skills,id',
+        ]);
+
+        $apiUrl = env('APP_URL');
+
+        $target = Student::find($studentId)
+            ->skills()
+            ->find($skillId);
+
+        $kudosReceived = $target->pivot->kudos;
+        $level = match (true) {
+            ($kudosReceived >= 10_000) => 5,
+            ($kudosReceived >= 7_000) => 4,
+            ($kudosReceived >= 4_000) => 3,
+            ($kudosReceived >= 2_000) => 2,
+            ($kudosReceived >= 1_000) => 1,
+            default => null
+        };
+
+        if (empty($level)) {
+            $target->pivot->image = null;
+        } else {
+            $target->pivot->image = "{$apiUrl}/storage/{$target->name}-{$level}.png";
+        }
+
+        $target->pivot->save();
     }
 }
