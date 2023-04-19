@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\AssignmentController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RankingsController;
-use App\Http\Controllers\StudentsController;
-use App\Http\Controllers\TeachersController;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Route;
+use App\{Http\Controllers\AssignmentController,
+    Http\Controllers\AuthController,
+    Http\Controllers\RankingsController,
+    Http\Controllers\StudentsController,
+    Http\Controllers\TeachersController,
+    Http\Controllers\EvaluationController};
+use Illuminate\{Support\Facades\Request, Support\Facades\Route};
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +32,8 @@ Route::prefix('register')->group(function () {
 Route::apiResource('student', StudentsController::class);
 Route::prefix('student')->group(function () {
     Route::post('password', [StudentsController::class, 'changePassword']);
+    Route::post('give', [EvaluationController::class, 'store']);
+    Route::post('undo', [EvaluationController::class, 'destroy']);
 });
 
 Route::apiResource('teacher', TeachersController::class);

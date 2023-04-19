@@ -32,13 +32,6 @@ export class AssignmentComponent implements OnInit {
   teacher: ITeacher = this.credentials.currentUser as ITeacher;
   areAssignmentsLoading: boolean = true;
 
-  assignmentForm = this.fb.group({
-    title: ['', [Validators.required]],
-    description: ['', [Validators.required]],
-    content: ['', [Validators.required]],
-    points: [0, [Validators.required]],
-  });
-
   assignments: IAssignment[] = [];
   rankings: IRanking[] = [];
 

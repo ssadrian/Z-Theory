@@ -14,10 +14,10 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $student = Student::with("rankings")
-            ->firstWhere("email", $data["email"]);
+        $student = Student::with('rankings')
+            ->firstWhere('email', $data['email']);
 
-        if ($student && Hash::check($data["password"], $student->password)) {
+        if ($student && Hash::check($data['password'], $student->password)) {
             return response()->json([
                 'user' => $student,
                 'role' => 'student',

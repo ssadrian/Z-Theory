@@ -22,7 +22,7 @@ class AssignmentFactory extends Factory
             'description' => fake()->text(),
             'content' => fake()->text(),
             'points' => fake()->numberBetween(0, 100),
-            'creator' => Teacher::all()->random()
+            'teacher_id' => Teacher::all()->random()
         ];
     }
 }

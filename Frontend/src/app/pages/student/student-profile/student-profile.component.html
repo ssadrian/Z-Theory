@@ -1,3 +1,5 @@
+<p-toast key="toasts"></p-toast>
+
 <section>
   <div class="grid grid-cols-2 divide-x">
     <div>
@@ -7,24 +9,26 @@
         >
           <div class="px-10">
             <div class="inline-flex justify-center w-full mb-4">
-              <div><div>
-                <p-badge [value]="'Estudiante'"></p-badge>
+              <div>
+                <div>
+                  <p-badge [value]="'Estudiante'"></p-badge>
 
-                <img
-                  [src]="student.avatar"
-                  alt="Avatar"
-                  class="rounded-full w-72 h-72 align-self-center bg-gradient-to-br from-cyan-300"
-                  (click)="toggle()"
-                />
+                  <img
+                    [src]="student.avatar"
+                    alt="Avatar"
+                    class="rounded-full w-72 h-72 align-self-center bg-gradient-to-br from-cyan-300"
+                    (click)="toggle()"
+                  />
 
-                <p-fileUpload
-                  *ngIf="show"
-                  mode="basic"
-                  chooseLabel="Cargar imagen" accept="image/*"
-                  [maxFileSize]="1000000"
-                  (onSelect)="encodeAvatar($event)"
-                ></p-fileUpload>
-              </div></div>
+                  <p-fileUpload
+                    *ngIf="show"
+                    mode="basic"
+                    chooseLabel="Cargar imagen" accept="image/*"
+                    [maxFileSize]="1000000"
+                    (onSelect)="encodeAvatar($event)"
+                  ></p-fileUpload>
+                </div>
+              </div>
             </div>
 
             <div class="grid grid-cols-2 gap-6">
@@ -60,44 +64,44 @@
                   (ngSubmit)="changePassword()"
                   class="flex flex-col gap-5 mt-5"
                 >
-            <span class="p-float-label">
-              <input
-                id="password"
-                pPassword
-                type="password"
-                [feedback]="true"
-                autocomplete="current-password"
-                formControlName="password"
-              />
-              <label for="password">Contraseña Actual</label>
-            </span>
+                  <span class="p-float-label">
+                    <input
+                      id="password"
+                      pPassword
+                      type="password"
+                      [feedback]="true"
+                      autocomplete="current-password"
+                      formControlName="password"
+                    />
+                    <label for="password">Contraseña Actual</label>
+                  </span>
 
                   <span class="p-float-label">
-              <input
-                id="new_password"
-                pPassword
-                type="password"
-                autocomplete="new-password"
-                formControlName="new_password"
-              />
-              <label for="password">Contraseña Nueva</label>
-            </span>
+                    <input
+                      id="new_password"
+                      pPassword
+                      type="password"
+                      autocomplete="new-password"
+                      formControlName="new_password"
+                    />
+                    <label for="password">Contraseña Nueva</label>
+                  </span>
 
                   <span class="p-buttonset">
-              <button
-                pButton pRipple
-                label="Cambiar"
-                class="p-button-success"
-              ></button>
+                    <button
+                      pButton pRipple
+                      label="Cambiar"
+                      class="p-button-success"
+                    ></button>
 
-              <button
-                type="button"
-                pButton pRipple
-                (click)="onShowPasswordDialogReject()"
-                label="Cancelar"
-                class="p-button-secondary"
-              ></button>
-            </span>
+                    <button
+                      type="button"
+                      pButton pRipple
+                      (click)="onShowPasswordDialogReject()"
+                      label="Cancelar"
+                      class="p-button-secondary"
+                    ></button>
+                  </span>
                 </form>
               </p-dialog>
             </div>
@@ -159,7 +163,7 @@
   <div class="p-20">
     <form class="flex gap-2" [formGroup]="codeForm" (ngSubmit)="joinRanking()">
       <span class="p-float-label">
-        <input pInputText id="code" formControlName="code" />
+        <input pInputText id="code" formControlName="code"/>
         <label for="code">Codigo</label>
       </span>
 

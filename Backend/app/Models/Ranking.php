@@ -37,6 +37,7 @@ use Illuminate\{
  * @mixin \Eloquent
  * @noinspection PhpFullyQualifiedNameUsageInspection
  * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+ * @mixin IdeHelperRanking
  */
 class Ranking extends Model
 {

@@ -38,7 +38,7 @@ class RankingsController extends Controller
         return response(
             Ranking::with(['creator'])
                 ->find($ranking->id)
-            , 201
+            , Response::HTTP_CREATED
         );
     }
 
@@ -51,10 +51,9 @@ class RankingsController extends Controller
      */
     public function show($code): Response
     {
-        $validator = Validator::make(['code' => $code], [
+        Validator::validate(['code' => $code], [
             'code' => 'required|exists:rankings'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Ranking::with(['queue', 'students', 'assignments', 'creator'])
@@ -68,17 +67,14 @@ class RankingsController extends Controller
      * @param $oldRankCode
      * @param Request $request
      * @return Response
-     * @throws ValidationException
      */
     public function update($oldRankCode, Request $request): Response
     {
         // Append ranking's id from url to request's body
-        $validator = Validator::make(['code' => $oldRankCode], [
-            'code' => 'required|exists:rankings'
-        ]);
-        $this->throwIfInvalid($validator);
+        $request['target'] = $oldRankCode;
 
         $data = $request->validate([
+            'target' => 'required|exists:rankings,code',
             'code' => 'sometimes|nullable|unique:rankings',
             'name' => 'sometimes|nullable|string',
             'creator' => 'sometimes|nullable|exists:teachers,id'
@@ -101,7 +97,7 @@ class RankingsController extends Controller
 
         return response(
             $previousRanking,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -110,13 +106,17 @@ class RankingsController extends Controller
      *
      * @param $code
      * @return Response
+     * @throws ValidationException
      */
     public function destroy($code): Response
     {
+        Validator::validate(['code' => $code], [
+            'code' => 'required|exists:rankings'
+        ]);
+
+        Ranking::firstWhere('code', $code)->delete();
         return response(
-            status: Ranking::all()
-                ->firstWhere('code', $code)
-                ->delete() ? 200 : 204
+            status: Response::HTTP_OK
         );
     }
 
@@ -127,10 +127,9 @@ class RankingsController extends Controller
      */
     public function createdBy($teacherId): Response
     {
-        $validator = Validator::make(['id' => $teacherId], [
+        Validator::validate(['id' => $teacherId], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Ranking::with(['students', 'queue', 'assignments'])
@@ -146,10 +145,9 @@ class RankingsController extends Controller
      */
     public function forStudent($studentId): Response
     {
-        $validator = Validator::make(['id' => $studentId], [
+        Validator::validate(['id' => $studentId], [
             'id' => 'required|exists:students'
         ]);
-        $this->throwIfInvalid($validator);
 
         $leaderboards = [];
         $rankings = Ranking::with(['students', 'assignments'])->get();
@@ -199,7 +197,7 @@ class RankingsController extends Controller
                 ->count() !== 0
         ) {
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -242,7 +240,7 @@ class RankingsController extends Controller
                 ->count() === 0
         ) {
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -292,7 +290,7 @@ class RankingsController extends Controller
                 ->count() === 0
         ) {
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -321,14 +319,13 @@ class RankingsController extends Controller
     public function updateForStudent($rankingCode, $studentId, Request $request): Response
     {
         // Append ranking's code and student's id from url to request's body
-        $validator = Validator::make([
+        Validator::validate([
             'code' => $rankingCode,
             'id' => $studentId
         ], [
             'code' => 'required|exists:rankings',
             'id' => 'required|exists:students|exists:ranking_student,student_id'
         ]);
-        $this->throwIfInvalid($validator);
 
         $data = $request->validate([
             'points' => 'sometimes|nullable|int'
@@ -349,10 +346,15 @@ class RankingsController extends Controller
 
         return response(
             $previousRanking,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
+    /**
+     * @param $teacherId
+     * @return Response
+     * @throws ValidationException
+     */
     public function queuesForTeacher($teacherId): Response
     {
         $data = Validator::validate([

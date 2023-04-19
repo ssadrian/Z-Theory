@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Skill;
 use App\Models\Student;
-use Illuminate\{
-    Http\Request,
+use Illuminate\{Http\Request,
     Http\Response,
     Support\Facades\Hash,
     Support\Facades\Validator,
@@ -21,7 +21,7 @@ class StudentsController extends Controller
     public function index(): Response
     {
         return response(
-            Student::with(['rankings', 'assignments'])->get()
+            Student::with(['rankings', 'assignments', 'skills'])->get()
         );
     }
 
@@ -43,9 +43,24 @@ class StudentsController extends Controller
             'avatar' => 'sometimes|nullable|string'
         ]);
 
+        // Default value for kudos required field
+        $data['kudos'] = 1_000;
+        $data['password'] = Hash::make($data['password']);
+
+        $student = Student::create($data);
+        $student = Student::with(['skills'])->find($student->id);
+
+        $allSkills = Skill::all('id');
+        foreach ($allSkills as $skill) {
+            $student->skills()->syncWithoutDetaching([
+                $skill->id => ['kudos' => 0]
+            ]);
+        }
+
+        $student->refresh();
         return response(
-            Student::create($data)
-            , 201
+            $student
+            , Response::HTTP_CREATED
         );
     }
 
@@ -58,13 +73,12 @@ class StudentsController extends Controller
      */
     public function show($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:students'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
-            Student::with(['rankings', 'assignments'])
+            Student::with(['rankings', 'assignments', 'skills'])
                 ->find($id)
         );
     }
@@ -88,6 +102,7 @@ class StudentsController extends Controller
             'surnames' => 'sometimes|nullable|string',
             'birth_date' => 'sometimes|nullable|date',
             'avatar' => 'sometimes|nullable|string',
+            'kudos' => 'sometimes|nullable|int|gte:0',
         ]);
 
         $previousStudent = Student::with(['rankings'])
@@ -99,6 +114,7 @@ class StudentsController extends Controller
         foreach ($data as $key => $value) {
             if (empty($value)) {
                 $student->makeHidden($key);
+                unset($data[$key]);
             }
         }
 
@@ -107,7 +123,7 @@ class StudentsController extends Controller
 
         return response(
             $previousStudent,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -120,13 +136,12 @@ class StudentsController extends Controller
      */
     public function destroy($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:students'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
-            status: Student::destroy($id) ? 200 : 204
+            status: Student::destroy($id) ? Response::HTTP_OK : Response::HTTP_NO_CONTENT
         );
     }
 
@@ -145,18 +160,16 @@ class StudentsController extends Controller
         $student = Student::find($data['id']);
 
         if (!Hash::check($data['password'], $student->password)) {
-            // Bad Request
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
         $student->password = Hash::make($data['new_password']);
         $student->save();
 
-        // Ok
         return response(
-            status: 200
+            status: Response::HTTP_OK
         );
     }
 }
