@@ -74,4 +74,4 @@ import { SidebarModule } from 'primeng/sidebar';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
