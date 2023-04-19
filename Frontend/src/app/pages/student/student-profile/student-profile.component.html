@@ -298,7 +298,11 @@
     <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
 
     <div class="flex flex-col gap-3">
-      <form [formGroup]="formEvaluateStudent">
+      <form
+        [formGroup]="formEvaluateStudent"
+        class="space-y-10"
+        (submit)="sumFields()"
+      >
         <span class="p-float-label">
           <p-inputNumber
             inputId="responsibility"
@@ -306,7 +310,7 @@
             formControlName="responsibility"
           >
           </p-inputNumber>
-          <label htmlFor="responsibility">Responsabilidad</label>
+          <label>Responsabilidad</label>
         </span>
 
         <span class="p-float-label">
@@ -316,7 +320,7 @@
             formControlName="cooperation"
           >
           </p-inputNumber>
-          <label htmlFor="cooperation">Cooperación</label>
+          <label>Cooperación</label>
         </span>
 
         <span class="p-float-label">
@@ -326,9 +330,7 @@
             formControlName="autonomy_and_initiative"
           >
           </p-inputNumber>
-          <label htmlFor="autonomy_and_initiative"
-            >Autonomía e iniciativa</label
-          >
+          <label>Autonomía e iniciativa</label>
         </span>
 
         <span class="p-float-label">
@@ -338,7 +340,7 @@
             formControlName="emotional_managment"
           >
           </p-inputNumber>
-          <label htmlFor="emotional_managment">Gestión emocional</label>
+          <label>Gestión emocional</label>
         </span>
 
         <span class="p-float-label">
@@ -348,15 +350,14 @@
             formControlName="thinking_skills"
           >
           </p-inputNumber>
-          <label htmlFor="thinking_skills">Hab. de Pensamiento</label>
+          <label>Hab. de Pensamiento</label>
         </span>
+        <p-button
+          type="submit"
+          styleClass="p-button-success"
+          label="Enviar"
+        ></p-button>
       </form>
-
-      <p-button
-        styleClass="p-button-success"
-        label="Enviar"
-        (click)="evaluateStudent()"
-      ></p-button>
     </div>
   </p-sidebar>
 </div>
