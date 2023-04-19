@@ -39,7 +39,8 @@ export class StudentProfileComponent implements OnInit {
 
   showPasswordChangeDialog: boolean = true;
   visible!: boolean;
-  sidebarVisible!: boolean;
+
+  sidebarVisible = false;
 
   sidebarVisible = false;
 
@@ -226,7 +227,6 @@ export class StudentProfileComponent implements OnInit {
   showDialog() {
     this.isPentabilitiesDialogVisible = true;
   }
-
   sumFields() {
     const {
       responsibility,
@@ -267,4 +267,14 @@ export class StudentProfileComponent implements OnInit {
 
     this.sidebarVisible = true;
   }
+
+
+  showEvaluationSideBarForStudent(studentId: number) {
+    if (studentId == this.student.id) {
+      return;
+    }
+    this.sidebarVisible = true;
+  }
+
+
 }
