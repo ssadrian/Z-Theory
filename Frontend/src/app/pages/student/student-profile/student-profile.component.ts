@@ -106,7 +106,7 @@ export class StudentProfileComponent implements OnInit {
 
     this.studentService
       .update(this.student.id, student)
-      .subscribe((): void => {});
+      .subscribe((): void => { });
     this.student.avatar = this.#b64Avatar;
 
     this.showImageUpload = false;
@@ -119,15 +119,31 @@ export class StudentProfileComponent implements OnInit {
   joinRanking(): void {
     const code: string = this.codeForm.value.code ?? '';
 
-    if (!this.#isValidUuid(code)) {
-      return;
-    }
+    // if (!this.#isValidUuid(code)) {
+    //   this.messageService.add({
+    //     key: 'toasts',
+    //     severity: 'error',
+    //     detail: `El UUID no es valido.`
+    //   });
+    //   return;
+    // }
 
     const entity: ICreateStudentAssignation = {
       code: code,
       student_id: this.student.id,
     };
 
+    this.rankingService.assignStudent(entity)
+      .subscribe((): void => {
+        this.#updateRanks();
+        this.codeForm.reset();
+
+        this.messageService.add({
+          key: 'toasts',
+          severity: 'success',
+          detail: 'Petición registrada.'
+        });
+      });
     this.rankingService.assignStudent(entity).subscribe((): void => {
       this.#updateRanks();
       this.codeForm.reset();
@@ -238,7 +254,7 @@ export class StudentProfileComponent implements OnInit {
   }
 
   evaluateStudent() {
-    console.log('funca');
+    
   }
 
   showEvaluationSideBarForStudent(studentId: number) {

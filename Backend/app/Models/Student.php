@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\{
-    Database\Eloquent\Factories\HasFactory,
+use Illuminate\{Database\Eloquent\Factories\HasFactory,
     Database\Eloquent\Relations\BelongsToMany,
-    Foundation\Auth\User as Authenticatable
-};
+    Foundation\Auth\User as Authenticatable};
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -43,6 +41,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @mixin \Eloquent
  * @noinspection PhpFullyQualifiedNameUsageInspection
  * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+ * @mixin IdeHelperStudent
  */
 class Student extends Authenticatable
 {
@@ -61,6 +60,7 @@ class Student extends Authenticatable
         'name',
         'surnames',
         'birth_date',
+        'kudos'
     ];
 
     /**
@@ -82,5 +82,18 @@ class Student extends Authenticatable
         return $this
             ->belongsToMany(Assignment::class)
             ->withPivot(['status', 'mark']);
+    }
+
+    public function skills(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Skill::class, 'student_skill')
+            ->withPivot(['kudos', 'image']);
+    }
+
+    public function evaluationHistory(): BelongsToMany {
+        return $this
+            ->belongsToMany(Skill::class, 'evaluation_history', 'evaluator')
+            ->withPivot(['id', 'subject', 'kudos']);
     }
 }

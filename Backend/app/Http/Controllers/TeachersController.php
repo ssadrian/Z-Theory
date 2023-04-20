@@ -45,7 +45,7 @@ class TeachersController extends Controller
 
         return response(
             Teacher::create($data)
-            , 201
+            , Response::HTTP_CREATED
         );
     }
 
@@ -58,10 +58,9 @@ class TeachersController extends Controller
      */
     public function show($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Teacher::with('rankings_created')
@@ -82,10 +81,11 @@ class TeachersController extends Controller
         $request['id'] = $id;
 
         $data = $request->validate([
-            'nickname' => 'required|string|unique:students|unique:teachers',
-            'name' => 'required|string',
-            'surnames' => 'required|string',
-            'avatar' => 'required|string',
+            'id' => 'required|exists:students',
+            'nickname' => 'sometimes|nullable|string',
+            'name' => 'sometimes|nullable|string',
+            'surnames' => 'sometimes|nullable|string',
+            'avatar' => 'sometimes|nullable|string',
             'center' => 'required|string',
         ]);
 
@@ -98,6 +98,7 @@ class TeachersController extends Controller
         foreach ($data as $key => $value) {
             if (empty($value)) {
                 $teacher->makeHidden($key);
+                unset($data[$key]);
             }
         }
 
@@ -106,7 +107,7 @@ class TeachersController extends Controller
 
         return response(
             $previousTeacher,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -119,13 +120,12 @@ class TeachersController extends Controller
      */
     public function destroy($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
-            status: Teacher::destroy($id) ? 200 : 204
+            status: Teacher::destroy($id) ? Response::HTTP_OK : Response::HTTP_NO_CONTENT
         );
     }
 
@@ -144,18 +144,16 @@ class TeachersController extends Controller
         $teacher = Teacher::find($data['id']);
 
         if (!Hash::check($data['password'], $teacher->password)) {
-            // Bad Request
             return response(
-                status: 400
+                status: Response::HTTP_BAD_REQUEST
             );
         }
 
         $teacher->password = Hash::make($data['new_password']);
         $teacher->save();
 
-        // Ok
         return response(
-            status: 200
+            status: Response::HTTP_OK
         );
     }
 }

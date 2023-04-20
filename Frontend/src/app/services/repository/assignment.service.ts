@@ -64,6 +64,7 @@ export class AssignmentService {
     const url: string = `${this.#assignmentUrl}/creator/${id}`;
     return this.http.get<IAssignment[]>(url, {
       headers: this.#clientHeaders,
+      observe: 'body'
     });
   }
 

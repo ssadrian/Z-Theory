@@ -41,7 +41,7 @@ class AssignmentController extends Controller
         $assignment = Assignment::create($data);
         return response(
             Assignment::with(['creator'])->find($assignment->id)
-            , 201
+            , Response::HTTP_CREATED
         );
     }
 
@@ -54,10 +54,9 @@ class AssignmentController extends Controller
      */
     public function show($id): Response
     {
-        $validator = Validator::make(['id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:assignments'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
             Assignment::with(['creator'])
@@ -100,7 +99,7 @@ class AssignmentController extends Controller
 
         return response(
             $previousAssignment,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -113,7 +112,7 @@ class AssignmentController extends Controller
     public function destroy($id): Response
     {
         return response(
-            status: Assignment::destroy($id) ? 200 : 400
+            status: Assignment::destroy($id) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 
@@ -126,10 +125,9 @@ class AssignmentController extends Controller
     public function assignToRanking($rankCode, Request $request): Response
     {
         // Append rank's code from url to request's body
-        $validator = Validator::make(['code' => $rankCode], [
+        Validator::validate(['code' => $rankCode], [
             'code' => 'required|exists:rankings'
         ]);
-        $this->throwIfInvalid($validator);
 
         $data = $request->validate([
             'id' => 'required|exists:assignments'
@@ -170,15 +168,13 @@ class AssignmentController extends Controller
      */
     public function removeFromRanking($id, $rankCode): Response
     {
-        // Append rank's code from url to request's body
-        $validator = Validator::make([
+        Validator::validate([
             'id' => $id,
             'code' => $rankCode
         ], [
             'id' => 'required|exists:assignments',
             'code' => 'required|exists:rankings'
         ]);
-        $this->throwIfInvalid($validator);
 
         Assignment::find($id)
             ->rankingsAssigned()
@@ -195,7 +191,7 @@ class AssignmentController extends Controller
         }
 
         return response(
-            status: 200
+            Response::HTTP_OK
         );
     }
 
@@ -206,14 +202,12 @@ class AssignmentController extends Controller
      */
     public function createdBy($teacherId): Response
     {
-        $validator = Validator::make(['id' => $teacherId], [
+        Validator::validate(['id' => $teacherId], [
             'id' => 'required|exists:teachers'
         ]);
-        $this->throwIfInvalid($validator);
 
         return response(
-            Assignment::all()
-                ->where('teacher_id', $teacherId)
+            Assignment::where('teacher_id', $teacherId)->get()
         );
     }
 
@@ -254,8 +248,7 @@ class AssignmentController extends Controller
 
         return response(
             $previousTask,
-            status: $success ? 200 : 400
+            status: $success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
-
 }

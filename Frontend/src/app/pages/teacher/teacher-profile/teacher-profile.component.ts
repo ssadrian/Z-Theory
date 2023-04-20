@@ -50,6 +50,7 @@ export class TeacherProfileComponent implements OnInit {
   isSubmit: boolean = false;
   isSidebarVisible: boolean = false;
   showPasswordChangeDialog: boolean = false;
+  showRankingUpdateDialog: boolean = false;
 
   courses: any[] = [
     {name: 'DAW', totalStudents: 10},
@@ -75,10 +76,10 @@ export class TeacherProfileComponent implements OnInit {
 
   rankingButtons: MenuItem[] = [];
 
-  #selectedRanking?: IRanking;
+  selectedRanking?: IRanking;
 
   setSelectedRanking(ranking: IRanking): void {
-    this.#selectedRanking = ranking;
+    this.selectedRanking = ranking;
   }
 
   #b64Avatar: string = '';
@@ -88,20 +89,52 @@ export class TeacherProfileComponent implements OnInit {
       {
         label: 'Añadir entrega',
         icon: 'pi pi-plus-circle',
-        styleClass: 'p-button-secondary',
         command: (): void => {
           this.showAssignmentForm();
+        }
+      },
+      {
+        label: 'Modificar',
+        icon: 'pi pi-pencil',
+        command: () => {
+          if (!this.selectedRanking) {
+            return;
+          }
+
+
         }
       },
       {
         label: 'Refrescar codigo',
         icon: 'pi pi-undo',
         command: (): void => {
-          if (!this.#selectedRanking) {
+          if (!this.selectedRanking) {
             return;
           }
 
-          this.changeRankingId(this.#selectedRanking);
+          this.changeRankingId(this.selectedRanking);
+        }
+      },
+      {
+        label: 'Eliminar',
+        icon: 'pi pi-minus-circle',
+        styleClass: 'bg-red-600',
+        command: (): void => {
+          if (!this.selectedRanking) {
+            return;
+          }
+
+          this.rankingService
+            .delete(this.selectedRanking.code)
+            .subscribe(() => {
+              this.createdRankings = this.createdRankings.filter(x => x.code !== this.selectedRanking?.code);
+
+              this.messageService.add({
+                key: 'toasts',
+                severity: 'success',
+                detail: 'Ranking eliminado!'
+              });
+            });
         }
       }
     ];
@@ -125,7 +158,14 @@ export class TeacherProfileComponent implements OnInit {
         creator: this.teacher.id,
         name: formValue.name!,
       })
-      .subscribe(this.#updateCreatedRanks);
+      .subscribe(() => {
+        this.messageService.add({
+          key: 'toasts',
+          severity: 'success',
+          detail: 'Ranking creado!'
+        });
+        this.#updateCreatedRanks();
+      });
   }
 
   #updateCreatedRanks(): void {
@@ -143,6 +183,17 @@ export class TeacherProfileComponent implements OnInit {
           });
         });
       });
+  }
+
+  updateRanking() {
+    if (!this.selectedRanking) {
+      return;
+    }
+
+    const entity: IUpdateRanking = {
+      url_oldCode: this.selectedRanking.code,
+      name: this.selectedRanking.name
+    };
   }
 
   encodeAvatar(event: any): void {
@@ -163,7 +214,9 @@ export class TeacherProfileComponent implements OnInit {
       center: this.teacher.center!,
     };
 
-    this.teacherService.update(this.teacher.id, entity).subscribe();
+    this.teacherService
+      .update(this.teacher.id, entity)
+      .subscribe(() => {});
     this.teacher.avatar = this.#b64Avatar;
 
     this.show = false;
@@ -184,11 +237,11 @@ export class TeacherProfileComponent implements OnInit {
 
     this.rankingService.update(entity)
       .subscribe((response: HttpResponse<Object>): void => {
-        if (!response.ok || !this.#selectedRanking) {
+        if (!response.ok || !this.selectedRanking) {
           return;
         }
 
-        this.#selectedRanking.code = newRankingCode;
+        this.selectedRanking.code = newRankingCode;
       });
   }
 
@@ -231,17 +284,31 @@ export class TeacherProfileComponent implements OnInit {
         points: formValue.points,
         creator: this.teacher.id,
       })
-      .subscribe();
+      .subscribe(() => {
+      });
 
     this.assignmentService
       .createdByTeacher(this.teacher.id)
-      .subscribe((response: IAssignment[]): void => {
-        response
-          .map((assignment: IAssignment): void => {
-            if (assignment.title === formValue.title) {
-              this.createdAssignments.push(assignment);
-            }
+      .subscribe((res: IAssignment[]): void => {
+        for (let assignment of res) {
+          if (assignment.title !== formValue.title) {
+            continue;
+          }
+
+          this.createdAssignments.push(assignment);
+
+          // Create assignment-ranking relation
+          this.assignmentService.assignToRank({
+            id: assignment.id,
+            url_rankCode: this.selectedRanking?.code!
+          }).subscribe(() => {
+            this.messageService.add({
+              key: 'toasts',
+              severity: 'success',
+              detail: 'Tarea asignada.'
+            })
           });
+        }
       });
 
     this.showAssignment = false;

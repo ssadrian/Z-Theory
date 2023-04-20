@@ -39,6 +39,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @mixin \Eloquent
  * @noinspection PhpFullyQualifiedNameUsageInspection
  * @noinspection PhpUnnecessaryFullyQualifiedNameInspection
+ * @mixin IdeHelperUser
  */
 class User extends Authenticatable
 {
