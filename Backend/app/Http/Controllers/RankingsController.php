@@ -150,15 +150,16 @@ class RankingsController extends Controller
         ]);
 
         $leaderboards = [];
-        $rankings = Ranking::with(['students', 'assignments'])->get();
+        $rankings = Ranking::with(['students.skills', 'assignments'])->get();
 
+        // TODO: Fix the bug "Call to undefined method ...\\BelongsToMany::contains()"
         foreach ($rankings as $ranking) {
-            if (!$ranking->students->contains($studentId)) {
+            if (!$ranking->students()->contains($studentId)) {
                 continue;
             }
 
-            $ranking->students->makeHidden(['email', 'password', 'name', 'surnames']);
-            foreach ($ranking->students as $student) {
+            $ranking->students()->makeHidden(['email', 'password', 'name', 'surnames']);
+            foreach ($ranking->students() as $student) {
                 $student->pivot->makeHidden(['ranking_id', 'student_id']);
             }
 

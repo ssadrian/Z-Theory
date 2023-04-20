@@ -36,7 +36,7 @@ Route::prefix('student')->group(function () {
     Route::post('undo', [EvaluationController::class, 'destroy']);
 });
 
-Route::apiResource('evaluate', EvaluationController::class);
+Route::apiResource('evaluation', EvaluationController::class);
 
 Route::apiResource('teacher', TeachersController::class);
 Route::prefix('teacher')->group(function () {

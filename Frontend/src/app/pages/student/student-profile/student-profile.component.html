@@ -234,47 +234,6 @@
                     tooltipPosition="bottom"
                   />
                 </div>
-
-                <p-dialog
-                  [modal]="true"
-                  header="Las Pentabilities"
-                  [(visible)]="isPentabilitiesDialogVisible"
-                  [style]="{ width: '50vw' }"
-                >
-                  <p>
-                    Las pentabilidades son las cinco grandes habilidades
-                    sociales y emocionales de Pentabilities: Responsabilidad,
-                    Cooperación, Autonomía e iniciativa, Gestión emocional y
-                    Habilidades de pensamiento.
-                  </p>
-
-                  <br />
-
-                  <p>
-                    Las definiciones de las pentabilidades propuestas recogen
-                    los conceptos básicos y prioritarios de cada habilidad, pero
-                    con una visión global y holística. El objetivo es crear un
-                    lenguaje común y concreto, alejado de los tecnicismos, la
-                    polisemia y la abstracción.
-                  </p>
-
-                  <br />
-
-                  <p>
-                    Las pentabilidades se dirigen hacia una finalidad tangible
-                    para garantizar una comunicación orientadora y un buen
-                    feedback constructivo, imprescindibles en todo aprendizaje.
-                  </p>
-
-                  <br />
-
-                  <p>
-                    La conexión entre las diferentes habilidades es tan
-                    relevante que a menudo son vasos comunicantes. Por eso, a
-                    veces, para mejorar una, será necesario y más efectivo
-                    potenciar otra.
-                  </p>
-                </p-dialog>
               </td>
             </tr>
           </ng-template>
@@ -287,79 +246,115 @@
 
 <!-- Sidebar de evaluar compañeros -->
 
-<div class="card flex justify-content-center">
-  <p-sidebar [(visible)]="sidebarVisible">
-    <h3>Evaluar alumnos</h3>
-    <br />
-    <p>
-      En esta parte podrás evaluar a tus compañeros de clase dependiendo de sus
-      5 habilidades. Cada semana dispones de 1000 puntos a repartir entre todos
-      tus compañeros. ¡Elige sabiamente a quien dar tus puntos!
-    </p>
+<p-sidebar [(visible)]="sidebarVisible">
+  <h3>Evaluar alumnos</h3>
+  <br />
+  <p>
+    En esta parte podrás evaluar a tus compañeros de clase dependiendo de sus 5
+    habilidades. Cada semana dispones de 1000 puntos a repartir entre todos tus
+    compañeros. ¡Elige sabiamente a quien dar tus puntos!
+  </p>
 
-    <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+  <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
 
-    <div class="flex flex-col gap-3">
-      <form
-        [formGroup]="formEvaluateStudent"
-        class="space-y-10"
-        (submit)="sumFields()"
-      >
-        <span class="p-float-label">
-          <p-inputNumber
-            inputId="responsibility"
-            [max]="1000"
-            formControlName="responsibility"
-          >
-          </p-inputNumber>
-          <label>Responsabilidad</label>
-        </span>
+  <div class="flex flex-col gap-3">
+    <form
+      [formGroup]="formEvaluateStudent"
+      class="space-y-10"
+      (submit)="sumFields()"
+    >
+      <span class="p-float-label">
+        <p-inputNumber
+          inputId="responsibility"
+          [max]="1000"
+          formControlName="responsibility"
+        >
+        </p-inputNumber>
+        <label>Responsabilidad</label>
+      </span>
 
-        <span class="p-float-label">
-          <p-inputNumber
-            inputId="cooperation"
-            [max]="1000"
-            formControlName="cooperation"
-          >
-          </p-inputNumber>
-          <label>Cooperación</label>
-        </span>
+      <span class="p-float-label">
+        <p-inputNumber
+          inputId="cooperation"
+          [max]="1000"
+          formControlName="cooperation"
+        >
+        </p-inputNumber>
+        <label>Cooperación</label>
+      </span>
 
-        <span class="p-float-label">
-          <p-inputNumber
-            inputId="autonomyInitiative"
-            [max]="1000"
-            formControlName="autonomyInitiative"
-          >
-          </p-inputNumber>
-          <label>Autonomía e iniciativa</label>
-        </span>
+      <span class="p-float-label">
+        <p-inputNumber
+          inputId="autonomyInitiative"
+          [max]="1000"
+          formControlName="autonomyInitiative"
+        >
+        </p-inputNumber>
+        <label>Autonomía e iniciativa</label>
+      </span>
 
-        <span class="p-float-label">
-          <p-inputNumber
-            inputId="emotionalManagment"
-            [max]="1000"
-            formControlName="emotionalManagment"
-          >
-          </p-inputNumber>
-          <label>Gestión emocional</label>
-        </span>
+      <span class="p-float-label">
+        <p-inputNumber
+          inputId="emotionalManagment"
+          [max]="1000"
+          formControlName="emotionalManagment"
+        >
+        </p-inputNumber>
+        <label>Gestión emocional</label>
+      </span>
 
-        <span class="p-float-label">
-          <p-inputNumber
-            inputId="thinkingSkills"
-            [max]="1000"
-            formControlName="thinkingSkills"
-          >
-          </p-inputNumber>
-          <label>Hab. de Pensamiento</label>
-        </span>
-        <p-button
-          type="submit"
-          styleClass="p-button-success"
-          label="Enviar"
-        ></p-button>
-      </form>
-    </div>
-  </p-sidebar>
-</div>
+      <span class="p-float-label">
+        <p-inputNumber
+          inputId="thinkingSkills"
+          [max]="1000"
+          formControlName="thinkingSkills"
+        >
+        </p-inputNumber>
+        <label>Hab. de Pensamiento</label>
+      </span>
+      <p-button
+        type="submit"
+        styleClass="p-button-success"
+        label="Enviar"
+      ></p-button>
+    </form>
+  </div>
+</p-sidebar>
+
+<p-dialog
+  [modal]="true"
+  header="Las Pentabilities"
+  [(visible)]="isPentabilitiesDialogVisible"
+  [style]="{ width: '50vw' }"
+>
+  <p>
+    Las pentabilidades son las cinco grandes habilidades sociales y emocionales
+    de Pentabilities: Responsabilidad, Cooperación, Autonomía e iniciativa,
+    Gestión emocional y Habilidades de pensamiento.
+  </p>
+
+  <br />
+
+  <p>
+    Las definiciones de las pentabilidades propuestas recogen los conceptos
+    básicos y prioritarios de cada habilidad, pero con una visión global y
+    holística. El objetivo es crear un lenguaje común y concreto, alejado de los
+    tecnicismos, la polisemia y la abstracción.
+  </p>
+
+  <br />
+
+  <p>
+    Las pentabilidades se dirigen hacia una finalidad tangible para garantizar
+    una comunicación orientadora y un buen feedback constructivo,
+    imprescindibles en todo aprendizaje.
+  </p>
+
+  <br />
+
+  <p>
+    La conexión entre las diferentes habilidades es tan relevante que a menudo
+    son vasos comunicantes. Por eso, a veces, para mejorar una, será necesario y
+    más efectivo potenciar otra.
+  </p>
+</p-dialog>
