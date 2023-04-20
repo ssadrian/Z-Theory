@@ -1,15 +1,15 @@
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {ICreateRanking} from '../../../models/create/create-ranking';
-import {ICreateStudentAssignation} from '../../../models/create/create-student-assignation';
-import {IRanking} from '../../../models/ranking.model';
-import {IAcceptStudentAssignation} from '../../../models/update/accept-student-assignation';
-import {IUpdateRanking} from '../../../models/update/update-ranking';
-import {IUpdateRankingStudent} from '../../../models/update/update-ranking-student';
-import {environment} from '../../environments/environment';
-import {CredentialService} from '../credential.service';
-import {IDeclineStudentAssignation} from "../../../models/update/decline-student-assignation";
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ICreateRanking } from '../../../models/create/create-ranking';
+import { ICreateStudentAssignation } from '../../../models/create/create-student-assignation';
+import { IRanking } from '../../../models/ranking.model';
+import { IAcceptStudentAssignation } from '../../../models/update/accept-student-assignation';
+import { IUpdateRanking } from '../../../models/update/update-ranking';
+import { IUpdateRankingStudent } from '../../../models/update/update-ranking-student';
+import { environment } from '../../environments/environment';
+import { CredentialService } from '../credential.service';
+import { IDeclineStudentAssignation } from '../../../models/update/decline-student-assignation';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,7 @@ export class RankingService {
   }
 
   readonly #clientHeaders: { [header: string]: string };
-  #rankingUrl: string = `${environment.apiUrl}/ranking`;
+  readonly #rankingUrl: string = `${environment.apiUrl}/ranking`;
 
   all(): Observable<IRanking[]> {
     return this.http.get<IRanking[]>(this.#rankingUrl, {
@@ -94,9 +94,7 @@ export class RankingService {
     });
   }
 
-  update(
-    entity: IUpdateRanking
-  ): Observable<HttpResponse<Object>> {
+  update(entity: IUpdateRanking): Observable<HttpResponse<Object>> {
     const url: string = `${this.#rankingUrl}/${entity.url_oldCode}`;
     return this.http.put(url, entity, {
       headers: this.#clientHeaders,
@@ -113,16 +111,18 @@ export class RankingService {
   }
 
   updateForStudent(entity: IUpdateRankingStudent): Observable<Object> {
-    const url: string = `${this.#rankingUrl}/${entity.url_rankingCode}/for/${entity.url_studentId}`;
+    const url: string = `${this.#rankingUrl}/${entity.url_rankingCode}/for/${
+      entity.url_studentId
+    }`;
     return this.http.put(url, entity, {
-      headers: this.#clientHeaders
+      headers: this.#clientHeaders,
     });
   }
 
   queuesForTeacher(teacherId: number): Observable<IRanking[]> {
     const url: string = `${this.#rankingUrl}/queues/for/${teacherId}`;
     return this.http.get<IRanking[]>(url, {
-      headers: this.#clientHeaders
+      headers: this.#clientHeaders,
     });
   }
 }

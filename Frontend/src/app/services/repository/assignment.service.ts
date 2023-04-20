@@ -13,9 +13,6 @@ import {IUpdateAssignment} from 'src/models/update/update-assignment';
   providedIn: 'root',
 })
 export class AssignmentService {
-  #assignmentUrl: string = `${environment.apiUrl}/assignment`;
-  readonly #clientHeaders: { [header: string]: string };
-
   constructor(private http: HttpClient, private credentials: CredentialService) {
     this.#clientHeaders = {
       Authorization: `Bearer ${this.credentials.token}`,
@@ -23,6 +20,9 @@ export class AssignmentService {
       'Content-Type': 'application/json',
     };
   }
+
+  readonly #clientHeaders: { [header: string]: string };
+  readonly #assignmentUrl: string = `${environment.apiUrl}/assignment`;
 
   all(): Observable<IAssignment[]> {
     return this.http.get<IAssignment[]>(this.#assignmentUrl, {

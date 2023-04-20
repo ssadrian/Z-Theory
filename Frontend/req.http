@@ -60,7 +60,7 @@ Accept: application/json
 
 ###
 # Give kudos
-POST http://localhost:8000/api/student/give HTTP/1.1
+POST http://localhost:8000/api/evaluate HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Cookie: XDEBUG_SESSION=TRUE
@@ -75,7 +75,7 @@ Cookie: XDEBUG_SESSION=TRUE
 
 ###
 # Undo evaluation with kudos
-POST http://localhost:8000/api/student/undo HTTP/1.1
+DELETE http://localhost:8000/api/evaluation HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Cookie: XDEBUG_SESSION=TRUE
@@ -91,6 +91,12 @@ Cookie: XDEBUG_SESSION=TRUE
 ###
 # Get all rankings
 GET http://localhost:8000/api/ranking HTTP/1.1
+Accept: application/json
+
+
+###
+# Get rankings for a student
+GET http://localhost:8000/api/ranking/for/1 HTTP/1.1
 Accept: application/json
 
 

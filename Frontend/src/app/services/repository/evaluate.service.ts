@@ -4,15 +4,16 @@ import { CredentialService } from '../credential.service';
 import { environment } from '../../environments/environment';
 import { Observable, catchError } from 'rxjs';
 import { ICreateEvaluation } from 'src/models/create/create-evaluation';
+import { IDeleteEvaluation } from 'src/models/delete/delete-evaluation';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EvaluateService {
-  readonly #clientHeaders: { [header: string]: string };
-  #evaluateUrl: string = `${environment.apiUrl}/evaluation`;
-
-  constructor(private http: HttpClient, private credentials: CredentialService) {
+  constructor(
+    private http: HttpClient,
+    private credentials: CredentialService
+  ) {
     this.#clientHeaders = {
       Authorization: `Bearer ${this.credentials.token}`,
       Accept: 'application/json',
@@ -20,15 +21,21 @@ export class EvaluateService {
     };
   }
 
-  evaluateResponsibility(entity: ICreateEvaluation): Observable<HttpResponse<Object>> {
+  readonly #clientHeaders: { [header: string]: string };
+  readonly #evaluateUrl: string = `${environment.apiUrl}/evaluation`;
+
+  create(entity: ICreateEvaluation): Observable<HttpResponse<Object>> {
     return this.http.post(this.#evaluateUrl, entity, {
       headers: this.#clientHeaders,
-      observe: 'response'
+      observe: 'response',
     });
   }
 
-  // cancelEvaluation(data: any): Observable<any> {
-    
-  // }
-
+  delete(entity: IDeleteEvaluation): Observable<HttpResponse<Object>> {
+    return this.http.delete(this.#evaluateUrl, {
+      headers: this.#clientHeaders,
+      observe: 'response',
+      body: entity,
+    });
+  }
 }

@@ -12,9 +12,6 @@ import { CredentialService } from '../credential.service';
   providedIn: 'root',
 })
 export class StudentService {
-  #studentUrl: string = `${environment.apiUrl}/student`;
-  readonly #clientHeaders: { [header: string]: string };
-
   constructor(private http: HttpClient, private credentials: CredentialService) {
     this.#clientHeaders = {
       Authorization: `Bearer ${this.credentials.token}`,
@@ -22,6 +19,9 @@ export class StudentService {
       'Content-Type': 'application/json',
     };
   }
+
+  readonly#studentUrl: string = `${environment.apiUrl}/student`;
+  readonly #clientHeaders: { [header: string]: string };
 
   all(): Observable<IStudent[]> {
     return this.http.get<IStudent[]>(this.#studentUrl, {
