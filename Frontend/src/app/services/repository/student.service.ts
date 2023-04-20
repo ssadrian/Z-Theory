@@ -1,12 +1,12 @@
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {IUpdatePassword} from 'src/models/update/update-password';
-import {ICreateStudent} from '../../../models/create/create-student';
-import {IStudent} from '../../../models/student.model';
-import {IUpdateStudent} from '../../../models/update/update-student';
-import {environment} from '../../environments/environment';
-import {CredentialService} from '../credential.service';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IUpdatePassword } from 'src/models/update/update-password';
+import { ICreateStudent } from '../../../models/create/create-student';
+import { IStudent } from '../../../models/student.model';
+import { IUpdateStudent } from '../../../models/update/update-student';
+import { environment } from '../../environments/environment';
+import { CredentialService } from '../credential.service';
 
 @Injectable({
   providedIn: 'root',

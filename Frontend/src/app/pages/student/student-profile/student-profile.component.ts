@@ -17,6 +17,7 @@ import { MessageService } from 'primeng/api';
 import { IUpdatePassword } from '../../../../models/update/update-password';
 import { catchError, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { EvaluateService } from 'src/app/services/repository/evaluate.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -30,8 +31,9 @@ export class StudentProfileComponent implements OnInit {
     private rankingService: RankingService,
     private fb: FormBuilder,
     private messageService: MessageService,
-    private b64: Base64Service
-  ) {}
+    private b64: Base64Service,
+    private evaluateService: EvaluateService
+  ) { }
 
   showImageUpload: boolean = false;
 
@@ -254,7 +256,7 @@ export class StudentProfileComponent implements OnInit {
   }
 
   evaluateStudent() {
-    
+   
   }
 
   showEvaluationSideBarForStudent(studentId: number) {
