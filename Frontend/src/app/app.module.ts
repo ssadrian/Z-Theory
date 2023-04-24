@@ -31,6 +31,8 @@ import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
+import { EvaluationHistoryListComponent } from './components/evaluation-history-list/evaluation-history-list.component';
+import { EvaluationHistoryComponent } from './pages/evaluation-history/evaluation-history.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { SidebarModule } from 'primeng/sidebar';
     RegistrationFormComponent,
     AssignmentComponent,
     QueuesListComponent,
+    EvaluationHistoryListComponent,
+    EvaluationHistoryComponent,
   ],
   imports: [
     BrowserModule,
