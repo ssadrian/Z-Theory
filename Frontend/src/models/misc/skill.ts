@@ -1,7 +1,7 @@
-export enum Skill{
-    Responsibility = 1,
-    Cooperation,
-    Autonomy,
-    Thinking,
-    Emotional
+export enum Skill {
+  Responsibility = 1,
+  Cooperation,
+  Autonomy,
+  Thinking,
+  Emotional,
 }
