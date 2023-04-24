@@ -18,6 +18,8 @@ import { IUpdatePassword } from '../../../../models/update/update-password';
 import { catchError, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EvaluateService } from 'src/app/services/repository/evaluate.service';
+import { ICreateEvaluation } from 'src/models/create/create-evaluation';
+import { Skill } from 'src/models/misc/skill';
 
 @Component({
   selector: 'app-student-profile',
@@ -44,8 +46,6 @@ export class StudentProfileComponent implements OnInit {
 
   sidebarVisible = false;
 
-  sidebarVisible = false;
-
   codeForm = this.fb.group({
     code: ['', [Validators.required]],
   });
@@ -57,6 +57,8 @@ export class StudentProfileComponent implements OnInit {
 
   student: IStudent = this.credentials.currentUser as IStudent;
   rankings: IRanking[] = [];
+
+  subject!: number;
 
   form = this.fb.group({
     nickname: ['', [Validators.required]],
@@ -254,26 +256,50 @@ export class StudentProfileComponent implements OnInit {
       return;
     }
 
-    this.evaluateStudent();
+    let evaluation: ICreateEvaluation = {
+      evaluator: this.student.id,
+      subject: this.subject,
+      skill: Skill.Responsibility,
+      kudos: responsibility!
+    };
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill = Skill.Responsibility;
+    evaluation.kudos = responsibility!;
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill = Skill.Autonomy;
+    evaluation.kudos = autonomyInitiative!;
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill = Skill.Cooperation;
+    evaluation.kudos = cooperation!;
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill = Skill.Emotional;
+    evaluation.kudos = emotionalManagment!;
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill = Skill.Thinking;
+    evaluation.kudos = thinkingSkills!;
+
+    this.evaluateStudent(evaluation);
   }
 
-  evaluateStudent() {
-   
+  evaluateStudent(entity: ICreateEvaluation) {
+    this.evaluateService.create(entity).subscribe();
   }
 
   showEvaluationSideBarForStudent(studentId: number) {
     if (studentId === this.student.id) {
       return;
     }
-
-    this.sidebarVisible = true;
-  }
-
-  showEvaluationSideBarForStudent(studentId: number) {
-    if (studentId === this.student.id) {
-      return;
-    }
-
+    this.subject = studentId;
     this.sidebarVisible = true;
   }
 }
