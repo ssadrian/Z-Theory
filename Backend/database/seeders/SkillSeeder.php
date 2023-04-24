@@ -17,7 +17,7 @@ class SkillSeeder extends Seeder
                    VALUES ('Responsibility'),
                           ('Cooperation'),
                           ('Autonomy'),
-                          ('Initiative'),
+                          ('Thinking'),
                           ('Emotional');
         ");
 
