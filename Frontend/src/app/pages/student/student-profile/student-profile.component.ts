@@ -17,7 +17,7 @@ import { MessageService } from 'primeng/api';
 import { IUpdatePassword } from '../../../../models/update/update-password';
 import { catchError, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { EvaluateService } from 'src/app/services/repository/evaluate.service';
+import { EvaluationService } from 'src/app/services/repository/evaluation.service';
 import { ICreateEvaluation } from 'src/models/create/create-evaluation';
 import { Skill } from 'src/models/misc/skill';
 
@@ -34,7 +34,7 @@ export class StudentProfileComponent implements OnInit {
     private fb: FormBuilder,
     private messageService: MessageService,
     private b64: Base64Service,
-    private evaluateService: EvaluateService
+    private evaluateService: EvaluationService
   ) { }
 
   showImageUpload: boolean = false;

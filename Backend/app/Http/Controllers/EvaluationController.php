@@ -28,6 +28,7 @@ class EvaluationController extends Controller
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|different:evaluator|exists:students,id',
             'skill' => 'required|exists:skills,id',
+            'ranking_id' => 'required|exists:rankings,id',
             'kudos' => 'required|int|gt:0'
         ]);
 
@@ -60,6 +61,7 @@ class EvaluationController extends Controller
             ->evaluationHistory()
             ->syncWithoutDetaching([
                 $data['skill'] => [
+                    'ranking_id' => $data['ranking_id'],
                     'subject' => $data['subject'],
                     'kudos' => $data['kudos'],
                     'created_at' => Carbon::now(),
@@ -99,6 +101,7 @@ class EvaluationController extends Controller
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|different:evaluator|exists:students,id',
+            'ranking_id' => 'required|exists:ranking,id',
             'skill' => 'required|exists:skills,id'
         ]);
 

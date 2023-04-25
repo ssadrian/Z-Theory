@@ -56,7 +56,7 @@ class RankingsController extends Controller
 
         return response(
             Ranking::with(['queue', 'students', 'assignments', 'creator'])
-                ->firstWhere('code', $code)
+                ->whereCode($code)
         );
     }
 
@@ -249,7 +249,8 @@ class RankingsController extends Controller
 
         $queue->pivot->join_status_id = JoinStatus::Accepted->value;
         $ranking->students()->attach($data['student_id'], [
-            'points' => 0
+            'points' => 0,
+            'kudos' => 0
         ]);
 
         // Update and save queue and refresh the ranking with the new values
@@ -318,16 +319,17 @@ class RankingsController extends Controller
     public function updateForStudent($rankingCode, $studentId, Request $request): Response
     {
         // Append ranking's code and student's id from url to request's body
-        Validator::validate([
-            'code' => $rankingCode,
-            'id' => $studentId
-        ], [
-            'code' => 'required|exists:rankings',
-            'id' => 'required|exists:students|exists:ranking_student,student_id'
-        ]);
+        Validator::validate(
+            ['code' => $rankingCode, 'id' => $studentId],
+            [
+                'code' => 'required|exists:rankings',
+                'id' => 'required|exists:students|exists:ranking_student,student_id'
+            ]
+        );
 
         $data = $request->validate([
-            'points' => 'sometimes|nullable|int'
+            'points' => 'sometimes|nullable|int',
+            'kudos' => 'sometimes|nullable|int'
         ]);
 
         $previousRanking = Ranking::with(['students'])
@@ -356,7 +358,7 @@ class RankingsController extends Controller
      */
     public function queuesForTeacher($teacherId): Response
     {
-        $data = Validator::validate([ 'id' => $teacherId ], [
+        $data = Validator::validate(['id' => $teacherId], [
             'id' => 'required|exists:teachers'
         ]);
 

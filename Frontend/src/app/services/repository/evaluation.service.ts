@@ -9,7 +9,7 @@ import { IDeleteEvaluation } from 'src/models/delete/delete-evaluation';
 @Injectable({
   providedIn: 'root',
 })
-export class EvaluateService {
+export class EvaluationService {
   constructor(
     private http: HttpClient,
     private credentials: CredentialService
@@ -23,6 +23,13 @@ export class EvaluateService {
 
   readonly #clientHeaders: { [header: string]: string };
   readonly #evaluateUrl: string = `${environment.apiUrl}/evaluation`;
+
+  all(teacherId: number) {
+    const url = `${this.#evaluateUrl}/${teacherId}`;
+    return this.http.get(url, {
+      headers: this.#clientHeaders,
+    });
+  }
 
   create(entity: ICreateEvaluation): Observable<HttpResponse<Object>> {
     return this.http.post(this.#evaluateUrl, entity, {

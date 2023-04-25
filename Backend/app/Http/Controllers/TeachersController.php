@@ -63,7 +63,7 @@ class TeachersController extends Controller
         ]);
 
         return response(
-            Teacher::with('rankings_created')
+            Teacher::with('rankingsCreated')
                 ->find($id)
         );
     }

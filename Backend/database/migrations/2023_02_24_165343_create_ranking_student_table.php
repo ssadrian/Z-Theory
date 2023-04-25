@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->foreignId('ranking_id')->constrained()->onDelete('cascade');
 
             $table->integer('points');
+            $table->unsignedInteger('kudos');
             $table->timestamps();
 
             $table->primary(['student_id', 'ranking_id']);

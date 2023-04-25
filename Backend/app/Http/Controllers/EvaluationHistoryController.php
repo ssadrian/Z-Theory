@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EvaluationHistory;
 use App\Models\Student;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +17,9 @@ class EvaluationHistoryController extends Controller
      */
     public function index()
     {
-        //
+        return response(
+            EvaluationHistory::all()
+        );
     }
 
     /**
@@ -44,15 +49,21 @@ class EvaluationHistoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        Validator::validate(['id' => $id], [
+            'id' => 'required|exists:evaluation_history'
+        ]);
+
+        return response(
+            EvaluationHistory::find($id)
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
         //
     }
@@ -60,8 +71,31 @@ class EvaluationHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    static public function destroy(array $data)
+    public function destroy(array $data)
     {
         //
+    }
+
+    public function forTeacher(int $teacherId)
+    {
+        Validator::validate(['id' => $teacherId], [
+            'id' => 'required|exists:teachers',
+        ]);
+
+        $teacher = Teacher::find($teacherId);
+        $rankings = $teacher->rankingsCreated()->with(['students'])->get();
+
+        $students = [];
+
+        foreach ($rankings as $ranking) {
+            foreach ($ranking->students()->get() as $student) {
+                $students[] = $student->id;
+            }
+        }
+
+        return response(
+            EvaluationHistory::whereIn('evaluator', $students)
+                ->get()
+        );
     }
 }

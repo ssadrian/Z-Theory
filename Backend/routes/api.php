@@ -1,11 +1,14 @@
 <?php
 
-use App\{Http\Controllers\AssignmentController,
+use App\{
+    Http\Controllers\AssignmentController,
     Http\Controllers\AuthController,
     Http\Controllers\RankingsController,
     Http\Controllers\StudentsController,
     Http\Controllers\TeachersController,
-    Http\Controllers\EvaluationController};
+    Http\Controllers\EvaluationController,
+    Http\Controllers\EvaluationHistoryController
+};
 use Illuminate\{Support\Facades\Request, Support\Facades\Route};
 
 /*
@@ -36,7 +39,14 @@ Route::prefix('student')->group(function () {
     Route::post('undo', [EvaluationController::class, 'destroy']);
 });
 
-Route::apiResource('evaluation', EvaluationController::class);
+Route::apiResource('evaluation', EvaluationController::class)
+    ->only([ 'store', 'destroy']);
+
+Route::apiResource('evaluation_history', EvaluationHistoryController::class)
+    ->except([ 'update', 'destroy' ]);
+Route::prefix('evaluation_history')->group(function () {
+    Route::get('for_teacher/{teacherId}', [EvaluationHistoryController::class, 'forTeacher']);
+});
 
 Route::apiResource('teacher', TeachersController::class);
 Route::prefix('teacher')->group(function () {

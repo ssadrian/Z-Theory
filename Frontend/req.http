@@ -89,6 +89,14 @@ Cookie: XDEBUG_SESSION=TRUE
 
 
 ###
+# Get all evaluation history
+GET http://localhost:8000/api/evaluation HTTP/1.1
+Accept: application/json
+Cookie: XDEBUG_SESSION=TRUE
+
+
+
+###
 # Get all rankings
 GET http://localhost:8000/api/ranking HTTP/1.1
 Accept: application/json

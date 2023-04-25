@@ -59,8 +59,7 @@ class Student extends Authenticatable
         'password',
         'name',
         'surnames',
-        'birth_date',
-        'kudos'
+        'birth_date'
     ];
 
     /**
@@ -94,6 +93,6 @@ class Student extends Authenticatable
     public function evaluationHistory(): BelongsToMany {
         return $this
             ->belongsToMany(Skill::class, 'evaluation_history', 'evaluator')
-            ->withPivot(['id', 'subject', 'kudos']);
+            ->withPivot(['id', 'subject', 'ranking_id', 'kudos']);
     }
 }
