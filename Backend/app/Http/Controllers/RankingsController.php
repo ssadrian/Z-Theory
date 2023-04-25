@@ -36,8 +36,7 @@ class RankingsController extends Controller
         $ranking = Ranking::create($data);
 
         return response(
-            Ranking::with(['creator'])
-                ->find($ranking->id)
+            $ranking
             , Response::HTTP_CREATED
         );
     }
@@ -357,9 +356,7 @@ class RankingsController extends Controller
      */
     public function queuesForTeacher($teacherId): Response
     {
-        $data = Validator::validate([
-            'id' => $teacherId
-        ], [
+        $data = Validator::validate([ 'id' => $teacherId ], [
             'id' => 'required|exists:teachers'
         ]);
 
