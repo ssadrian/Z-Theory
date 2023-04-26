@@ -6,7 +6,6 @@ use App\Http\Controllers\EvaluationHistoryController;
 use App\Models\EvaluationHistory;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -111,34 +110,26 @@ class EvaluationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): Response
+    public function destroy($evaluationId)
     {
-        $data = $request->validate([
-            'evaluator' => 'required|exists:students,id',
-            'subject' => 'required|different:evaluator|exists:students,id',
-            'ranking_id' => 'required|exists:ranking,id',
-            'skill' => 'required|exists:skills,id'
+        Validator::validate([ 'evaluation_id' => $evaluationId ], [
+            'evaluation_id' => 'required|exists:evaluation_history,id'
         ]);
 
-        $evaluator = Student::find($data['evaluator']);
-        $subject = Student::find($data['subject']);
+        $evaluationHistory = EvaluationHistory::find($evaluationId);
 
-        $targetHistory = $evaluator
-            ->evaluationHistory()->get()
-            ->where('pivot.skill_id', $data['skill_id'])
-            ->where('pivot.subject', $data['subject'])
-            ->last();
+        $evaluator = Student::find($evaluationHistory->evaluator);
+        $subject = Student::find($evaluationHistory->subject);
 
-        $subjectSkills = $subject->skills();
-        $targetSkill = $subjectSkills->find($data['skill_id']);
+        $targetSkill = $subject->skills()->find($evaluationHistory->skill_id);
 
         // Remove the given points, these points will be lost forever
-        $targetSkill->pivot->kudos -= $targetHistory->pivot->kudos;
+        $targetSkill->pivot->kudos -= $evaluationHistory->kudos;
 
-        $targetHistory->pivot->delete();
         $targetSkill->pivot->save();
 
-        EvaluationController::updateSkillImage($data['subject'], $data['skill_id']);
+        EvaluationHistory::destroy($evaluationId);
+        EvaluationController::updateSkillImage($evaluationHistory->subject, $evaluationHistory->skill_id);
 
         return response(
             status: Response::HTTP_OK

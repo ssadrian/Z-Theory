@@ -76,17 +76,8 @@ Cookie: XDEBUG_SESSION=TRUE
 
 ###
 # Undo evaluation with kudos
-DELETE http://localhost:8000/api/evaluation HTTP/1.1
+DELETE http://localhost:8000/api/evaluation/1 HTTP/1.1
 Accept: application/json
-Content-Type: application/json
-Cookie: XDEBUG_SESSION=TRUE
-
-{
-  "evaluator": "1",
-  "subject": "2",
-  "skill": "3"
-}
-
 
 
 ###
