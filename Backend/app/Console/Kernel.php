@@ -21,12 +21,9 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
             $weeklyKudos = env('WEEKLY_KUDOS');
+            $now = Carbon::now();
 
-            Student::query()
-                ->update([
-                    'kudos' => $weeklyKudos,
-                    'updated_at' => Carbon::now(),
-                ]);
+            DB::update("UPDATE ranking_student SET kudos = $weeklyKudos, updated_at = '$now'");
         })->weekly();
     }
 

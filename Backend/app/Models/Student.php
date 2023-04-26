@@ -73,7 +73,7 @@ class Student extends Authenticatable
     {
         return $this
             ->belongsToMany(Ranking::class)
-            ->withPivot('points');
+            ->withPivot(['points', 'kudos']);
     }
 
     public function assignments(): BelongsToMany

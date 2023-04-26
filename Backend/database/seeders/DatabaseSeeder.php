@@ -73,7 +73,8 @@ class DatabaseSeeder extends Seeder
             foreach (range(0, 2) as $ignored) {
                 $randomRank = Ranking::all()->random();
                 $pivot = [
-                    'points' => fake()->numberBetween(int2: 50)
+                    'points' => fake()->numberBetween(int2: 50),
+                    'kudos' => fake()->numberBetween(int2: 1_000)
                 ];
 
                 $student->rankings()->attach($randomRank, $pivot);
