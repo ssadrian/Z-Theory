@@ -15,6 +15,10 @@ export class EvaluationHistoryListComponent implements OnInit {
   evaluationHistory: IEvaluationHistory[] = [];
 
   ngOnInit(): void {
-    this.evaluationHistory = [];
+    this.evaluationService
+      .forTeacher(this.target)
+      .subscribe(res => {
+        this.evaluationHistory = res;
+      });
   }
 }

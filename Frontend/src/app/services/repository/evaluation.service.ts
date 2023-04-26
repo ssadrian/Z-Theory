@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Observable, catchError } from 'rxjs';
 import { ICreateEvaluation } from 'src/models/create/create-evaluation';
 import { IDeleteEvaluation } from 'src/models/delete/delete-evaluation';
+import { IEvaluationHistory } from 'src/models/evaluation-history.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +25,8 @@ export class EvaluationService {
   readonly #clientHeaders: { [header: string]: string };
   readonly #evaluateUrl: string = `${environment.apiUrl}/evaluation`;
 
-  all(teacherId: number) {
-    const url = `${this.#evaluateUrl}/${teacherId}`;
-    return this.http.get(url, {
+  all(): Observable<IEvaluationHistory[]> {
+    return this.http.get<IEvaluationHistory[]>(this.#evaluateUrl, {
       headers: this.#clientHeaders,
     });
   }
@@ -43,6 +43,13 @@ export class EvaluationService {
       headers: this.#clientHeaders,
       observe: 'response',
       body: entity,
+    });
+  }
+
+  forTeacher(teacherId: number): Observable<IEvaluationHistory[]> {
+    const url = `${this.#evaluateUrl}_history/for_teacher/${teacherId}`;
+    return this.http.get<IEvaluationHistory[]>(url, {
+      headers: this.#clientHeaders,
     });
   }
 }
