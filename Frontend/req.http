@@ -60,7 +60,7 @@ Accept: application/json
 
 ###
 # Give kudos
-POST http://localhost:8000/api/evaluate HTTP/1.1
+POST http://localhost:8000/api/evaluation HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Cookie: XDEBUG_SESSION=TRUE
@@ -68,8 +68,9 @@ Cookie: XDEBUG_SESSION=TRUE
 {
   "evaluator": 1,
   "subject": 2,
-  "skill": 3,
-  "kudos": 3000
+  "skill_id": 1,
+  "ranking_id": 2,
+  "kudos": 5
 }
 
 

@@ -55,25 +55,6 @@ class Ranking extends Model
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'id',
-    ];
-
-    /**
-     * All the relationships to be touched.
-     *
-     * @var array
-     */
-    protected $touches = [
-        //'queues',
-        //'assignments'
-    ];
-
-    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool

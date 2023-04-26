@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\EvaluationHistoryController;
+use App\Models\EvaluationHistory;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -22,20 +23,47 @@ class EvaluationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): Response
+    public function store(Request $request)
     {
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|different:evaluator|exists:students,id',
-            'skill' => 'required|exists:skills,id',
+            'skill_id' => 'required|exists:skills,id',
             'ranking_id' => 'required|exists:rankings,id',
-            'kudos' => 'required|int|gt:0'
+            'kudos' => 'required|gt:0'
         ]);
 
-        $evaluator = Student::find($data['evaluator']);
-        $subject = Student::find($data['subject']);
+        if (
+            EvaluationHistory::where([
+                'skill_id' => $data['skill_id'],
+                'ranking_id' => $data['ranking_id'],
+                'evaluator' => $data['evaluator'],
+                'subject' => $data['subject']
+            ])->get()->count() === 0
+        ) {
+            return response(
+                status: Response::HTTP_BAD_REQUEST
+            );
+        }
 
-        $availableKudos = $evaluator->kudos;
+        $evaluator = Student::with([
+            'rankings' => function ($query) use ($data) {
+                return $query->find($data['ranking_id']);
+            }
+        ])
+            ->find($data['evaluator']);
+
+        $subject = Student::with([
+            'skills' => function($query) use ($data) {
+                return $query->find($data['skill_id']);
+            },
+            'rankings' => function ($query) use ($data) {
+                return $query->find($data['ranking_id']);
+            }
+        ])
+            ->find($data['subject']);
+
+        $availableKudos = $evaluator->rankings()->first()->pivot->kudos;
 
         if (
             empty($availableKudos)
@@ -46,28 +74,15 @@ class EvaluationController extends Controller
             );
         }
 
-        $subjectSkills = $subject->skills();
-        $targetSkill = $subjectSkills->find($data['skill']);
+        $targetSkill = $subject->skills()->first();
 
-        $evaluator->kudos -= $data['kudos'];
+        $evaluator->rankings()->first()->pivot->kudos -= $data['kudos'];
         $targetSkill->pivot->kudos += $data['kudos'];
 
         $evaluator->save();
         $targetSkill->pivot->save();
 
-        EvaluationController::updateSkillImage($data['subject'], $data['skill']);
-
-        Student::find($data['evaluator'])
-            ->evaluationHistory()
-            ->syncWithoutDetaching([
-                $data['skill'] => [
-                    'ranking_id' => $data['ranking_id'],
-                    'subject' => $data['subject'],
-                    'kudos' => $data['kudos'],
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ]
-            ]);
+        EvaluationController::updateSkillImage($data['subject'], $data['skill_id']);
 
         // Save a new history
         EvaluationHistoryController::store($data);
@@ -110,12 +125,12 @@ class EvaluationController extends Controller
 
         $targetHistory = $evaluator
             ->evaluationHistory()->get()
-            ->where('pivot.skill_id', $data['skill'])
+            ->where('pivot.skill_id', $data['skill_id'])
             ->where('pivot.subject', $data['subject'])
             ->last();
 
         $subjectSkills = $subject->skills();
-        $targetSkill = $subjectSkills->find($data['skill']);
+        $targetSkill = $subjectSkills->find($data['skill_id']);
 
         // Remove the given points, these points will be lost forever
         $targetSkill->pivot->kudos -= $targetHistory->pivot->kudos;
@@ -123,7 +138,7 @@ class EvaluationController extends Controller
         $targetHistory->pivot->delete();
         $targetSkill->pivot->save();
 
-        EvaluationController::updateSkillImage($data['subject'], $data['skill']);
+        EvaluationController::updateSkillImage($data['subject'], $data['skill_id']);
 
         return response(
             status: Response::HTTP_OK

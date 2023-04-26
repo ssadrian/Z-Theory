@@ -12,6 +12,19 @@ class EvaluationHistory extends Model
 
     protected $table = "evaluation_history";
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'evaluator',
+        'subject',
+        'skill_id',
+        'ranking_id',
+        'kudos'
+    ];
+
     public function students(): BelongsToMany
     {
         return $this
