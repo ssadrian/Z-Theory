@@ -38,11 +38,15 @@ export class MiscService {
 
   confirmAction(
     message: string,
-    target: EventTarget,
+    target: EventTarget | null,
     onAccept: Function,
     onReject: Function = (): void => {
     }
   ): void {
+    if (target === null) {
+      return;
+    }
+
     this.confirmationService.confirm({
       target: target,
       icon: 'pi pi-exclamation-triangle',
