@@ -40,7 +40,7 @@ class EvaluationController extends Controller
             ->find($data['evaluator']);
 
         $subject = Student::with([
-            'skills' => function($query) use ($data) {
+            'skills' => function ($query) use ($data) {
                 return $query->find($data['skill_id']);
             },
             'rankings' => function ($query) use ($data) {
@@ -99,7 +99,7 @@ class EvaluationController extends Controller
      */
     public function destroy($evaluationId)
     {
-        Validator::validate([ 'evaluation_id' => $evaluationId ], [
+        Validator::validate(['evaluation_id' => $evaluationId], [
             'evaluation_id' => 'required|exists:evaluation_history,id'
         ]);
 
@@ -123,12 +123,17 @@ class EvaluationController extends Controller
         );
     }
 
-    public static function updateSkillImage($studentId, $skillId)
+    public static function updateSkillImage($studentId, $skillId, $rankingId)
     {
-        Validator::validate(['student_id' => $studentId, 'skill_id' => $skillId], [
-            'student_id' => 'required|exists:students,id',
-            'skill_id' => 'required|exists:skills,id',
-        ]);
+        Validator::validate([
+            'student_id' => $studentId,
+            'skill_id' => $skillId,
+            'ranking_id' => $rankingId
+        ], [
+                'student_id' => 'required|exists:students,id',
+                'skill_id' => 'required|exists:skills,id',
+                'ranking_id' => 'required|exists:ranking,id'
+            ]);
 
         $apiUrl = env('APP_URL');
 
@@ -137,6 +142,13 @@ class EvaluationController extends Controller
             ->find($skillId);
 
         $kudosReceived = $target->pivot->kudos;
+
+        /**
+         * The branches get executed resulting in the following form
+         * false, true, true, ...
+         *
+         * Default executes when the target has under 1k kudos which results in no medal
+         */
         $level = match (true) {
             ($kudosReceived >= 10_000) => 5,
             ($kudosReceived >= 7_000) => 4,
@@ -149,7 +161,7 @@ class EvaluationController extends Controller
         if (empty($level)) {
             $target->pivot->image = null;
         } else {
-            $target->pivot->image = "{$apiUrl}/storage/{$target->name}-{$level}.png";
+            $target->pivot->image = "{$apiUrl}/storage/{$target->name}/{$level}.png";
         }
 
         $target->pivot->save();

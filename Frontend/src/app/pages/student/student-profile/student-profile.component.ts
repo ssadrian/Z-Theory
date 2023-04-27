@@ -43,7 +43,7 @@ export class StudentProfileComponent implements OnInit {
     private messageService: MessageService,
     private b64: Base64Service,
     private evaluateService: EvaluationService
-  ) { }
+  ) {}
 
   showImageUpload: boolean = false;
 
@@ -67,7 +67,6 @@ export class StudentProfileComponent implements OnInit {
   rankings: IRanking[] = [];
   subject!: number;
   rankingId!: number;
-
 
   form = this.fb.group({
     nickname: ['', [Validators.required]],
@@ -121,7 +120,7 @@ export class StudentProfileComponent implements OnInit {
 
     this.studentService
       .update(this.student.id, student)
-      .subscribe((): void => { });
+      .subscribe((): void => {});
     this.student.avatar = this.#b64Avatar;
 
     this.showImageUpload = false;
@@ -148,17 +147,16 @@ export class StudentProfileComponent implements OnInit {
       student_id: this.student.id,
     };
 
-    this.rankingService.assignStudent(entity)
-      .subscribe((): void => {
-        this.#updateRanks();
-        this.codeForm.reset();
+    this.rankingService.assignStudent(entity).subscribe((): void => {
+      this.#updateRanks();
+      this.codeForm.reset();
 
-        this.messageService.add({
-          key: 'toasts',
-          severity: 'success',
-          detail: 'Petición registrada.'
-        });
+      this.messageService.add({
+        key: 'toasts',
+        severity: 'success',
+        detail: 'Petición registrada.',
       });
+    });
     this.rankingService.assignStudent(entity).subscribe((): void => {
       this.#updateRanks();
       this.codeForm.reset();
@@ -239,6 +237,10 @@ export class StudentProfileComponent implements OnInit {
     this.isPentabilitiesDialogVisible = true;
   }
 
+  hideDialog() {
+    this.isPentabilitiesDialogVisible = false;
+  }
+
   sumFields() {
     const {
       responsibility,
@@ -268,51 +270,39 @@ export class StudentProfileComponent implements OnInit {
     let evaluation: ICreateEvaluation = {
       evaluator: this.student.id,
       subject: this.subject,
-      skill: Skill.Responsibility,
       kudos: responsibility!,
       ranking_id: this.rankingId,
-      skill_id: Skill.Responsibility
+      skill_id: Skill.Responsibility,
     };
 
-
     this.evaluateStudent(evaluation);
-    console.log(evaluation);
-    
-    evaluation.skill = Skill.Autonomy;
-    evaluation.kudos = autonomyInitiative!;
+
     evaluation.skill_id = Skill.Autonomy;
+    evaluation.kudos = autonomyInitiative!;
 
     this.evaluateStudent(evaluation);
-    console.log(evaluation);
 
-    evaluation.skill = Skill.Cooperation;
+    evaluation.skill_id = Skill.Cooperation;
     evaluation.kudos = cooperation!;
-    evaluation.skill_id = Skill.Cooperation!;
 
     this.evaluateStudent(evaluation);
-    console.log(evaluation);
 
-    evaluation.skill = Skill.Emotional;
+    evaluation.skill_id = Skill.Emotional;
     evaluation.kudos = emotionalManagment!;
-    evaluation.skill_id = Skill.Emotional!;
 
     this.evaluateStudent(evaluation);
-    console.log(evaluation);
 
-    evaluation.skill = Skill.Thinking;
+    evaluation.skill_id = Skill.Thinking;
     evaluation.kudos = thinkingSkills!;
-    evaluation.skill_id = Skill.Thinking!;
 
     this.evaluateStudent(evaluation);
-    console.log(evaluation);
-    
+
+    this.hideDialog();
     this.messageService.add({
       key: 'toasts',
       severity: 'success',
-      detail: 'Puntos añadidos correctamente.'
+      detail: 'Puntos añadidos correctamente.',
     });
-    console.log(evaluation);
-
   }
 
   evaluateStudent(entity: ICreateEvaluation) {
