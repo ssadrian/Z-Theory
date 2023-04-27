@@ -38,11 +38,10 @@ export class EvaluationService {
     });
   }
 
-  delete(entity: IDeleteEvaluation): Observable<HttpResponse<Object>> {
-    return this.http.delete(this.#evaluateUrl, {
-      headers: this.#clientHeaders,
-      observe: 'response',
-      body: entity,
+  delete(entity: IDeleteEvaluation): Observable<Object> {
+    const url = `${this.#evaluateUrl}/${entity.id}`;
+    return this.http.delete(url, {
+      headers: this.#clientHeaders
     });
   }
 

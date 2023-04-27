@@ -69,9 +69,13 @@ class EvaluationHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(array $data)
+    public function destroy(int $id)
     {
-        //
+        Validator::validate([ 'id' => $id], [
+            'id' => 'required|exists:evaluation_history'
+        ]);
+
+        EvaluationHistory::destroy($id);
     }
 
     public function forTeacher(int $teacherId)
