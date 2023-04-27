@@ -32,19 +32,6 @@ class EvaluationController extends Controller
             'kudos' => 'required|gt:0'
         ]);
 
-        if (
-            EvaluationHistory::where([
-                'skill_id' => $data['skill_id'],
-                'ranking_id' => $data['ranking_id'],
-                'evaluator' => $data['evaluator'],
-                'subject' => $data['subject']
-            ])->get()->count() === 0
-        ) {
-            return response(
-                status: Response::HTTP_BAD_REQUEST
-            );
-        }
-
         $evaluator = Student::with([
             'rankings' => function ($query) use ($data) {
                 return $query->find($data['ranking_id']);

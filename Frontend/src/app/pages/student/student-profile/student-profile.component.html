@@ -193,7 +193,7 @@
         >
           <ng-template pTemplate="caption">
             <div class="table-header">
-              {{ ranking.name }}
+              {{ ranking.name }} -  {{ ranking.id }}
             </div>
           </ng-template>
 
@@ -218,7 +218,9 @@
                   icon="pi pi-heart"
                   styleClass="p-button-warning"
                   label="Evaluar"
-                  (click)="showEvaluationSideBarForStudent(rowStudent.id)"
+                  (click)="
+                    showEvaluationSideBarForStudent(rowStudent.id, ranking.id)
+                  "
                   [disabled]="rowStudent.id == student.id"
                 ></p-button>
               </td>

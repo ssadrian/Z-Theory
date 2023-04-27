@@ -21,6 +21,14 @@ import { EvaluationService } from 'src/app/services/repository/evaluation.servic
 import { ICreateEvaluation } from 'src/models/create/create-evaluation';
 import { Skill } from 'src/models/misc/skill';
 
+export const SKILL_OPTIONS = [
+  { id: 1, name: 'Responsabilidad' },
+  { id: 2, name: 'Cooperación' },
+  { id: 3, name: 'Autonomía e iniciativa' },
+  { id: 4, name: 'Gestión emocional' },
+  { id: 5, name: 'Habilidades de pensamiento' },
+];
+
 @Component({
   selector: 'app-student-profile',
   templateUrl: './student-profile.component.html',
@@ -57,8 +65,9 @@ export class StudentProfileComponent implements OnInit {
 
   student: IStudent = this.credentials.currentUser as IStudent;
   rankings: IRanking[] = [];
-
   subject!: number;
+  rankingId!: number;
+
 
   form = this.fb.group({
     nickname: ['', [Validators.required]],
@@ -260,46 +269,63 @@ export class StudentProfileComponent implements OnInit {
       evaluator: this.student.id,
       subject: this.subject,
       skill: Skill.Responsibility,
-      kudos: responsibility!
+      kudos: responsibility!,
+      ranking_id: this.rankingId,
+      skill_id: Skill.Responsibility
     };
 
-    this.evaluateStudent(evaluation);
-
-    evaluation.skill = Skill.Responsibility;
-    evaluation.kudos = responsibility!;
 
     this.evaluateStudent(evaluation);
-
+    console.log(evaluation);
+    
     evaluation.skill = Skill.Autonomy;
     evaluation.kudos = autonomyInitiative!;
+    evaluation.skill_id = Skill.Autonomy;
 
     this.evaluateStudent(evaluation);
+    console.log(evaluation);
 
     evaluation.skill = Skill.Cooperation;
     evaluation.kudos = cooperation!;
+    evaluation.skill_id = Skill.Cooperation!;
 
     this.evaluateStudent(evaluation);
+    console.log(evaluation);
 
     evaluation.skill = Skill.Emotional;
     evaluation.kudos = emotionalManagment!;
+    evaluation.skill_id = Skill.Emotional!;
 
     this.evaluateStudent(evaluation);
+    console.log(evaluation);
 
     evaluation.skill = Skill.Thinking;
     evaluation.kudos = thinkingSkills!;
+    evaluation.skill_id = Skill.Thinking!;
 
     this.evaluateStudent(evaluation);
+    console.log(evaluation);
+    
+    this.messageService.add({
+      key: 'toasts',
+      severity: 'success',
+      detail: 'Puntos añadidos correctamente.'
+    });
+    console.log(evaluation);
+
   }
 
   evaluateStudent(entity: ICreateEvaluation) {
     this.evaluateService.create(entity).subscribe();
   }
 
-  showEvaluationSideBarForStudent(studentId: number) {
+  showEvaluationSideBarForStudent(studentId: number, rankingId: number) {
     if (studentId === this.student.id) {
       return;
     }
+
     this.subject = studentId;
+    this.rankingId = rankingId;
     this.sidebarVisible = true;
   }
 }
