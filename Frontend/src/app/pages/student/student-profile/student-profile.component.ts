@@ -20,6 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { EvaluationService } from 'src/app/services/repository/evaluation.service';
 import { ICreateEvaluation } from 'src/models/create/create-evaluation';
 import { Skill } from 'src/models/misc/skill';
+import { ISkill } from 'src/models/skill.model';
 
 export const SKILL_OPTIONS = [
   { id: 1, name: 'Responsabilidad' },
@@ -80,12 +81,12 @@ export class StudentProfileComponent implements OnInit {
     center: [''],
   });
 
-  formEvaluateStudent = new FormGroup({
-    responsibility: new FormControl(0),
-    cooperation: new FormControl(0),
-    autonomyInitiative: new FormControl(0),
-    emotionalManagment: new FormControl(0),
-    thinkingSkills: new FormControl(0),
+  formEvaluateStudent = this.fb.group({
+    responsibility: [0, Validators.required],
+    cooperation: [0, Validators.required],
+    autonomyInitiative: [0, Validators.required],
+    emotionalManagment: [0, Validators.required],
+    thinkingSkills: [0, Validators.required],
   });
 
   #b64Avatar: string = '';
@@ -317,5 +318,52 @@ export class StudentProfileComponent implements OnInit {
     this.subject = studentId;
     this.rankingId = rankingId;
     this.sidebarVisible = true;
+  }
+
+  extractMedalToolTip(medalUrl?: string): string {
+    if (!medalUrl) {
+      return 'Sin medalla';
+    }
+
+    const urlParts: string[] = medalUrl.split('/');
+    const urlPartsLen: number = urlParts.length;
+
+    let skill: string = urlParts[urlPartsLen - 2];
+    const level: string = urlParts[urlPartsLen - 1].split('.')[0];
+
+    switch (skill) {
+      case Skill[Skill.Autonomy]:
+        skill = 'Autonomia';
+        break;
+      case Skill[Skill.Cooperation]:
+        skill = 'Cooperación';
+        break;
+      case Skill[Skill.Emotional]:
+        skill = 'Emocional';
+        break;
+      case Skill[Skill.Responsibility]:
+        skill = 'Responsabilidad';
+        break;
+      case Skill[Skill.Thinking]:
+        skill = 'Pensamiento';
+        break;
+      default:
+        skill = '';
+    }
+
+    return `Nivel ${level} - ${skill}`;
+  }
+
+  extractMedalAlt(medalUrl?: string): string {
+    if (!medalUrl) {
+      return 'Sin medalla';
+    }
+
+    let medalParts: string[] = this.extractMedalToolTip(medalUrl).split(' ');
+    const level: string = medalParts[1];
+    const skill: string = medalParts[medalParts.length - 1];
+
+    const medalAlt: string = `Medalla ${skill} de nivel ${level}`;
+    return medalAlt;
   }
 }

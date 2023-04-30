@@ -7,7 +7,7 @@ export const environment = {
    * anything else - no special pass, valid credentials must be provided
    */
   // TODO: Remove on last coding task
-  studentTeacherPass: 0x11,
+  studentTeacherPass: 0x111,
 
   apiUrl: 'http://localhost:8000/api',
 };

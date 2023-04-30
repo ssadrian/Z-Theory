@@ -193,9 +193,7 @@
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         >
           <ng-template pTemplate="caption">
-            <div class="table-header">
-              {{ ranking.name }} -  {{ ranking.id }}
-            </div>
+            <div class="table-header">{{ ranking.name }}</div>
           </ng-template>
 
           <ng-template pTemplate="header">
@@ -203,16 +201,33 @@
               <th>#</th>
               <th>Estudiante</th>
               <th>Puntos</th>
-              <th>Soft Skills</th>
               <th>Medallas</th>
+              <th></th>
             </tr>
           </ng-template>
 
           <ng-template pTemplate="body" let-rowStudent let-rowIndex="rowIndex">
             <tr class="p-selectable-row">
               <td>{{ rowIndex + 1 }}</td>
-              <td>{{ rowStudent.name + ' ' + rowStudent.surnames + rowStudent.id }}</td>
+              <td>
+                {{
+                  rowStudent.name + " " + rowStudent.surnames
+                }}
+              </td>
               <td>{{ rowStudent.pivot.points }}</td>
+
+              <td class="flex flex-row gap-5">
+                <ng-container *ngFor="let skill of rowStudent.skills">
+                  <img
+                    [src]="skill.pivot.image"
+                    [alt]="extractMedalAlt(skill.pivot.image)"
+                    (click)="showDialog()"
+                    [pTooltip]="extractMedalToolTip(skill.pivot.image)"
+                    tooltipPosition="bottom"
+                    class="w-16 h-16"
+                  />
+                </ng-container>
+              </td>
 
               <td>
                 <p-button
@@ -225,19 +240,6 @@
                   [disabled]="rowStudent.id == student.id"
                 ></p-button>
               </td>
-
-              <td>
-                <div class="flex flex-row gap-5">
-                  <img
-                    src="http://127.0.0.1:8000/medals/responsibility/Responsabilidad-1.png"
-                    alt="medal"
-                    class="w-16 h-16"
-                    (click)="showDialog()"
-                    pTooltip="Nivel 1-Responsabilidad"
-                    tooltipPosition="bottom"
-                  />
-                </div>
-              </td>
             </tr>
           </ng-template>
         </p-table>
@@ -247,7 +249,6 @@
 </section>
 
 <!-- Sidebar de evaluar compañeros -->
-
 <p-sidebar [(visible)]="sidebarVisible">
   <h3>Evaluar alumnos</h3>
   <br />
