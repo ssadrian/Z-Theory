@@ -1,4 +1,4 @@
-export interface IAssignRanking {
+export interface IAssignationRanking {
   id: number;
   url_rankCode: string;
 }

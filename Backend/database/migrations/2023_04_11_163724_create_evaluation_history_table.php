@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
 
             $table->foreignId('skill_id')->constrained();
+            $table->foreignId('ranking_id')->constrained();
 
             $table->unsignedBigInteger('evaluator');
             $table->foreign('evaluator')

@@ -101,8 +101,7 @@ class StudentsController extends Controller
             'name' => 'sometimes|nullable|string',
             'surnames' => 'sometimes|nullable|string',
             'birth_date' => 'sometimes|nullable|date',
-            'avatar' => 'sometimes|nullable|string',
-            'kudos' => 'sometimes|nullable|int|gte:0',
+            'avatar' => 'sometimes|nullable|string'
         ]);
 
         $previousStudent = Student::with(['rankings'])

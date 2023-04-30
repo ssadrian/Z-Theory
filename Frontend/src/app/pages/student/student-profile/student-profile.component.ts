@@ -1,17 +1,34 @@
-import {Component, OnInit} from '@angular/core';
-import {CredentialService} from '../../../services/credential.service';
-import {IStudent} from '../../../../models/student.model';
-import {StudentService} from 'src/app/services/repository/student.service';
-import {FormBuilder, Validators} from '@angular/forms';
-import {Base64Service} from 'src/app/services/base64.service';
-import {IUpdateStudent} from 'src/models/update/update-student';
-import {IRanking} from '../../../../models/ranking.model';
-import {RankingService} from '../../../services/repository/ranking.service';
-import {ICreateStudentAssignation} from '../../../../models/create/create-student-assignation';
-import {MessageService} from 'primeng/api';
-import {IUpdatePassword} from '../../../../models/update/update-password';
-import {catchError, throwError} from "rxjs";
-import {HttpErrorResponse} from "@angular/common/http";
+import { Component, OnInit } from '@angular/core';
+import { CredentialService } from '../../../services/credential.service';
+import { IStudent } from '../../../../models/student.model';
+import { StudentService } from 'src/app/services/repository/student.service';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Base64Service } from 'src/app/services/base64.service';
+import { IUpdateStudent } from 'src/models/update/update-student';
+import { IRanking } from '../../../../models/ranking.model';
+import { RankingService } from '../../../services/repository/ranking.service';
+import { ICreateStudentAssignation } from '../../../../models/create/create-student-assignation';
+import { MessageService } from 'primeng/api';
+import { IUpdatePassword } from '../../../../models/update/update-password';
+import { catchError, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { EvaluationService } from 'src/app/services/repository/evaluation.service';
+import { ICreateEvaluation } from 'src/models/create/create-evaluation';
+import { Skill } from 'src/models/misc/skill';
+import { ISkill } from 'src/models/skill.model';
+
+export const SKILL_OPTIONS = [
+  { id: 1, name: 'Responsabilidad' },
+  { id: 2, name: 'Cooperación' },
+  { id: 3, name: 'Autonomía e iniciativa' },
+  { id: 4, name: 'Gestión emocional' },
+  { id: 5, name: 'Habilidades de pensamiento' },
+];
 
 @Component({
   selector: 'app-student-profile',
@@ -25,15 +42,18 @@ export class StudentProfileComponent implements OnInit {
     private rankingService: RankingService,
     private fb: FormBuilder,
     private messageService: MessageService,
-    private b64: Base64Service
-  ) {
-  }
+    private b64: Base64Service,
+    private evaluateService: EvaluationService
+  ) {}
 
-  show: boolean = false;
+  showImageUpload: boolean = false;
 
-  loading: boolean = true;
+  isRankingsTableLoading: boolean = true;
 
-  showPasswordChangeDialog: boolean = true;
+  showPasswordChangeDialog: boolean = false;
+  isPentabilitiesDialogVisible: boolean = false;
+
+  sidebarVisible = false;
 
   codeForm = this.fb.group({
     code: ['', [Validators.required]],
@@ -46,6 +66,8 @@ export class StudentProfileComponent implements OnInit {
 
   student: IStudent = this.credentials.currentUser as IStudent;
   rankings: IRanking[] = [];
+  subject!: number;
+  rankingId!: number;
 
   form = this.fb.group({
     nickname: ['', [Validators.required]],
@@ -59,12 +81,20 @@ export class StudentProfileComponent implements OnInit {
     center: [''],
   });
 
+  formEvaluateStudent = this.fb.group({
+    responsibility: [0, Validators.required],
+    cooperation: [0, Validators.required],
+    autonomyInitiative: [0, Validators.required],
+    emotionalManagment: [0, Validators.required],
+    thinkingSkills: [0, Validators.required],
+  });
+
   #b64Avatar: string = '';
 
   inventory: Object[] = [
-    {qty: 1, name: 'Espada'},
-    {qty: 3, name: 'Diamantes'},
-    {qty: 1, name: 'Mapa'},
+    { qty: 1, name: 'Espada' },
+    { qty: 3, name: 'Diamantes' },
+    { qty: 1, name: 'Mapa' },
   ];
 
   ngOnInit(): void {
@@ -94,11 +124,11 @@ export class StudentProfileComponent implements OnInit {
       .subscribe((): void => {});
     this.student.avatar = this.#b64Avatar;
 
-    this.show = false;
+    this.showImageUpload = false;
   }
 
   toggle(): void {
-    this.show = true;
+    this.showImageUpload = true;
   }
 
   joinRanking(): void {
@@ -118,17 +148,20 @@ export class StudentProfileComponent implements OnInit {
       student_id: this.student.id,
     };
 
-    this.rankingService.assignStudent(entity)
-      .subscribe((): void => {
-        this.#updateRanks();
-        this.codeForm.reset();
+    this.rankingService.assignStudent(entity).subscribe((): void => {
+      this.#updateRanks();
+      this.codeForm.reset();
 
-        this.messageService.add({
-          key: 'toasts',
-          severity: 'success',
-          detail: 'Petición registrada.'
-        });
+      this.messageService.add({
+        key: 'toasts',
+        severity: 'success',
+        detail: 'Petición registrada.',
       });
+    });
+    this.rankingService.assignStudent(entity).subscribe((): void => {
+      this.#updateRanks();
+      this.codeForm.reset();
+    });
   }
 
   #isValidUuid(uuid: string): boolean {
@@ -138,7 +171,7 @@ export class StudentProfileComponent implements OnInit {
   }
 
   #updateRanks(): void {
-    this.loading = true;
+    this.isRankingsTableLoading = true;
 
     this.rankingService
       .leaderboardsForStudent(this.student.id)
@@ -148,13 +181,13 @@ export class StudentProfileComponent implements OnInit {
         this.rankings.forEach((rank: IRanking): void => {
           rank.students.sort((a: IStudent, b: IStudent) => {
             return (
-              b.pivot.points - a.pivot.points
-              || a.nickname.localeCompare(b.nickname)
+              b.pivot.points - a.pivot.points ||
+              a.nickname.localeCompare(b.nickname)
             );
           });
         });
 
-        this.loading = false;
+        this.isRankingsTableLoading = false;
       });
   }
 
@@ -178,7 +211,7 @@ export class StudentProfileComponent implements OnInit {
             this.messageService.add({
               key: 'toasts',
               severity: 'error',
-              summary: 'No se pudo cambiar la contraseña'
+              summary: 'No se pudo cambiar la contraseña',
             });
           }
 
@@ -191,7 +224,7 @@ export class StudentProfileComponent implements OnInit {
         this.messageService.add({
           key: 'toasts',
           severity: 'success',
-          summary: 'Contraseña cambiada!'
+          summary: 'Contraseña cambiada!',
         });
         this.onShowPasswordDialogReject();
       });
@@ -199,5 +232,138 @@ export class StudentProfileComponent implements OnInit {
 
   onShowPasswordDialogReject(): void {
     this.showPasswordChangeDialog = false;
+  }
+
+  showDialog() {
+    this.isPentabilitiesDialogVisible = true;
+  }
+
+  hideDialog() {
+    this.isPentabilitiesDialogVisible = false;
+  }
+
+  sumFields() {
+    const {
+      responsibility,
+      cooperation,
+      autonomyInitiative,
+      emotionalManagment,
+      thinkingSkills,
+    } = this.formEvaluateStudent.value;
+
+    const total =
+      responsibility! +
+      cooperation! +
+      autonomyInitiative! +
+      emotionalManagment! +
+      thinkingSkills!;
+
+    if (total > 1000) {
+      this.messageService.add({
+        key: 'toasts',
+        severity: 'error',
+        summary: 'La suma de todos los campos no puede dar más de 1000',
+      });
+
+      return;
+    }
+
+    let evaluation: ICreateEvaluation = {
+      evaluator: this.student.id,
+      subject: this.subject,
+      kudos: responsibility!,
+      ranking_id: this.rankingId,
+      skill_id: Skill.Responsibility,
+    };
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill_id = Skill.Autonomy;
+    evaluation.kudos = autonomyInitiative!;
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill_id = Skill.Cooperation;
+    evaluation.kudos = cooperation!;
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill_id = Skill.Emotional;
+    evaluation.kudos = emotionalManagment!;
+
+    this.evaluateStudent(evaluation);
+
+    evaluation.skill_id = Skill.Thinking;
+    evaluation.kudos = thinkingSkills!;
+
+    this.evaluateStudent(evaluation);
+
+    this.hideDialog();
+    this.messageService.add({
+      key: 'toasts',
+      severity: 'success',
+      detail: 'Puntos añadidos correctamente.',
+    });
+  }
+
+  evaluateStudent(entity: ICreateEvaluation) {
+    this.evaluateService.create(entity).subscribe();
+  }
+
+  showEvaluationSideBarForStudent(studentId: number, rankingId: number) {
+    if (studentId === this.student.id) {
+      return;
+    }
+
+    this.subject = studentId;
+    this.rankingId = rankingId;
+    this.sidebarVisible = true;
+  }
+
+  extractMedalToolTip(medalUrl?: string): string {
+    if (!medalUrl) {
+      return 'Sin medalla';
+    }
+
+    const urlParts: string[] = medalUrl.split('/');
+    const urlPartsLen: number = urlParts.length;
+
+    let skill: string = urlParts[urlPartsLen - 2];
+    const level: string = urlParts[urlPartsLen - 1].split('.')[0];
+
+    switch (skill) {
+      case Skill[Skill.Autonomy]:
+        skill = 'Autonomia';
+        break;
+      case Skill[Skill.Cooperation]:
+        skill = 'Cooperación';
+        break;
+      case Skill[Skill.Emotional]:
+        skill = 'Emocional';
+        break;
+      case Skill[Skill.Responsibility]:
+        skill = 'Responsabilidad';
+        break;
+      case Skill[Skill.Thinking]:
+        skill = 'Pensamiento';
+        break;
+      default:
+        skill = '';
+    }
+
+    return `Nivel ${level} - ${skill}`;
+  }
+
+  extractMedalAlt(medalUrl?: string): string {
+    if (!medalUrl) {
+      return 'Sin medalla';
+    }
+
+    let medalParts: string[] = this.extractMedalToolTip(medalUrl).split(' ');
+    const level: string = medalParts[1];
+    const skill: string = medalParts[medalParts.length - 1];
+
+    const medalAlt: string = `Medalla ${skill} de nivel ${level}`;
+    return medalAlt;
   }
 }

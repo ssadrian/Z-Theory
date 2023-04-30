@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('nickname')->unique();
             $table->longText('avatar')->nullable();
             $table->date('birth_date');
-            $table->unsignedInteger('kudos');
             $table->timestamps();
         });
     }

@@ -2,8 +2,11 @@
 
 namespace App\Console;
 
+use App\Models\Student;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,6 +19,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            $weeklyKudos = env('WEEKLY_KUDOS');
+            $now = Carbon::now();
+
+            DB::update("UPDATE ranking_student SET kudos = $weeklyKudos, updated_at = '$now'");
+        })->weekly();
     }
 
     /**

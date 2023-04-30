@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\EvaluationHistoryController;
+use App\Models\EvaluationHistory;
+use App\Models\Ranking;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,19 +23,28 @@ class EvaluationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): Response
+    public function store(Request $request)
     {
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|different:evaluator|exists:students,id',
-            'skill' => 'required|exists:skills,id',
-            'kudos' => 'required|int|gt:0'
+            'skill_id' => 'required|exists:skills,id',
+            'ranking_id' => 'required|exists:rankings,id',
+            'kudos' => 'required|gt:0'
         ]);
+
+        $rankingStudents = Ranking::find($data['ranking_id'])->students()->get();
+        if (!($rankingStudents->contains($data['evaluator']) || $rankingStudents->contains($data['subject']))) {
+            return response(
+                status: Response::HTTP_BAD_REQUEST
+            );
+        }
 
         $evaluator = Student::find($data['evaluator']);
         $subject = Student::find($data['subject']);
 
-        $availableKudos = $evaluator->kudos;
+        $evaluatorRanking = $evaluator->rankings()->find($data['ranking_id']);
+        $availableKudos = $evaluatorRanking->pivot->kudos;
 
         if (
             empty($availableKudos)
@@ -45,27 +55,15 @@ class EvaluationController extends Controller
             );
         }
 
-        $subjectSkills = $subject->skills();
-        $targetSkill = $subjectSkills->find($data['skill']);
+        $targetSkill = $subject->skills()->find($data['skill_id']);
 
-        $evaluator->kudos -= $data['kudos'];
+        $evaluatorRanking->pivot->kudos -= $data['kudos'];
         $targetSkill->pivot->kudos += $data['kudos'];
 
-        $evaluator->save();
+        $evaluatorRanking->pivot->save();
         $targetSkill->pivot->save();
 
-        EvaluationController::updateSkillImage($data['subject'], $data['skill']);
-
-        Student::find($data['evaluator'])
-            ->evaluationHistory()
-            ->syncWithoutDetaching([
-                $data['skill'] => [
-                    'subject' => $data['subject'],
-                    'kudos' => $data['kudos'],
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ]
-            ]);
+        EvaluationController::updateSkillImage($data['subject'], $data['skill_id'], $data['ranking_id']);
 
         // Save a new history
         EvaluationHistoryController::store($data);
@@ -94,44 +92,42 @@ class EvaluationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): Response
+    public function destroy($evaluationId)
     {
-        $data = $request->validate([
-            'evaluator' => 'required|exists:students,id',
-            'subject' => 'required|different:evaluator|exists:students,id',
-            'skill' => 'required|exists:skills,id'
+        Validator::validate(['evaluation_id' => $evaluationId], [
+            'evaluation_id' => 'required|exists:evaluation_history,id'
         ]);
 
-        $evaluator = Student::find($data['evaluator']);
-        $subject = Student::find($data['subject']);
+        $evaluationHistory = EvaluationHistory::find($evaluationId);
 
-        $targetHistory = $evaluator
-            ->evaluationHistory()->get()
-            ->where('pivot.skill_id', $data['skill'])
-            ->where('pivot.subject', $data['subject'])
-            ->last();
+        $evaluator = Student::find($evaluationHistory->evaluator);
+        $subject = Student::find($evaluationHistory->subject);
 
-        $subjectSkills = $subject->skills();
-        $targetSkill = $subjectSkills->find($data['skill']);
+        $targetSkill = $subject->skills()->find($evaluationHistory->skill_id);
 
         // Remove the given points, these points will be lost forever
-        $targetSkill->pivot->kudos -= $targetHistory->pivot->kudos;
+        $targetSkill->pivot->kudos -= $evaluationHistory->kudos;
 
-        $targetHistory->pivot->delete();
         $targetSkill->pivot->save();
 
-        EvaluationController::updateSkillImage($data['subject'], $data['skill']);
+        EvaluationHistory::destroy($evaluationId);
+        EvaluationController::updateSkillImage($evaluationHistory->subject, $evaluationHistory->skill_id, $evaluationHistory->ranking_id);
 
         return response(
             status: Response::HTTP_OK
         );
     }
 
-    public static function updateSkillImage($studentId, $skillId)
+    public static function updateSkillImage($studentId, $skillId, $rankingId)
     {
-        Validator::validate(['student_id' => $studentId, 'skill_id' => $skillId], [
+        Validator::validate([
+            'student_id' => $studentId,
+            'skill_id' => $skillId,
+            'ranking_id' => $rankingId
+        ], [
             'student_id' => 'required|exists:students,id',
             'skill_id' => 'required|exists:skills,id',
+            'ranking_id' => 'required|exists:rankings,id'
         ]);
 
         $apiUrl = env('APP_URL');
@@ -141,6 +137,13 @@ class EvaluationController extends Controller
             ->find($skillId);
 
         $kudosReceived = $target->pivot->kudos;
+
+        /**
+         * The branches get executed resulting in the following form
+         * false, true, true, ...
+         *
+         * Default executes when the target has under 1k kudos which results in no medal
+         */
         $level = match (true) {
             ($kudosReceived >= 10_000) => 5,
             ($kudosReceived >= 7_000) => 4,
@@ -153,7 +156,7 @@ class EvaluationController extends Controller
         if (empty($level)) {
             $target->pivot->image = null;
         } else {
-            $target->pivot->image = "{$apiUrl}/storage/{$target->name}-{$level}.png";
+            $target->pivot->image = "{$apiUrl}/storage/{$target->name}/{$level}.png";
         }
 
         $target->pivot->save();

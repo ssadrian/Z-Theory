@@ -59,8 +59,7 @@ class Student extends Authenticatable
         'password',
         'name',
         'surnames',
-        'birth_date',
-        'kudos'
+        'birth_date'
     ];
 
     /**
@@ -74,7 +73,7 @@ class Student extends Authenticatable
     {
         return $this
             ->belongsToMany(Ranking::class)
-            ->withPivot('points');
+            ->withPivot(['points', 'kudos']);
     }
 
     public function assignments(): BelongsToMany
@@ -87,13 +86,13 @@ class Student extends Authenticatable
     public function skills(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Skill::class, 'student_skill')
-            ->withPivot(['kudos', 'image']);
+            ->belongsToMany(Skill::class, 'student_skill_ranking')
+            ->withPivot(['ranking_id', 'kudos', 'image']);
     }
 
     public function evaluationHistory(): BelongsToMany {
         return $this
             ->belongsToMany(Skill::class, 'evaluation_history', 'evaluator')
-            ->withPivot(['id', 'subject', 'kudos']);
+            ->withPivot(['id', 'subject', 'ranking_id', 'kudos']);
     }
 }

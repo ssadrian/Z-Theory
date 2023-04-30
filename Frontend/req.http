@@ -60,7 +60,7 @@ Accept: application/json
 
 ###
 # Give kudos
-POST http://localhost:8000/api/student/give HTTP/1.1
+POST http://localhost:8000/api/evaluation HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 Cookie: XDEBUG_SESSION=TRUE
@@ -68,23 +68,23 @@ Cookie: XDEBUG_SESSION=TRUE
 {
   "evaluator": 1,
   "subject": 2,
-  "skill": 3,
-  "kudos": 3000
+  "skill_id": 1,
+  "ranking_id": 6,
+  "kudos": 10
 }
 
 
 ###
 # Undo evaluation with kudos
-POST http://localhost:8000/api/student/undo HTTP/1.1
+DELETE http://localhost:8000/api/evaluation/1 HTTP/1.1
 Accept: application/json
-Content-Type: application/json
-Cookie: XDEBUG_SESSION=TRUE
 
-{
-  "evaluator": "1",
-  "subject": "2",
-  "skill": "3"
-}
+
+###
+# Get all evaluation history
+GET http://localhost:8000/api/evaluation HTTP/1.1
+Accept: application/json
+Cookie: XDEBUG_SESSION=TRUE
 
 
 
@@ -92,6 +92,103 @@ Cookie: XDEBUG_SESSION=TRUE
 # Get all rankings
 GET http://localhost:8000/api/ranking HTTP/1.1
 Accept: application/json
+
+
+###
+# Get a ranking
+GET http://localhost:8000/api/ranking/67b01b87-03e7-418e-bebd-abc96c98a3d4 HTTP/1.1
+Accept: application/json
+
+
+###
+# Create a ranking
+POST http://localhost:8000/api/ranking HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "67b01b87-03e7-418e-bebd-abc96c98a3d4",
+  "name": "Test",
+  "creator": 1
+}
+
+
+###
+# Update a ranking
+PUT http://localhost:8000/api/ranking/67b01b87-03e7-418e-bebd-abc96c98a3d4 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "67b01b87-03e7-418e-bebd-abc96c98a3d5",
+  "name": "T2",
+  "creator": 3
+}
+
+
+###
+# Delete a ranking
+DELETE http://localhost:8000/api/ranking/67b01b87-03e7-418e-bebd-abc96c98a3d4 HTTP/1.1
+Accept: application/json
+
+
+
+###
+# Get rankings for a student
+GET http://localhost:8000/api/ranking/for/1 HTTP/1.1
+Accept: application/json
+Cookie: XDEBUG_SESSION=TRUE
+
+
+###
+# Get rankings created by a teacher
+GET http://localhost:8000/api/ranking/created_by/1 HTTP/1.1
+Accept: application/json
+
+
+###
+# Get all queues for a teacher
+GET http://localhost:8000/api/ranking/queues/for/1 HTTP/1.1
+Accept: application/json
+
+
+###
+# Assign a student to a queue for ranking
+POST http://localhost:8000/api/ranking/assign/1 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "67b01b87-03e7-418e-bebd-abc96c98a3d3"
+}
+
+
+###
+# Accept a student's join request
+POST http://localhost:8000/api/ranking/assign/1 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "67b01b87-03e7-418e-bebd-abc96c98a3d3"
+}
+
+
+###
+# Update a student's ranking data
+PUT http://localhost:8000/api/ranking/67b01b87-03e7-418e-bebd-abc96c98a3d3/for/1 HTTP/1.1
+Accept: application/json
+
+
+###
+# Decline a student's join request
+POST http://localhost:8000/api/ranking/assign/1 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "67b01b87-03e7-418e-bebd-abc96c98a3d3"
+}
 
 
 ###

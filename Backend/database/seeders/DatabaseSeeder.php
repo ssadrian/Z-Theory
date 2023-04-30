@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\{Models\Assignment, Models\Ranking, Models\Skill, Models\Student, Models\Teacher};
+use App\Http\Controllers\EvaluationController;
+use App\Models\StudentSkillRanking;
 use Illuminate\{Database\Seeder, Support\Carbon};
 
 class DatabaseSeeder extends Seeder
@@ -55,28 +57,16 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         foreach (Student::all() as $student) {
-            $i = Skill::all()->count();
-
-            // Add the needed relationships with the skills
-            while ($i > 0) {
-                $student->skills()->syncWithoutDetaching(
-                    [ $i =>[
-                        'kudos' => 0,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
-                    ]]
-                );
-
-                $i -= 1;
-            }
-
             foreach (range(0, 2) as $ignored) {
                 $randomRank = Ranking::all()->random();
                 $pivot = [
-                    'points' => fake()->numberBetween(int2: 50)
+                    'points' => fake()->numberBetween(int2: 50),
+                    'kudos' => fake()->numberBetween(int2: 1_000)
                 ];
 
                 $student->rankings()->attach($randomRank, $pivot);
+
+                $this->addRankingSkillsForStudent($student, $randomRank);
 
                 // 10% possibility of adding the student to another ranking
                 $rolledNumber = fake()->numberBetween(int2: 9);
@@ -84,6 +74,25 @@ class DatabaseSeeder extends Seeder
                     break;
                 }
             }
+        }
+    }
+
+    private function addRankingSkillsForStudent($student, Ranking $ranking): void
+    {
+        $skillId = Skill::all()->count();
+
+        // Add the needed relationships with the skills
+        while ($skillId > 0) {
+            StudentSkillRanking::create([
+                'student_id' => $student->id,
+                'skill_id' => $skillId,
+                'ranking_id' => $ranking->id,
+                'kudos' => random_int(0, 10_000),
+                'created_at' => time(),
+                'updated_at' => time()
+            ]);
+
+            $skillId -= 1;
         }
     }
 }

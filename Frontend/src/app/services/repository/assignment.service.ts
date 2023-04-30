@@ -2,8 +2,8 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {IAssignment} from '../../../models/assignment.model';
-import {IAssignRanking} from '../../../models/misc/assign-ranking';
-import {IRemoveAssignRanking} from '../../../models/misc/remove-assign-ranking';
+import {IAssignationRanking} from '../../../models/create/create-assignation-ranking';
+import {IRemoveAssignRanking} from '../../../models/delete/remove-assign-ranking';
 import {environment} from '../../environments/environment';
 import {CredentialService} from '../credential.service';
 import {ICreateAssignment} from 'src/models/create/create-assignment';
@@ -13,9 +13,6 @@ import {IUpdateAssignment} from 'src/models/update/update-assignment';
   providedIn: 'root',
 })
 export class AssignmentService {
-  #assignmentUrl: string = `${environment.apiUrl}/assignment`;
-  readonly #clientHeaders: { [header: string]: string };
-
   constructor(private http: HttpClient, private credentials: CredentialService) {
     this.#clientHeaders = {
       Authorization: `Bearer ${this.credentials.token}`,
@@ -23,6 +20,9 @@ export class AssignmentService {
       'Content-Type': 'application/json',
     };
   }
+
+  readonly #clientHeaders: { [header: string]: string };
+  readonly #assignmentUrl: string = `${environment.apiUrl}/assignment`;
 
   all(): Observable<IAssignment[]> {
     return this.http.get<IAssignment[]>(this.#assignmentUrl, {
@@ -68,7 +68,7 @@ export class AssignmentService {
     });
   }
 
-  assignToRank(entity: IAssignRanking): Observable<any> {
+  assignToRank(entity: IAssignationRanking): Observable<any> {
     const url: string = `${this.#assignmentUrl}/assign/ranking/${entity.url_rankCode}`;
     return this.http.post(url, entity, {
       headers: this.#clientHeaders,

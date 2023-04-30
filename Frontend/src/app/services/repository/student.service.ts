@@ -1,20 +1,17 @@
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {IUpdatePassword} from 'src/models/update/update-password';
-import {ICreateStudent} from '../../../models/create/create-student';
-import {IStudent} from '../../../models/student.model';
-import {IUpdateStudent} from '../../../models/update/update-student';
-import {environment} from '../../environments/environment';
-import {CredentialService} from '../credential.service';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { IUpdatePassword } from 'src/models/update/update-password';
+import { ICreateStudent } from '../../../models/create/create-student';
+import { IStudent } from '../../../models/student.model';
+import { IUpdateStudent } from '../../../models/update/update-student';
+import { environment } from '../../environments/environment';
+import { CredentialService } from '../credential.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
-  #studentUrl: string = `${environment.apiUrl}/student`;
-  readonly #clientHeaders: { [header: string]: string };
-
   constructor(private http: HttpClient, private credentials: CredentialService) {
     this.#clientHeaders = {
       Authorization: `Bearer ${this.credentials.token}`,
@@ -22,6 +19,9 @@ export class StudentService {
       'Content-Type': 'application/json',
     };
   }
+
+  readonly#studentUrl: string = `${environment.apiUrl}/student`;
+  readonly #clientHeaders: { [header: string]: string };
 
   all(): Observable<IStudent[]> {
     return this.http.get<IStudent[]>(this.#studentUrl, {

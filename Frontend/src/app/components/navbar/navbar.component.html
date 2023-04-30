@@ -13,6 +13,12 @@
       >
         <ng-container *ngSwitchDefault>
           <ng-container *ngIf="credentials.role === 'teacher'">
+            <li [routerLink]="['/historial']">
+              <a [routerLinkActive]="[ 'text-gray-50' ]">
+                Historial
+              </a>
+            </li>
+
             <li [routerLink]="['/queues']">
               <a [routerLinkActive]="[ 'text-gray-50' ]">
                 Rankings
