@@ -281,13 +281,17 @@
   </p-sidebar>
 </section>
 
-<p-dialog [(visible)]="showRankingUpdateDialog">
-  <ng-template pTemplate="header"> Actualizar Ranking </ng-template>
+<p-dialog [(visible)]="showRankingUpdateDialog" *ngIf="selectedRanking">
+  <ng-template pTemplate="header">Actualizar Ranking</ng-template>
 
   <span class="p-float-label">
-    <input pInputText id="ranking-name" [(ngModel)]="selectedRanking!.name"/>
+    <input pInputText id="ranking-name" [(ngModel)]="selectedRanking.name" />
     <label htmlFor="ranking-name">Nombre</label>
   </span>
 
-  <p-button label="Actualizar" styleClass="p-button-warning" icon="pi pi"></p-button>
+  <p-button
+    label="Actualizar"
+    styleClass="p-button-warning"
+    icon="pi pi"
+  ></p-button>
 </p-dialog>

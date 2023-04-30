@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\EvaluationHistoryController;
 use App\Models\EvaluationHistory;
+use App\Models\Ranking;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -32,24 +33,18 @@ class EvaluationController extends Controller
             'kudos' => 'required|gt:0'
         ]);
 
-        $evaluator = Student::with([
-            'rankings' => function ($query) use ($data) {
-                return $query->find($data['ranking_id']);
-            }
-        ])
-            ->find($data['evaluator']);
+        $rankingStudents = Ranking::find($data['ranking_id'])->students()->get();
+        if (!($rankingStudents->contains($data['evaluator']) || $rankingStudents->contains($data['subject']))) {
+            return response(
+                status: Response::HTTP_BAD_REQUEST
+            );
+        }
 
-        $subject = Student::with([
-            'skills' => function ($query) use ($data) {
-                return $query->find($data['skill_id']);
-            },
-            'rankings' => function ($query) use ($data) {
-                return $query->find($data['ranking_id']);
-            }
-        ])
-            ->find($data['subject']);
+        $evaluator = Student::find($data['evaluator']);
+        $subject = Student::find($data['subject']);
 
-        $availableKudos = $evaluator->rankings()->first()->pivot->kudos;
+        $evaluatorRanking = $evaluator->rankings()->find($data['ranking_id']);
+        $availableKudos = $evaluatorRanking->pivot->kudos;
 
         if (
             empty($availableKudos)
@@ -60,15 +55,15 @@ class EvaluationController extends Controller
             );
         }
 
-        $targetSkill = $subject->skills()->first();
+        $targetSkill = $subject->skills()->find($data['skill_id']);
 
-        $evaluator->rankings()->first()->pivot->kudos -= $data['kudos'];
+        $evaluatorRanking->pivot->kudos -= $data['kudos'];
         $targetSkill->pivot->kudos += $data['kudos'];
 
-        $evaluator->save();
+        $evaluatorRanking->pivot->save();
         $targetSkill->pivot->save();
 
-        EvaluationController::updateSkillImage($data['subject'], $data['skill_id']);
+        EvaluationController::updateSkillImage($data['subject'], $data['skill_id'], $data['ranking_id']);
 
         // Save a new history
         EvaluationHistoryController::store($data);
@@ -116,7 +111,7 @@ class EvaluationController extends Controller
         $targetSkill->pivot->save();
 
         EvaluationHistory::destroy($evaluationId);
-        EvaluationController::updateSkillImage($evaluationHistory->subject, $evaluationHistory->skill_id);
+        EvaluationController::updateSkillImage($evaluationHistory->subject, $evaluationHistory->skill_id, $evaluationHistory->ranking_id);
 
         return response(
             status: Response::HTTP_OK
@@ -130,10 +125,10 @@ class EvaluationController extends Controller
             'skill_id' => $skillId,
             'ranking_id' => $rankingId
         ], [
-                'student_id' => 'required|exists:students,id',
-                'skill_id' => 'required|exists:skills,id',
-                'ranking_id' => 'required|exists:ranking,id'
-            ]);
+            'student_id' => 'required|exists:students,id',
+            'skill_id' => 'required|exists:skills,id',
+            'ranking_id' => 'required|exists:rankings,id'
+        ]);
 
         $apiUrl = env('APP_URL');
 

@@ -101,7 +101,7 @@ export class TeacherProfileComponent implements OnInit {
             return;
           }
 
-
+          this.showRankingUpdateDialog = true;
         }
       },
       {

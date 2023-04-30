@@ -31,8 +31,11 @@
             </div>
 
             <div class="grid grid-cols-2 gap-6">
-              <div>Nombre</div>
+              <div>Nick</div>
               <div>{{ student.nickname }}</div>
+
+              <div>Nombre</div>
+              <div>{{ student.name }}</div>
 
               <div>Apellidos</div>
               <div>{{ student.surnames }}</div>
@@ -208,7 +211,7 @@
           <ng-template pTemplate="body" let-rowStudent let-rowIndex="rowIndex">
             <tr class="p-selectable-row">
               <td>{{ rowIndex + 1 }}</td>
-              <td>{{ rowStudent.nickname }}</td>
+              <td>{{ rowStudent.name + ' ' + rowStudent.surnames + rowStudent.id }}</td>
               <td>{{ rowStudent.pivot.points }}</td>
 
               <td>

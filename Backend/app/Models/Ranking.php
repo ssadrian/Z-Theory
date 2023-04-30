@@ -64,9 +64,8 @@ class Ranking extends Model
     public function students(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Student::class, 'ranking_student',
-                'ranking_id', 'student_id')
-            ->withPivot('points');
+            ->belongsToMany(Student::class, 'ranking_student', 'ranking_id', 'student_id')
+            ->withPivot(['points', 'kudos']);
     }
 
     public function creator(): BelongsTo
@@ -78,11 +77,19 @@ class Ranking extends Model
     public function queue(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Student::class, 'ranking_join_queue',
-                'ranking_id', 'student_id')
+            ->belongsToMany(
+                Student::class,
+                'ranking_join_queue',
+                'ranking_id',
+                'student_id'
+            )
             ->withPivot('join_status_id')
-            ->join('join_statuses',
-                'join_statuses.id', '=', 'ranking_join_queue.join_status_id');
+            ->join(
+                'join_statuses',
+                'join_statuses.id',
+                '=',
+                'ranking_join_queue.join_status_id'
+            );
     }
 
     public function assignments(): BelongsToMany
