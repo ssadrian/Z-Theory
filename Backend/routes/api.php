@@ -22,18 +22,14 @@ use Illuminate\{Support\Facades\Request, Support\Facades\Route};
 |
 */
 
-Route::prefix('login')->group(function () {
-    Route::post('/student', [AuthController::class, 'loginStudent']);
-    Route::post('/teacher', [AuthController::class, 'loginTeacher']);
-});
+Route::middleware('auth:sanctum')
+    ->apiResource('student', StudentsController::class);
 
-Route::prefix('register')->group(function () {
-    Route::post('/student', [StudentsController::class, 'store']);
-    Route::post('/teacher', [TeachersController::class, 'store']);
-});
-
-Route::apiResource('student', StudentsController::class);
 Route::prefix('student')->group(function () {
+    Route::get('{studentId}/logout', [AuthController::class, 'logoutStudent']);
+    Route::post('login', [AuthController::class, 'loginStudent']);
+    Route::post('register', [StudentsController::class, 'store']);
+
     Route::post('password', [StudentsController::class, 'changePassword']);
     Route::post('give', [EvaluationController::class, 'store']);
 });
@@ -49,6 +45,10 @@ Route::prefix('evaluation_history')->group(function () {
 
 Route::apiResource('teacher', TeachersController::class);
 Route::prefix('teacher')->group(function () {
+    Route::get('{teacherId}/logout', [AuthController::class, 'logoutTeacher']);
+    Route::post('login', [AuthController::class, 'loginTeacher']);
+    Route::post('register', [TeachersController::class, 'store']);
+
     Route::post('password', [TeachersController::class, 'changePassword']);
 });
 

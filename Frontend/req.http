@@ -1,6 +1,6 @@
 ###
 # Login test student
-POST http://localhost:8000/api/login/student HTTP/1.1
+POST http://localhost:8000/api/student/login HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 
@@ -11,8 +11,8 @@ Content-Type: application/json
 
 
 ###
-# Login test student
-POST http://localhost:8000/api/login/teacher HTTP/1.1
+# Login test teacher
+POST http://localhost:8000/api/teacher/login HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 

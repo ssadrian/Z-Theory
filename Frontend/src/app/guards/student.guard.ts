@@ -21,7 +21,7 @@ export class StudentGuard {
     private credentials: CredentialService
   ) {}
 
-  #loginUrl: string = `${environment.apiUrl}/login/student`;
+  #loginUrl: string = `${environment.apiUrl}/student/login`;
 
   canMatch(
     route: Route,

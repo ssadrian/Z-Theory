@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\{Models\Student, Models\Teacher};
 use Illuminate\{Http\JsonResponse, Http\Request, Support\Facades\Hash};
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -21,7 +23,7 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $student,
                 'role' => 'student',
-                'token' => $student->createToken('token')->plainTextToken
+                'token' => $student->createToken('token', ['read:students'])->plainTextToken
             ]);
         }
 
@@ -51,5 +53,32 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Invalid credentials'
         ]);
+    }
+
+    public function logoutStudent(int $studentId)
+    {
+        Validator::validate(['id' => $studentId], [
+            'id' => 'required|exists:students'
+        ]);
+
+        $student = Student::find($studentId);
+        $student->tokens()->delete();
+
+        return response(
+            status: Response::HTTP_OK,
+        );
+    }
+
+    public function logoutTeacher(int $teacherId)
+    {
+        Validator::validate(['id' => $teacherId], [
+            'id' => 'required|exists:teachers'
+        ]);
+
+        Teacher::find($teacherId)->tokens()->delete();
+
+        return response(
+            status: Response::HTTP_OK,
+        );
     }
 }

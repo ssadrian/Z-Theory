@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Skill;
 use App\Models\Student;
-use Illuminate\{Http\Request,
+use Illuminate\{
+    Http\Request,
     Http\Response,
     Support\Facades\Hash,
     Support\Facades\Validator,
@@ -18,8 +19,17 @@ class StudentsController extends Controller
      *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('read:students')) {
+            return response([
+                'message' => 'Access forbidden'
+            ], Response::HTTP_FORBIDDEN);
+        }
+
         return response(
             Student::with(['rankings', 'assignments', 'skills'])->get()
         );
