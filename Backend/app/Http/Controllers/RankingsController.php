@@ -12,8 +12,15 @@ class RankingsController extends Controller
      *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('index:rankings')) {
+            return $this->forbidden();
+        }
+
         return response(
             Ranking::with(['students', 'queue', 'assignments', 'creator'])->get()
         );
@@ -27,6 +34,13 @@ class RankingsController extends Controller
      */
     public function store(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('store:rankings')) {
+            return $this->forbidden();
+        }
+
         $data = $request->validate([
             'code' => 'required|uuid|unique:rankings',
             'name' => 'required|string|unique:rankings',
@@ -48,8 +62,15 @@ class RankingsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function show($code): Response
+    public function show($code, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('show:rankings')) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['code' => $code], [
             'code' => 'required|exists:rankings'
         ]);
@@ -69,6 +90,13 @@ class RankingsController extends Controller
      */
     public function update($oldRankCode, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('update:rankings')) {
+            return $this->forbidden();
+        }
+
         // Append ranking's id from url to request's body
         $request['target'] = $oldRankCode;
 
@@ -107,8 +135,22 @@ class RankingsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function destroy($code): Response
+    public function destroy($code, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('destroy:rankings')) {
+            return $this->forbidden();
+        }
+
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('destroy:rankings')) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['code' => $code], [
             'code' => 'required|exists:rankings'
         ]);
@@ -124,8 +166,15 @@ class RankingsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function createdBy($teacherId): Response
+    public function createdBy($teacherId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('createdBy:rankings')) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $teacherId], [
             'id' => 'required|exists:teachers'
         ]);
@@ -142,8 +191,15 @@ class RankingsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function forStudent($studentId): Response
+    public function forStudent($studentId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('forStudent:rankings')) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $studentId], [
             'id' => 'required|exists:students'
         ]);
@@ -176,6 +232,13 @@ class RankingsController extends Controller
      */
     public function assignStudent($studentId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('assignStudent:rankings')) {
+            return $this->forbidden();
+        }
+
         // Append student's id from url to request's body
         $request['student_id'] = $studentId;
 
@@ -218,6 +281,13 @@ class RankingsController extends Controller
      */
     public function acceptStudent($studentId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('acceptStudent:rankings')) {
+            return $this->forbidden();
+        }
+
         // Append student's id from url to request's body
         $request['student_id'] = $studentId;
 
@@ -269,6 +339,13 @@ class RankingsController extends Controller
      */
     public function declineStudent($studentId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('declineStudent:rankings')) {
+            return $this->forbidden();
+        }
+
         // Append student's id from url to request's body
         $request['student_id'] = $studentId;
 
@@ -318,6 +395,13 @@ class RankingsController extends Controller
      */
     public function updateForStudent($rankingCode, $studentId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('updateForStudent:rankings')) {
+            return $this->forbidden();
+        }
+
         // Append ranking's code and student's id from url to request's body
         Validator::validate(
             ['code' => $rankingCode, 'id' => $studentId],
@@ -356,8 +440,15 @@ class RankingsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function queuesForTeacher($teacherId): Response
+    public function queuesForTeacher($teacherId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('queuesForTeacher:rankings')) {
+            return $this->forbidden();
+        }
+
         $data = Validator::validate(['id' => $teacherId], [
             'id' => 'required|exists:teachers'
         ]);

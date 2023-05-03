@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\{Database\Eloquent\Factories\HasFactory,
+use Illuminate\{
+    Database\Eloquent\Factories\HasFactory,
     Database\Eloquent\Relations\BelongsToMany,
-    Foundation\Auth\User as Authenticatable};
+    Foundation\Auth\User as Authenticatable
+};
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -50,7 +52,7 @@ class Student extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array<string>
      */
     protected $fillable = [
         'nickname',
@@ -60,6 +62,16 @@ class Student extends Authenticatable
         'name',
         'surnames',
         'birth_date'
+    ];
+
+    /**
+     * Abilities for a token issued to a student
+     *
+     * @var array<string>
+     */
+    public $abilities = [
+        'forStudent:rankings',
+        'assignStudent:rankings',
     ];
 
     /**
@@ -90,7 +102,8 @@ class Student extends Authenticatable
             ->withPivot(['ranking_id', 'kudos', 'image']);
     }
 
-    public function evaluationHistory(): BelongsToMany {
+    public function evaluationHistory(): BelongsToMany
+    {
         return $this
             ->belongsToMany(Skill::class, 'evaluation_history', 'evaluator')
             ->withPivot(['id', 'subject', 'ranking_id', 'kudos']);

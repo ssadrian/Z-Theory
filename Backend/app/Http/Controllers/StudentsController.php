@@ -24,14 +24,15 @@ class StudentsController extends Controller
         $tokenId = explode('|', $request->bearerToken())[0];
         $token = $request->user()->tokens()->find($tokenId);
 
-        if (!$token->can('read:students')) {
-            return response([
-                'message' => 'Access forbidden'
-            ], Response::HTTP_FORBIDDEN);
+        if (!$token->can('index:students')) {
+            return $this->forbidden();
         }
 
+        $students = Student::with(['rankings', 'assignments', 'skills'])->get();
+
         return response(
-            Student::with(['rankings', 'assignments', 'skills'])->get()
+            $students
+            , Response::HTTP_OK
         );
     }
 
@@ -43,6 +44,15 @@ class StudentsController extends Controller
      */
     public function store(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('store:students')) {
+            return response([
+                'message' => 'Access forbidden'
+            ], Response::HTTP_FORBIDDEN);
+        }
+
         $data = $request->validate([
             'nickname' => 'required|string|unique:students|unique:teachers',
             'email' => 'required|email|unique:students|unique:teachers',
@@ -81,15 +91,26 @@ class StudentsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function show($id): Response
+    public function show($id, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!($id == $user->id || $token->can('show:students'))) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $id], [
             'id' => 'required|exists:students'
         ]);
 
+        $student = Student::with(['rankings', 'assignments', 'skills'])
+            ->find($id);
+
         return response(
-            Student::with(['rankings', 'assignments', 'skills'])
-                ->find($id)
+            $student
+            , Response::HTTP_OK
         );
     }
 
@@ -102,6 +123,17 @@ class StudentsController extends Controller
      */
     public function update($id, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (
+            !(($id == $user->id && $token->tokenable_type === Student::class)
+                || $token->can('update:students'))
+        ) {
+            return $this->forbidden();
+        }
+
         // Append student's id from url to request's body
         $request['id'] = $id;
 
@@ -143,8 +175,19 @@ class StudentsController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function destroy($id): Response
+    public function destroy($id, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (
+            !(($id == $user->id && $token->tokenable_type == Student::class)
+                || $token->can('destroy:students'))
+        ) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $id], [
             'id' => 'required|exists:students'
         ]);
@@ -160,6 +203,17 @@ class StudentsController extends Controller
      */
     public function changePassword(Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (
+            !(($user->id == $request['id'] && $token->tokenable_type == Teacher::class)
+                || $token->can('changePassword:students'))
+        ) {
+            return $this->forbidden();
+        }
+
         $data = $request->validate([
             'id' => 'required|exists:students',
             'password' => 'required|string',

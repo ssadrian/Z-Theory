@@ -25,6 +25,14 @@ class EvaluationController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('store:evaluation')) {
+            return $this->forbidden();
+        }
+
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|different:evaluator|exists:students,id',
@@ -92,8 +100,15 @@ class EvaluationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($evaluationId)
+    public function destroy($evaluationId, Request $request)
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('destroy:evaluation')) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['evaluation_id' => $evaluationId], [
             'evaluation_id' => 'required|exists:evaluation_history,id'
         ]);
@@ -118,8 +133,15 @@ class EvaluationController extends Controller
         );
     }
 
-    public static function updateSkillImage($studentId, $skillId, $rankingId)
+    public static function updateSkillImage($studentId, $skillId, $rankingId, Request $request)
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('updateSkillImage:evaluation')) {
+            return Controller::forbidden();
+        }
+
         Validator::validate([
             'student_id' => $studentId,
             'skill_id' => $skillId,

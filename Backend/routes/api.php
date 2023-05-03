@@ -25,35 +25,39 @@ use Illuminate\{Support\Facades\Request, Support\Facades\Route};
 Route::middleware('auth:sanctum')
     ->apiResource('student', StudentsController::class);
 
-Route::prefix('student')->group(function () {
-    Route::get('{studentId}/logout', [AuthController::class, 'logoutStudent']);
-    Route::post('login', [AuthController::class, 'loginStudent']);
+Route::middleware('auth:sanctum')->prefix('student')->group(function () {
+    Route::get('{studentId}/logout', [AuthController::class, 'logoutStudent'])->withoutMiddleware('auth:sanctum');
+    Route::post('login', [AuthController::class, 'loginStudent'])->withoutMiddleware('auth:sanctum');
     Route::post('register', [StudentsController::class, 'store']);
 
     Route::post('password', [StudentsController::class, 'changePassword']);
     Route::post('give', [EvaluationController::class, 'store']);
 });
 
-Route::apiResource('evaluation', EvaluationController::class)
-    ->only([ 'store', 'destroy']);
+Route::middleware('auth:sanctum')
+    ->apiResource('evaluation', EvaluationController::class)
+    ->only(['store', 'destroy']);
 
-Route::apiResource('evaluation_history', EvaluationHistoryController::class)
-    ->except([ 'update', 'destroy' ]);
-Route::prefix('evaluation_history')->group(function () {
+Route::middleware('auth:sanctum')
+    ->apiResource('evaluation_history', EvaluationHistoryController::class)
+    ->except(['update', 'destroy']);
+Route::middleware('auth:sanctum')->prefix('evaluation_history')->group(function () {
     Route::get('for_teacher/{teacherId}', [EvaluationHistoryController::class, 'forTeacher']);
 });
 
-Route::apiResource('teacher', TeachersController::class);
-Route::prefix('teacher')->group(function () {
+Route::middleware('auth:sanctum')
+    ->apiResource('teacher', TeachersController::class);
+Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
     Route::get('{teacherId}/logout', [AuthController::class, 'logoutTeacher']);
-    Route::post('login', [AuthController::class, 'loginTeacher']);
-    Route::post('register', [TeachersController::class, 'store']);
+    Route::post('login', [AuthController::class, 'loginTeacher'])->withoutMiddleware('auth:sanctum');
+    Route::post('register', [TeachersController::class, 'store'])->withoutMiddleware('auth:sanctum');
 
     Route::post('password', [TeachersController::class, 'changePassword']);
 });
 
-Route::apiResource('ranking', RankingsController::class);
-Route::prefix('ranking')->group(function () {
+Route::middleware('auth:sanctum')
+    ->apiResource('ranking', RankingsController::class);
+Route::middleware('auth:sanctum')->prefix('ranking')->group(function () {
     Route::get('for/{studentId}', [RankingsController::class, 'forStudent']);
     Route::get('created_by/{teacherId}', [RankingsController::class, 'createdBy']);
     Route::get('queues/for/{teacherId}', [RankingsController::class, 'queuesForTeacher']);
@@ -65,8 +69,9 @@ Route::prefix('ranking')->group(function () {
     Route::put('{code}/for/{studentId}', [RankingsController::class, 'updateForStudent']);
 });
 
-Route::apiResource('assignment', AssignmentController::class);
-Route::prefix('assignment')->group(function () {
+Route::middleware('auth:sanctum')
+    ->apiResource('assignment', AssignmentController::class);
+Route::middleware('auth:sanctum')->prefix('assignment')->group(function () {
     Route::get('creator/{teacherId}', [AssignmentController::class, 'createdBy']);
     Route::get('{id}/remove/ranking/{rankCode}', [AssignmentController::class, 'removeFromRanking']);
 

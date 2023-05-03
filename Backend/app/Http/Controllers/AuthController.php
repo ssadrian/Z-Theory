@@ -23,7 +23,7 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $student,
                 'role' => 'student',
-                'token' => $student->createToken('token', ['read:students'])->plainTextToken
+                'token' => $student->createToken('token', $student->abilities)->plainTextToken
             ]);
         }
 
@@ -46,7 +46,7 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $teacher,
                 'role' => 'teacher',
-                'token' => $teacher->createToken('token')->plainTextToken
+                'token' => $teacher->createToken('token', $teacher->abilities)->plainTextToken
             ]);
         }
 

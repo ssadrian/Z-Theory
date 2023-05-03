@@ -27,12 +27,13 @@ Content-Type: application/json
 # Get all students
 GET http://localhost:8000/api/student HTTP/1.1
 Accept: application/json
-
+Authorization: Bearer 8|AtNByACBV8aXIw8O2jLYKjb9MIaYEeMST0W3X8J5
 
 ###
 # Get a student
 GET http://localhost:8000/api/student/1 HTTP/1.1
 Accept: application/json
+Authorization: Bearer 2|99rE7OX1RB2sq4Zq0UaDg69w64QgFnJIH5uu4Zcj
 
 
 ###
@@ -56,7 +57,7 @@ Cookie: XDEBUG_SESSION=TRUE
 # Delete a student
 DELETE http://localhost:8000/api/student/1 HTTP/1.1
 Accept: application/json
-
+Authorization: Bearer 2|99rE7OX1RB2sq4Zq0UaDg69w64QgFnJIH5uu4Zcj
 
 ###
 # Give kudos
@@ -137,6 +138,7 @@ Accept: application/json
 # Get rankings for a student
 GET http://localhost:8000/api/ranking/for/1 HTTP/1.1
 Accept: application/json
+Authorization: Bearer 17|vTDvSg0cjK4EwhSAaMIAcukYA4hSfBJQPmZsf0kt
 Cookie: XDEBUG_SESSION=TRUE
 
 
