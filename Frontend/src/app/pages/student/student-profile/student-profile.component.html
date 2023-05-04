@@ -220,9 +220,9 @@
                 <ng-container *ngFor="let skill of rowStudent.skills">
                   <img
                     [src]="skill.pivot.image"
-                    [alt]="extractMedalAlt(skill.pivot.image)"
+                    [alt]="extractMedalAlt(skill)"
                     (click)="showDialog()"
-                    [pTooltip]="extractMedalToolTip(skill.pivot.image)"
+                    [pTooltip]="extractMedalToolTip(skill)"
                     tooltipPosition="bottom"
                     class="w-16 h-16"
                   />
@@ -238,6 +238,7 @@
                     showEvaluationSideBarForStudent(rowStudent.id, ranking.id)
                   "
                   [disabled]="rowStudent.id == student.id"
+                  [pTooltip]="(rowStudent.id == student.id ? rowStudent.pivot.kudos : '?') + ' kudos'"
                 ></p-button>
               </td>
             </tr>

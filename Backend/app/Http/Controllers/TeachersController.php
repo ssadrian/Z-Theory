@@ -77,9 +77,12 @@ class TeachersController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
-        if (!($id == $user->id || $token->can('show:teachers'))) {
+        if (
+            !($id == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('show:teachers')
+        ) {
             return $this->forbidden();
         }
 
@@ -104,9 +107,12 @@ class TeachersController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
-        if (!($id == $user->id || $token->can('update:teachers'))) {
+        if (
+            !($id == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('update:teachers')
+        ) {
             return $this->forbidden();
         }
 
@@ -155,9 +161,12 @@ class TeachersController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
-        if (!($id == $user->id || $token->can('destroy:teachers'))) {
+        if (
+            !($id == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('destroy:teachers')
+        ) {
             return $this->forbidden();
         }
 
@@ -178,9 +187,12 @@ class TeachersController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
-        if (!($request['id'] == $user->id || $token->can('changePassword:teachers'))) {
+        if (
+            !($request['id'] == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('changePasswor:teachers')
+        ) {
             return $this->forbidden();
         }
 

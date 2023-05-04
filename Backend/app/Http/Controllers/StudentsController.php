@@ -95,7 +95,7 @@ class StudentsController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
         if (!($id == $user->id || $token->can('show:students'))) {
             return $this->forbidden();
@@ -125,7 +125,7 @@ class StudentsController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
         if (
             !(($id == $user->id && $token->tokenable_type === Student::class)
@@ -179,7 +179,7 @@ class StudentsController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
         if (
             !(($id == $user->id && $token->tokenable_type == Student::class)
@@ -205,10 +205,11 @@ class StudentsController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
         if (
-            !(($user->id == $request['id'] && $token->tokenable_type == Teacher::class)
+            // Types for the ids will mismatch
+            !(($user->id == $request['id'] && $token->tokenable_type === \App\Models\Student::class)
                 || $token->can('changePassword:students'))
         ) {
             return $this->forbidden();

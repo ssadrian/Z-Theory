@@ -79,7 +79,8 @@ class Teacher extends Authenticatable
      * @var array<string>
      */
     public $abilities = [
-        'changePassword:teachers'
+        'index:assignments',
+        'store:rankings'
     ];
 
     /**

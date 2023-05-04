@@ -72,6 +72,7 @@ class Student extends Authenticatable
     public $abilities = [
         'forStudent:rankings',
         'assignStudent:rankings',
+        'store:evaluation'
     ];
 
     /**

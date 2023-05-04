@@ -141,7 +141,7 @@ class AssignmentController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
         if (!$token->can('destroy:assignments')) {
             return $this->forbidden();
@@ -213,7 +213,7 @@ class AssignmentController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
         if (!$token->can('removeFromRanking:assignments')) {
             return $this->forbidden();
@@ -255,9 +255,12 @@ class AssignmentController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
-        if (!$token->can('createdBy:assignments')) {
+        if (
+            !($user->id == $teacherId && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('createdBy:assignments')
+        ) {
             return $this->forbidden();
         }
 

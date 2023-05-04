@@ -144,13 +144,6 @@ class RankingsController extends Controller
             return $this->forbidden();
         }
 
-        $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
-
-        if (!$token->can('destroy:rankings')) {
-            return $this->forbidden();
-        }
-
         Validator::validate(['code' => $code], [
             'code' => 'required|exists:rankings'
         ]);
@@ -168,10 +161,14 @@ class RankingsController extends Controller
      */
     public function createdBy($teacherId, Request $request): Response
     {
+        $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
-        if (!$token->can('createdBy:rankings')) {
+        if (
+            !($user->id == $teacherId && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('createdBy:rankings')
+        ) {
             return $this->forbidden();
         }
 
@@ -442,10 +439,14 @@ class RankingsController extends Controller
      */
     public function queuesForTeacher($teacherId, Request $request): Response
     {
+        $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
-        if (!$token->can('queuesForTeacher:rankings')) {
+        if (
+            !($user->id == $teacherId && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('queuesForTeacher:rankings')
+        ) {
             return $this->forbidden();
         }
 

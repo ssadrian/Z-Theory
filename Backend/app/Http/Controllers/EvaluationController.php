@@ -9,6 +9,7 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Str;
 
 class EvaluationController extends Controller
 {
@@ -27,7 +28,7 @@ class EvaluationController extends Controller
     {
         $user = $request->user();
         $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
+        $token = $user->tokens()->find($tokenId);
 
         if (!$token->can('store:evaluation')) {
             return $this->forbidden();
@@ -133,15 +134,8 @@ class EvaluationController extends Controller
         );
     }
 
-    public static function updateSkillImage($studentId, $skillId, $rankingId, Request $request)
+    public static function updateSkillImage($studentId, $skillId, $rankingId)
     {
-        $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
-
-        if (!$token->can('updateSkillImage:evaluation')) {
-            return Controller::forbidden();
-        }
-
         Validator::validate([
             'student_id' => $studentId,
             'skill_id' => $skillId,
@@ -175,6 +169,7 @@ class EvaluationController extends Controller
             default => null
         };
 
+        $target->name = Str::lower($target->name);
         if (empty($level)) {
             $target->pivot->image = null;
         } else {
