@@ -178,7 +178,7 @@ class EvaluationController extends Controller
         if (empty($level)) {
             $target->pivot->image = null;
         } else {
-            $target->pivot->image = "{$apiUrl}/storage/{$target->name}/{$level}.png";
+            $target->pivot->image = "{$apiUrl}/medals/{$target->name}/{$level}.png";
         }
 
         $target->pivot->save();
