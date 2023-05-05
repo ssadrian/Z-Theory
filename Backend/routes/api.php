@@ -23,10 +23,12 @@ use Illuminate\{Support\Facades\Request, Support\Facades\Route};
 */
 
 Route::middleware('auth:sanctum')
+    ->get('logout', [AuthController::class, 'logout']);
+
+Route::middleware('auth:sanctum')
     ->apiResource('student', StudentsController::class);
 
 Route::middleware('auth:sanctum')->prefix('student')->group(function () {
-    Route::get('{studentId}/logout', [AuthController::class, 'logoutStudent'])->withoutMiddleware('auth:sanctum');
     Route::post('login', [AuthController::class, 'loginStudent'])->withoutMiddleware('auth:sanctum');
     Route::post('register', [StudentsController::class, 'store']);
 
@@ -48,7 +50,6 @@ Route::middleware('auth:sanctum')->prefix('evaluation_history')->group(function 
 Route::middleware('auth:sanctum')
     ->apiResource('teacher', TeachersController::class);
 Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
-    Route::get('{teacherId}/logout', [AuthController::class, 'logoutTeacher']);
     Route::post('login', [AuthController::class, 'loginTeacher'])->withoutMiddleware('auth:sanctum');
     Route::post('register', [TeachersController::class, 'store'])->withoutMiddleware('auth:sanctum');
 

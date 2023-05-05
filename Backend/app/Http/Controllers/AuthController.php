@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\{Models\Student, Models\Teacher};
 use Illuminate\{Http\JsonResponse, Http\Request, Support\Facades\Hash};
 use Illuminate\Http\Response;
+use Illuminate\Queue\Failed\PrunableFailedJobProvider;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -55,30 +56,12 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logoutStudent(int $studentId)
+    public function logout(Request $request): Response
     {
-        Validator::validate(['id' => $studentId], [
-            'id' => 'required|exists:students'
-        ]);
-
-        $student = Student::find($studentId);
-        $student->tokens()->delete();
+        $request->user()->tokens()->delete();
 
         return response(
-            status: Response::HTTP_OK,
-        );
-    }
-
-    public function logoutTeacher(int $teacherId)
-    {
-        Validator::validate(['id' => $teacherId], [
-            'id' => 'required|exists:teachers'
-        ]);
-
-        Teacher::find($teacherId)->tokens()->delete();
-
-        return response(
-            status: Response::HTTP_OK,
+            status: Response::HTTP_OK
         );
     }
 }

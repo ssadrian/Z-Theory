@@ -334,7 +334,7 @@ export class StudentProfileComponent implements OnInit {
     const medalUrl: string = skill.pivot.image;
 
     if (!medalUrl) {
-      return 'Sin medalla';
+      return `Sin medalla - ${skill.pivot.kudos} kudos`;
     }
 
     const urlParts: string[] = medalUrl.split('/');

@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\EvaluationHistory;
-use App\Models\Student;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class EvaluationHistoryController extends Controller
@@ -15,17 +13,18 @@ class EvaluationHistoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         return response(
-            EvaluationHistory::all()
+            EvaluationHistory::with(['evaluator', 'subject', 'ranking', 'skill'])->all()
+            , Response::HTTP_OK
         );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    static public function store(array $data)
+    static public function store(array $data): Response
     {
         Validator::validate($data, [
             'evaluator' => 'required|exists:students,id',
@@ -42,6 +41,10 @@ class EvaluationHistoryController extends Controller
             'ranking_id' => $data['ranking_id'],
             'kudos' => $data['kudos']
         ]);
+
+        return response(
+            status: Response::HTTP_OK
+        );
     }
 
     /**
@@ -55,6 +58,7 @@ class EvaluationHistoryController extends Controller
 
         return response(
             EvaluationHistory::find($id)
+            , Response::HTTP_OK
         );
     }
 
@@ -69,13 +73,17 @@ class EvaluationHistoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(int $id): Response
     {
-        Validator::validate([ 'id' => $id], [
+        Validator::validate(['id' => $id], [
             'id' => 'required|exists:evaluation_history'
         ]);
 
         EvaluationHistory::destroy($id);
+
+        return response(
+            status: Response::HTTP_OK
+        );
     }
 
     public function forTeacher(int $teacherId)
@@ -95,9 +103,14 @@ class EvaluationHistoryController extends Controller
             }
         }
 
+        $histories = EvaluationHistory::with(['evaluator', 'subject', 'ranking', 'skill'])
+            ->whereIn('evaluator', $students)
+            ->get();
+
+        // TODO: Hide password field from the evaluator and subject relationships
         return response(
-            EvaluationHistory::whereIn('evaluator', $students)
-                ->get()
+            $histories
+            , Response::HTTP_OK
         );
     }
 }

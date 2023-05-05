@@ -80,7 +80,9 @@ class Teacher extends Authenticatable
      */
     public $abilities = [
         'index:assignments',
-        'store:rankings'
+        'store:rankings',
+        'acceptStudent:rankings',
+        'declineStudent:rankings'
     ];
 
     /**

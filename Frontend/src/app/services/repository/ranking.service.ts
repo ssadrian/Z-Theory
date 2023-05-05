@@ -82,7 +82,6 @@ export class RankingService {
 
   leaderboardsForStudent(id: number): Observable<IRanking[]> {
     const url: string = `${this.#rankingUrl}/for/${id}`;
-    console.log(this.#clientHeaders);
     return this.http.get<IRanking[]>(url, {
       headers: this.#clientHeaders,
     });

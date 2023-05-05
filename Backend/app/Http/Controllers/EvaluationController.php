@@ -121,9 +121,17 @@ class EvaluationController extends Controller
 
         $targetSkill = $subject->skills()->find($evaluationHistory->skill_id);
 
-        // Remove the given points, these points will be lost forever
-        $targetSkill->pivot->kudos -= $evaluationHistory->kudos;
+        // Calculate the remaining kudos and don't subtract them
+        // and don't delete the evaluation history
+        $remainingKudos = $targetSkill->pivot->kudos - $evaluationHistory->kudos;
+        if ($remainingKudos < 0) {
+            return response(
+                status: Response::HTTP_BAD_REQUEST
+            );
+        }
 
+        // Remove the given points, these points will be lost forever
+        $targetSkill->pivot->kudos = $remainingKudos;
         $targetSkill->pivot->save();
 
         EvaluationHistory::destroy($evaluationId);
@@ -141,10 +149,10 @@ class EvaluationController extends Controller
             'skill_id' => $skillId,
             'ranking_id' => $rankingId
         ], [
-            'student_id' => 'required|exists:students,id',
-            'skill_id' => 'required|exists:skills,id',
-            'ranking_id' => 'required|exists:rankings,id'
-        ]);
+                'student_id' => 'required|exists:students,id',
+                'skill_id' => 'required|exists:skills,id',
+                'ranking_id' => 'required|exists:rankings,id'
+            ]);
 
         $apiUrl = env('APP_URL');
 

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class EvaluationHistory extends Model
 {
@@ -25,14 +25,31 @@ class EvaluationHistory extends Model
         'kudos'
     ];
 
-    public function students(): BelongsToMany
+    protected $hidden = [
+        'subject.password'
+    ];
+
+    public function evaluator(): HasOne
     {
         return $this
-            ->belongsToMany(Student::class, $this->table, 'id', 'evaluator');
+            ->hasOne(Student::class, 'id', 'evaluator');
     }
 
-    public function rankings(): BelongsToMany
+    public function subject(): HasOne
     {
-        return null;
+        return $this
+            ->hasOne(Student::class, 'id', 'subject');
+    }
+
+    public function ranking(): HasOne
+    {
+        return $this
+            ->hasOne(Ranking::class, 'id', 'ranking_id');
+    }
+
+    public function skill(): HasOne
+    {
+        return $this
+            ->hasOne(Skill::class, 'id', 'skill_id');
     }
 }
