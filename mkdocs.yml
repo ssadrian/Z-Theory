@@ -1,1 +1,9 @@
-site_name: My Docs
+site_name: Z - Docs
+site_description: 'Documentación para el Gamifi-K hecho por Z-Theory'
+site_author: Z-Theory
+
+repo_url: https://github.com/ssadrian/Z-Theory
+edit_uri: ''
+
+plugins:
+  - search
