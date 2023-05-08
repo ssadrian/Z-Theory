@@ -14,14 +14,13 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
   constructor(private router: Router) {}
 
   intercept(
-    request: HttpRequest<any>,
+    request: HttpRequest<unknown>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       tap((req): void => {
+        // redirect to login page when unauthorized
         if (req instanceof HttpErrorResponse && req.status === 401) {
-          // handle unauthorized error
-          // for example, redirect to login page
           this.router.navigate(['/login']);
         }
       })

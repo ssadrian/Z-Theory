@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -27,12 +27,11 @@ import { TeacherService } from './services/repository/teacher.service';
 import { AssignmentComponent } from './pages/teacher/assignment/assignment.component';
 import { MiscService } from './services/misc.service';
 import { QueuesListComponent } from './pages/teacher/queues-list/queues-list.component';
-import { DialogModule } from 'primeng/dialog';
-import { TooltipModule } from 'primeng/tooltip';
-import { ButtonModule } from 'primeng/button';
-import { SidebarModule } from 'primeng/sidebar';
 import { EvaluationHistoryListComponent } from './components/evaluation-history-list/evaluation-history-list.component';
 import { EvaluationHistoryComponent } from './pages/evaluation-history/evaluation-history.component';
+import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
+import { UnauthorizedInterceptor } from './interceptors/unauthorized/unauthorized.interceptor';
+import { BadRequestInterceptor } from './interceptors/bad-request/bad-request.interceptor';
 
 @NgModule({
   declarations: [
@@ -60,10 +59,6 @@ import { EvaluationHistoryComponent } from './pages/evaluation-history/evaluatio
     ReactiveFormsModule,
     HttpClientModule,
     AccordionModule,
-    DialogModule,
-    TooltipModule,
-    ButtonModule,
-    SidebarModule
   ],
   providers: [
     LoginService,
@@ -75,7 +70,22 @@ import { EvaluationHistoryComponent } from './pages/evaluation-history/evaluatio
     MessageService,
     ConfirmationService,
     MiscService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UnauthorizedInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BadRequestInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

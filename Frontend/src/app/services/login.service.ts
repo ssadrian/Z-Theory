@@ -25,13 +25,7 @@ export class LoginService {
 
   logout(): void {
     const url: string = `${this.#apiUrl}/logout`;
-    this.http
-      .get(url, {
-        headers: {
-          Authorization: `Bearer ${this.credentials.token}`,
-        },
-      })
-      .subscribe();
+    this.http.get(url).subscribe();
 
     this.credentials.clear();
     this.router.navigate(['/']);

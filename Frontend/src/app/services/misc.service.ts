@@ -1,29 +1,23 @@
-import {Injectable} from '@angular/core';
-import {ConfirmationService, MessageService} from "primeng/api";
+import { Injectable } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MiscService {
   constructor(
     private messageService: MessageService,
-    private confirmationService: ConfirmationService) {
-  }
+    private confirmationService: ConfirmationService
+  ) {}
 
   copyText(event: string | Event): void {
     if (typeof event === 'string') {
-      navigator
-        .clipboard
-        .writeText(event)
-        .then((): void => {
-        });
+      navigator.clipboard.writeText(event).then((): void => {});
       this.#logSuccess();
     } else if (event instanceof Event) {
-      navigator
-        .clipboard
+      navigator.clipboard
         .writeText((<HTMLElement>event.target).innerText)
-        .then((): void => {
-        });
+        .then((): void => {});
       this.#logSuccess();
     }
   }
@@ -32,7 +26,7 @@ export class MiscService {
     this.messageService.add({
       key: 'toasts',
       severity: 'success',
-      summary: 'Copiado en clipboard'
+      summary: 'Copiado en clipboard',
     });
   }
 
@@ -40,8 +34,7 @@ export class MiscService {
     message: string,
     target: EventTarget | null,
     onAccept: Function,
-    onReject: Function = (): void => {
-    }
+    onReject: Function = (): void => {}
   ): void {
     if (target === null) {
       return;
@@ -54,7 +47,7 @@ export class MiscService {
       acceptLabel: 'Sí',
       rejectLabel: 'No',
       accept: () => onAccept(),
-      reject: () => onReject()
+      reject: () => onReject(),
     });
   }
 }
