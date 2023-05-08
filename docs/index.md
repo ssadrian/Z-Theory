@@ -5,6 +5,13 @@
 Gamifi-k ha sido el proyecto que hemos tenido que hacer para el fin de ciclo de DAW. En esta página podréis encontrar todo lo necesario para comprender cómo instalarlo y cómo usarlo. Tanto siendo alumno como profesor.
 
 ---
+
+## Descarga del proyecto
+
+Para descargar el proyecto puedes acceder al GitHub y descargar el fichero [zip](https://github.com/ssadrian/Z-Theory/archive/refs/heads/main.zip).
+
+--- 
+
 ## Guía de instalación
 
 Para poder servir el proyecto se necesitara varios programas
@@ -14,6 +21,30 @@ Para poder servir el proyecto se necesitara varios programas
 - [ ] [Composer](https://getcomposer.org/download/)
 
 ---
+
+### Comprobación de la instalación
+
+Para comprobar que se instaló correctamente, puedes usar la consola del sistema y usar el siguiente comando:
+
+```
+$ node -v
+v16.17.0
+
+$ php -v
+PHP 8.2.3 (cli) (built: Feb 14 2023 09:55:52) (ZTS Visual C++ 2019 x64)
+Copyright (c) The PHP Group
+Zend Engine v4.2.3, Copyright (c) Zend Technologies
+
+$ composer --version
+Composer version 2.4.1 2022-08-20 11:44:50
+
+```
+
+Reinicia la consola al finalizar toda la instalación.
+
+---
+
+## Set up 
 
 Una vez instaladas las dependencias necesarias, se requerirá ejecutar varios comandos para poder servir el proyecto y verlo en acción.
 
@@ -55,6 +86,7 @@ Si no quieres usar ninguno de estos archivos también está disponible la opció
 
     ```
     composer install
+    cp .env.example .env
     php artisan migrate
     php artisan serve
     ```
