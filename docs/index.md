@@ -5,7 +5,6 @@
 Gamifi-k ha sido el proyecto que hemos tenido que hacer para el fin de ciclo de DAW. En esta página podréis encontrar todo lo necesario para comprender cómo instalarlo y cómo usarlo. Tanto siendo alumno como profesor.
 
 ---
-
 ## Guía de instalación
 
 Para poder servir el proyecto se necesitara varios programas
