@@ -12,6 +12,5 @@ Dentro de este ranking, podrá evaluar a sus compañeros dandoles puntos para la
 
 ## Cambiar contraseña
 
-![Cambio de contraseña del usuario](../../images/student/profile/student_change_password.png)
-
 El usuario deberá poner su contraseña anterior y poner la nueva para un cambio de contraseña exitoso.
+![Cambio de contraseña del usuario](../../images/student/profile/student_change_password.gif)

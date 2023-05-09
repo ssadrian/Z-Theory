@@ -7,14 +7,19 @@ Dentro de esta parte, el profesor podrá gestionar la entrada a los rankings de 
 Volviendo al perfil del profesor. Podrá gestionar todo el sistema de rankings desde ahí.
 
 ![Muestra de ranking](../../images/teacher/ranking/ranking.png)
-Desde aquí podrá; borrar alumnos, añadir entregas, modificar el nombre del ranking, eliminar el ranking y cambiar el código del ranking dando click en el mismo código del ranking.
 
-![Gestión del ranking](../../images/teacher/ranking/ranking_management.png)
+Desde aquí podrá; borrar alumnos, añadir entregas, modificar el nombre del ranking,cambiar el código del y eliminar el ranking.
 
-Para poder crear un ranking deberá ir a su perfil y darle un nombre. Acto seguido, deberá dar click en **Añadir Ranking**.
-![Creación de ranking](../../images/teacher/ranking/ranking_creation.png)
+Cambio de nombre al ranking
+![Cambio del nombre del ranking](../../images/teacher/ranking/ranking_rename.gif)
 
-Para verlo únicamente deberá bajar un poco por su perfil y se lo mostrará en el apartado de **Rankings creados**.
-![Mostar ranking creado](../../images/teacher/ranking/ranking_created.png)
+Eliminación del estudiante del ranking
+![Borrar alumno del ranking](../../images/teacher/ranking/ranking_student_delete.gif)
+
+Refrescar código del ranking
+![Refrescar código del ranking](../../images/teacher/ranking/ranking_refresh_code.gif)
+
+Para poder crear un ranking deberá ir a su perfil y darle un nombre. Acto seguido, deberá dar click en **Añadir Ranking**. Para verlo únicamente deberá bajar un poco por su perfil y se lo mostrará en el apartado de **Rankings creados**.
+![Creación de ranking](../../images/teacher/ranking/ranking_creation.gif)
 
 Para poder añadir estudiantes al ranking, deberá darle click al código para que se le copie al portapapeles. Luego, podrá pasarle ese código a los alumnos para que se vayan uniendo.
