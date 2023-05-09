@@ -11,6 +11,8 @@ import {
   studentPass,
   teacherPass,
 } from '../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
+import { ISessionCookie } from 'src/models/session-cookie.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,10 +20,12 @@ import {
 export class TeacherGuard {
   constructor(
     private _http: HttpClient,
-    private credentials: CredentialService
+    private credentials: CredentialService,
+    private cookieService: CookieService
   ) {}
 
   #loginUrl: string = `${environment.apiUrl}/teacher/login`;
+  #sessionCookie: string = environment.sessionCookieName;
 
   canMatch(
     route: Route,
@@ -30,14 +34,13 @@ export class TeacherGuard {
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
-    | UrlTree {
+    | UrlTree { debugger;
     if (studentPass()) {
       return false;
     }
 
     if (teacherPass()) {
       this.credentials.token = '16|R7vyPUDatEyMtVN77yBwcHhcUwvfDdfNYdEZNbve';
-      this.credentials.role = 'teacher';
       this.credentials.currentUser = {
         id: 1,
         name: 'Helena Crist',
@@ -48,6 +51,7 @@ export class TeacherGuard {
         nickname: '9688913c-82d3-37f3-bf1d-29bc4b0fff8d',
         avatar: 'None',
         center: 'None',
+        role: 'teacher',
         created_at: '2000-01-01T12:00:00.000000Z',
         updated_at: '2000-01-01T12:00:00.000000Z',
       } as ITeacher;
@@ -66,12 +70,7 @@ export class TeacherGuard {
           email: this.credentials.email,
           password: this.credentials.password,
         }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          observe: 'response',
-        }
+        { observe: 'response' }
       )
       .pipe(
         map((res: HttpResponse<ILoginResponse>): boolean => {
@@ -79,16 +78,42 @@ export class TeacherGuard {
           const role: string = res.body?.role ?? '';
           const user: IStudent | ITeacher | undefined = res.body?.user;
 
-          if (token === '') {
+          if (token === '' || !user) {
             return false;
           }
 
           this.credentials.token = token;
-          this.credentials.role = role;
+          this.credentials.role = role === 'teacher' ? 'teacher' : '';
           this.credentials.currentUser = user;
 
-          return role === 'teacher';
+          const rememberMe: boolean =
+            this.cookieService.get('rememberMe') === 'true';
+
+          if (rememberMe) {
+            this.setSessionToken();
+          }
+          return this.credentials.role === 'teacher';
         })
       );
+  }
+
+  public setSessionToken(): void {
+    const expiry: Date = new Date();
+
+    // For whatever reason, the cookie service sets
+    //  the created date to two hours before now
+    expiry.setHours(expiry.getHours() + 4);
+
+    this.cookieService.set(
+      this.#sessionCookie,
+      JSON.stringify({
+        email: this.credentials.email,
+        password: this.credentials.password,
+        token: this.credentials.token,
+        role: this.credentials.role,
+        currentUser: this.credentials.currentUser,
+      } as ISessionCookie),
+      { path: '/', expires: expiry, sameSite: 'Strict' }
+    );
   }
 }

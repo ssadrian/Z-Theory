@@ -8,45 +8,28 @@ import { IAcceptStudentAssignation } from '../../../models/update/accept-student
 import { IUpdateRanking } from '../../../models/update/update-ranking';
 import { IUpdateRankingStudent } from '../../../models/update/update-ranking-student';
 import { environment } from '../../environments/environment';
-import { CredentialService } from '../credential.service';
 import { IDeclineStudentAssignation } from '../../../models/update/decline-student-assignation';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RankingService {
-  constructor(
-    private http: HttpClient,
-    private credentials: CredentialService
-  ) {
-    this.#clientHeaders = {
-      Authorization: `Bearer ${this.credentials.token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
-  }
+  constructor(private http: HttpClient) {}
 
-  readonly #clientHeaders: { [header: string]: string };
   readonly #rankingUrl: string = `${environment.apiUrl}/ranking`;
 
   all(): Observable<IRanking[]> {
-    return this.http.get<IRanking[]>(this.#rankingUrl, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.get<IRanking[]>(this.#rankingUrl);
   }
 
   get(code: string): Observable<IRanking | null> {
     const url: string = `${this.#rankingUrl}/${code}`;
-    return this.http.get<IRanking>(url, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.get<IRanking>(url);
   }
 
   createdBy(id: number): Observable<IRanking[]> {
     const url: string = `${this.#rankingUrl}/created_by/${id}`;
-    return this.http.get<IRanking[]>(url, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.get<IRanking[]>(url);
   }
 
   assignStudent(
@@ -55,7 +38,6 @@ export class RankingService {
     const url: string = `${this.#rankingUrl}/assign/${entity.student_id}`;
 
     return this.http.post(url, entity, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
@@ -65,7 +47,6 @@ export class RankingService {
   ): Observable<HttpResponse<Object>> {
     const url: string = `${this.#rankingUrl}/accept/${entity.url_studentId}`;
     return this.http.post(url, entity, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
@@ -75,7 +56,6 @@ export class RankingService {
   ): Observable<HttpResponse<Object>> {
     const url: string = `${this.#rankingUrl}/decline/${entity.url_studentId}`;
     return this.http.post(url, entity, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
@@ -83,13 +63,11 @@ export class RankingService {
   leaderboardsForStudent(id: number): Observable<IRanking[]> {
     const url: string = `${this.#rankingUrl}/for/${id}`;
     return this.http.get<IRanking[]>(url, {
-      headers: this.#clientHeaders,
     });
   }
 
   create(entity: ICreateRanking): Observable<HttpResponse<Object>> {
     return this.http.post(this.#rankingUrl, entity, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
@@ -97,7 +75,6 @@ export class RankingService {
   update(entity: IUpdateRanking): Observable<HttpResponse<Object>> {
     const url: string = `${this.#rankingUrl}/${entity.url_oldCode}`;
     return this.http.put(url, entity, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
@@ -105,7 +82,6 @@ export class RankingService {
   delete(code: string): Observable<HttpResponse<Object>> {
     const url: string = `${this.#rankingUrl}/${code}`;
     return this.http.delete(url, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
@@ -114,15 +90,11 @@ export class RankingService {
     const url: string = `${this.#rankingUrl}/${entity.url_rankingCode}/for/${
       entity.url_studentId
     }`;
-    return this.http.put(url, entity, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.put(url, entity);
   }
 
   queuesForTeacher(teacherId: number): Observable<IRanking[]> {
     const url: string = `${this.#rankingUrl}/queues/for/${teacherId}`;
-    return this.http.get<IRanking[]>(url, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.get<IRanking[]>(url);
   }
 }

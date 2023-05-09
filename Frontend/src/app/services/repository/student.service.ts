@@ -6,54 +6,39 @@ import { ICreateStudent } from '../../../models/create/create-student';
 import { IStudent } from '../../../models/student.model';
 import { IUpdateStudent } from '../../../models/update/update-student';
 import { environment } from '../../environments/environment';
-import { CredentialService } from '../credential.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
-  constructor(private http: HttpClient, private credentials: CredentialService) {
-    this.#clientHeaders = {
-      Authorization: `Bearer ${this.credentials.token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    };
+  constructor(private http: HttpClient) {
   }
 
-  readonly#studentUrl: string = `${environment.apiUrl}/student`;
-  readonly #clientHeaders: { [header: string]: string };
+  readonly #studentUrl: string = `${environment.apiUrl}/student`;
 
   all(): Observable<IStudent[]> {
-    return this.http.get<IStudent[]>(this.#studentUrl, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.get<IStudent[]>(this.#studentUrl);
   }
 
   get(id: number): Observable<IStudent | null> {
     const url: string = `${this.#studentUrl}/${id}`;
-    return this.http.get<IStudent>(url, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.get<IStudent>(url);
   }
 
   create(entity: ICreateStudent): Observable<HttpResponse<Object>> {
     return this.http.post(this.#studentUrl, entity, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
 
   updatePassword(entity: IUpdatePassword) {
     const url: string = `${this.#studentUrl}/password`;
-    return this.http.post(url, entity, {
-      headers: this.#clientHeaders,
-    });
+    return this.http.post(url, entity);
   }
 
   update(id: number, entity: IUpdateStudent): Observable<HttpResponse<Object>> {
     const url: string = `${this.#studentUrl}/${id}`;
     return this.http.put(url, entity, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }
@@ -61,7 +46,6 @@ export class StudentService {
   delete(id: number): Observable<HttpResponse<Object>> {
     const url: string = `${this.#studentUrl}/${id}`;
     return this.http.delete(url, {
-      headers: this.#clientHeaders,
       observe: 'response',
     });
   }

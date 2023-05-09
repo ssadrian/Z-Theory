@@ -9,7 +9,7 @@ use App\{
     Http\Controllers\EvaluationController,
     Http\Controllers\EvaluationHistoryController
 };
-use Illuminate\{Support\Facades\Request, Support\Facades\Route};
+use Illuminate\{Support\Facades\Route};
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +79,10 @@ Route::middleware('auth:sanctum')->prefix('assignment')->group(function () {
     Route::post('assign/ranking/{rankCode}', [AssignmentController::class, 'assignToRanking']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', fn(Request $request) => $request->user());
-});
+Route::middleware('auth:sanctum')
+    ->get('/user', function (\Illuminate\Http\Request $request) {
+        $user = $request->user();
+        $user['role'] = isset($user['center']) ? 'teacher' : 'student';
+
+        return $user;
+    });

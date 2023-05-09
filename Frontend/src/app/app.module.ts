@@ -29,9 +29,10 @@ import { MiscService } from './services/misc.service';
 import { QueuesListComponent } from './pages/teacher/queues-list/queues-list.component';
 import { EvaluationHistoryListComponent } from './components/evaluation-history-list/evaluation-history-list.component';
 import { EvaluationHistoryComponent } from './pages/evaluation-history/evaluation-history.component';
-import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
+import { HeadersInterceptor } from './interceptors/headers/headers.interceptor';
 import { UnauthorizedInterceptor } from './interceptors/unauthorized/unauthorized.interceptor';
 import { BadRequestInterceptor } from './interceptors/bad-request/bad-request.interceptor';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -69,10 +70,11 @@ import { BadRequestInterceptor } from './interceptors/bad-request/bad-request.in
     RankingService,
     MessageService,
     ConfirmationService,
+    CookieService,
     MiscService,
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
+      useClass: HeadersInterceptor,
       multi: true,
     },
     {

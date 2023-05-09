@@ -371,7 +371,7 @@ class RankingsController extends Controller
         $queue = $ranking->queue()
             ->where([
                 'student_id' => $data['student_id'],
-                'ranking_id' => $data['ranking_id']
+                'ranking_id' => $ranking->id
             ])
             ->firstWhere('join_status_id', JoinStatus::Pending->value);
         $queue->pivot->join_status_id = JoinStatus::Declined->value;

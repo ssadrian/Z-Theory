@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { CredentialService } from '../../services/credential.service';
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class HeadersInterceptor implements HttpInterceptor {
   constructor(private credentialService: CredentialService) {}
 
   intercept(
@@ -18,16 +18,15 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     const token: string = this.credentialService.token;
 
-    if (token.trim().length > 0) {
-      const authReq = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    console.log(`Sending request to: ${request.url} with token: ${token}`);
+    const req = request.clone({
+      setHeaders: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-      return next.handle(authReq);
-    }
-
-    return next.handle(request);
+    return next.handle(req);
   }
 }
