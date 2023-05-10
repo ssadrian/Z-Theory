@@ -12,8 +12,15 @@ class AssignmentController extends Controller
      *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('index:assignments')) {
+            return $this->forbidden();
+        }
+
         return response(
             Assignment::with(['creator', 'rankingsAssigned', 'studentsAssigned'])->get()
         );
@@ -27,6 +34,13 @@ class AssignmentController extends Controller
      */
     public function store(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('store:assignments')) {
+            return $this->forbidden();
+        }
+
         $data = $request->validate([
             'creator' => 'required|exists:teachers,id',
             'title' => 'required|string|unique:assignments',
@@ -52,8 +66,15 @@ class AssignmentController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function show($id): Response
+    public function show($id, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('show:assignments')) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $id], [
             'id' => 'required|exists:assignments'
         ]);
@@ -73,6 +94,13 @@ class AssignmentController extends Controller
      */
     public function update($id, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('update:assignments')) {
+            return $this->forbidden();
+        }
+
         // Append assignment's id from url to request's body
         $request['id'] = $id;
 
@@ -109,8 +137,16 @@ class AssignmentController extends Controller
      * @param $id
      * @return Response
      */
-    public function destroy($id): Response
+    public function destroy($id, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (!$token->can('destroy:assignments')) {
+            return $this->forbidden();
+        }
+
         return response(
             status: Assignment::destroy($id) ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
@@ -124,6 +160,13 @@ class AssignmentController extends Controller
      */
     public function assignToRanking($rankCode, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('assignToRanking:assignments')) {
+            return $this->forbidden();
+        }
+
         // Append rank's code from url to request's body
         Validator::validate(['code' => $rankCode], [
             'code' => 'required|exists:rankings'
@@ -166,8 +209,16 @@ class AssignmentController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function removeFromRanking($id, $rankCode): Response
+    public function removeFromRanking($id, $rankCode, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (!$token->can('removeFromRanking:assignments')) {
+            return $this->forbidden();
+        }
+
         Validator::validate([
             'id' => $id,
             'code' => $rankCode
@@ -200,8 +251,19 @@ class AssignmentController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function createdBy($teacherId): Response
+    public function createdBy($teacherId, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (
+            !($user->id == $teacherId && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('createdBy:assignments')
+        ) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $teacherId], [
             'id' => 'required|exists:teachers'
         ]);
@@ -219,6 +281,13 @@ class AssignmentController extends Controller
      */
     public function updateForStudent($assignmentId, $studentId, Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('updateForStudent:assignments')) {
+            return $this->forbidden();
+        }
+
         // Append ranking's code and student's id from url to request's body
         $data['student_id'] = $studentId;
         $data['assignment_id'] = $assignmentId;

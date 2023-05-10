@@ -76,7 +76,8 @@ import {DataViewModule} from "primeng/dataview";
     ConfirmPopupModule,
     ContextMenuModule,
     DividerModule,
-    DataViewModule
+    DataViewModule,
+    CheckboxModule
   ],
 })
 export class PrimengModule {

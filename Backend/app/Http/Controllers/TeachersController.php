@@ -18,10 +18,20 @@ class TeachersController extends Controller
      *
      * @return Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('index:teachers')) {
+            return $this->forbidden();
+        }
+
+        $teachers = Teacher::with(['rankingsCreated'])->get();
+
         return response(
-            Teacher::with('rankingsCreated')->get()
+            $teachers
+            , Response::HTTP_OK
         );
     }
 
@@ -33,6 +43,13 @@ class TeachersController extends Controller
      */
     public function store(Request $request): Response
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('store:teachers')) {
+            return $this->forbidden();
+        }
+
         $data = $request->validate([
             'nickname' => 'required|unique:students|unique:teachers',
             'email' => 'required|email|unique:students|unique:teachers',
@@ -56,8 +73,19 @@ class TeachersController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function show($id): Response
+    public function show($id, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (
+            !($id == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('show:teachers')
+        ) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
@@ -77,6 +105,17 @@ class TeachersController extends Controller
      */
     public function update($id, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (
+            !($id == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('update:teachers')
+        ) {
+            return $this->forbidden();
+        }
+
         // Append teacher's id from url to request's body
         $request['id'] = $id;
 
@@ -118,8 +157,19 @@ class TeachersController extends Controller
      * @return Response
      * @throws ValidationException
      */
-    public function destroy($id): Response
+    public function destroy($id, Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (
+            !($id == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('destroy:teachers')
+        ) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['id' => $id], [
             'id' => 'required|exists:teachers'
         ]);
@@ -135,6 +185,17 @@ class TeachersController extends Controller
      */
     public function changePassword(Request $request): Response
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (
+            !($request['id'] == $user->id && $token->tokenable_type === \App\Models\Teacher::class)
+            || $token->can('changePasswor:teachers')
+        ) {
+            return $this->forbidden();
+        }
+
         $data = $request->validate([
             'id' => 'required|exists:teachers',
             'password' => 'required|string',
