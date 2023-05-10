@@ -24,7 +24,7 @@ Para poder servir el proyecto se necesitara varios programas
 
 ### Comprobación de la instalación
 
-Para comprobar que se instaló correctamente, puedes usar la consola del sistema y usar el siguiente comando:
+Para comprobar que se instaló correctamente, puedes usar la consola del sistema y usar los siguientes comandos:
 
 ```
 $ node -v
@@ -37,7 +37,6 @@ Zend Engine v4.2.3, Copyright (c) Zend Technologies
 
 $ composer --version
 Composer version 2.4.1 2022-08-20 11:44:50
-
 ```
 
 Reinicia la consola al finalizar toda la instalación.

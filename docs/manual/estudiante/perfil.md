@@ -10,7 +10,7 @@ Si el usuario baja un poco más por su perfil, encontrará a los rankings que pe
 
 Dentro de este ranking, podrá evaluar a sus compañeros dandoles puntos para las **Soft skills**
 
-## Cambiar contraseña
+## Cambio de contraseña
 
 El usuario deberá poner su contraseña anterior y poner la nueva para un cambio de contraseña exitoso.
 ![Cambio de contraseña del usuario](../../images/student/profile/student_change_password.gif)
