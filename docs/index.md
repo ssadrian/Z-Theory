@@ -10,14 +10,14 @@ Gamifi-k ha sido el proyecto que hemos tenido que hacer para el fin de ciclo de 
 
 Para descargar el proyecto puedes acceder al GitHub y descargar el fichero [zip](https://github.com/ssadrian/Z-Theory/archive/refs/heads/main.zip).
 
---- 
+---
 
 ## Guía de instalación
 
 Para poder servir el proyecto se necesitara varios programas
 
 - [ ] [Node JS](https://nodejs.org/en/download)
-- [ ] [PHP v8.2](https://www.php.net/downloads)
+- [ ] [PHP v8.2](https://www.php.net/downloads) o mayor
 - [ ] [Composer](https://getcomposer.org/download/)
 
 ---
@@ -26,7 +26,7 @@ Para poder servir el proyecto se necesitara varios programas
 
 Para comprobar que se instaló correctamente, puedes usar la consola del sistema y usar los siguientes comandos:
 
-```
+```ps1
 $ node -v
 v16.17.0
 
@@ -43,7 +43,7 @@ Reinicia la consola al finalizar toda la instalación.
 
 ---
 
-## Set up 
+## Set up
 
 Una vez instaladas las dependencias necesarias, se requerirá ejecutar varios comandos para poder servir el proyecto y verlo en acción.
 

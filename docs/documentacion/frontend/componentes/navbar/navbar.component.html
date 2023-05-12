@@ -1,0 +1,62 @@
+<nav class="border-b-2 border-gray-700 sticky top-0 z-10 bg-gray-900">
+  <div class="container flex flex-wrap items-center justify-between mx-auto">
+    <a [routerLink]="['/']" class="flex items-center">
+      <app-logo></app-logo>
+
+      <span class="text-3xl font-semibold">Z-Theory</span>
+    </a>
+
+    <div class="w-full md:block md:w-auto">
+      <ul
+        class="flex flex-row gap-4 text-2xl text-gray-500 cursor-pointer"
+        [ngSwitch]="isLogged()"
+      >
+        <ng-container *ngSwitchDefault>
+          <ng-container *ngIf="credentials.role === 'teacher'">
+            <li [routerLink]="['/historial']">
+              <a [routerLinkActive]="[ 'text-gray-50' ]">
+                Historial
+              </a>
+            </li>
+
+            <li [routerLink]="['/queues']">
+              <a [routerLinkActive]="[ 'text-gray-50' ]">
+                Rankings
+              </a>
+            </li>
+
+            <li [routerLink]="['/assignments']">
+              <a [routerLinkActive]="[ 'text-gray-50' ]">
+                Tareas
+              </a>
+            </li>
+          </ng-container>
+
+          <li [routerLink]="['/profile']">
+            <a [routerLinkActive]="[ 'text-gray-50' ]">
+              Perfil
+            </a>
+          </li>
+
+          <li (click)="logOut()">
+            Cerrar sesión
+          </li>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="false">
+          <li [routerLink]="['/register']">
+            <a [routerLinkActive]="['text-gray-50']">
+              Registro
+            </a>
+          </li>
+
+          <li [routerLink]="['/login']">
+            <a [routerLinkActive]="['text-gray-50']">
+              Iniciar sesión
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,24 @@
+<div class="min-h-screen">
+  <div class="context text-5xl">
+    <h1>Z-Theory</h1>
+
+    <div class="text-center text-white font-bold text-4xl mt-5">
+      Un paso hacia el futuro de la <span class="underline">educación</span> 👨‍🏫
+    </div>
+  </div>
+
+  <div class="area">
+    <ul class="circles">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+</div>
