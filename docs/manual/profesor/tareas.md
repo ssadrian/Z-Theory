@@ -8,22 +8,22 @@ El profesor deberá de rellenar el formulario para que los alumnos puedan crear 
 
 ## Crear
 
-![Creación de la tarea](../../images/teacher/assignment/assignment_creation.gif)
+![Creación de la tarea](../../images/teacher/assignment/assignment_creation.gif){ loading=lazy }
 
 Una vez creada la tarea, deberá ir al apartado de **Tareas** que tiene en su perfil para poder gestionar la tarea.
 
 ## Edición
 
-![Edición de la tarea](../../images/teacher/assignment/assignment_edit.gif)
+![Edición de la tarea](../../images/teacher/assignment/assignment_edit.gif){ loading=lazy }
 
 ## Quitar del ranking
 
 La tarea dentro de ese ranking se eliminará pero no definitivamente
 
-![Borrar del ranking](../../images/teacher/assignment/assignment_delete.gif)
+![Borrar del ranking](../../images/teacher/assignment/assignment_delete.gif){ loading=lazy }
 
 ## Borrar definitivamente
 
 Borrarla definitivamente
 
-![Borrar del ranking para siempre](../../images/teacher/assignment/assignment_delete_forever.gif)
+![Borrar del ranking para siempre](../../images/teacher/assignment/assignment_delete_forever.gif){ loading=lazy }
