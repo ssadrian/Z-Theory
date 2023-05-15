@@ -27,7 +27,5 @@ jobs:
           key: ${{ github.ref }}
           path: .cache
 
-      - run: pip install mkdocs-material
-      - run: pip install mkdocs-minify-plugin
-      - run: pip install mkdocs-glightbox
+      - run: pip install -r requiremets.txt
       - run: mkdocs gh-deploy --force
