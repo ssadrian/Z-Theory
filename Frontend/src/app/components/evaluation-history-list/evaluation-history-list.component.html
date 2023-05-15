@@ -87,13 +87,14 @@
     </tr>
   </ng-template>
 
+  <!-- TODO: Change the JS style property change -->
   <ng-template pTemplate="body" let-eval>
     <tr>
       <td pFrozenColumn>{{ eval.id }}</td>
-      <td>{{ eval.skill_id }}</td>
-      <td>{{ eval.ranking_id }}</td>
-      <td>{{ eval.evaluator }}</td>
-      <td>{{ eval.subject }}</td>
+      <td>{{ eval.skill.name }}</td>
+      <td>{{ eval.ranking.name }}</td>
+      <td>{{ eval.evaluator.name }}</td>
+      <td>{{ eval.subject.name }}</td>
       <td>{{ eval.kudos }}</td>
       <td>{{ eval.created_at }}</td>
       <td>

@@ -5,7 +5,6 @@ import {IAssignment} from '../../../models/assignment.model';
 import {IAssignationRanking} from '../../../models/create/create-assignation-ranking';
 import {IRemoveAssignRanking} from '../../../models/delete/remove-assign-ranking';
 import {environment} from '../../environments/environment';
-import {CredentialService} from '../credential.service';
 import {ICreateAssignment} from 'src/models/create/create-assignment';
 import {IUpdateAssignment} from 'src/models/update/update-assignment';
 
@@ -13,10 +12,8 @@ import {IUpdateAssignment} from 'src/models/update/update-assignment';
   providedIn: 'root',
 })
 export class AssignmentService {
-  constructor(private http: HttpClient, private credentials: CredentialService) {
+  constructor(private http: HttpClient) {
     this.#clientHeaders = {
-      Authorization: `Bearer ${this.credentials.token}`,
-      Accept: 'application/json',
       'Content-Type': 'application/json',
     };
   }

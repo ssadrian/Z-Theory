@@ -52,7 +52,7 @@ class Teacher extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var array<string>
      */
     protected $fillable = [
         'nickname',
@@ -67,10 +67,22 @@ class Teacher extends Authenticatable
     /**
      * All the relationships to be touched.
      *
-     * @var array
+     * @var array<string>
      */
     protected $touches = [
         'rankingsCreated'
+    ];
+
+    /**
+     * Abilities for a token issued to a teacher
+     *
+     * @var array<string>
+     */
+    public $abilities = [
+        'index:assignments',
+        'store:rankings',
+        'acceptStudent:rankings',
+        'declineStudent:rankings'
     ];
 
     /**

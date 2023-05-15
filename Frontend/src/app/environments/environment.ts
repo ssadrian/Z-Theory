@@ -9,6 +9,7 @@ export const environment = {
   // TODO: Remove on last coding task
   studentTeacherPass: 0x111,
 
+  sessionCookieName: 'session',
   apiUrl: 'http://localhost:8000/api',
 };
 
