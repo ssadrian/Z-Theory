@@ -2,7 +2,7 @@
 
 Una vez instalado correctamente el proyecto y que este se esté sirviendo, deberás aprender a usar la aplicación web. Lo primero que te encontrarás es:
 
-![Página inicial](../../images/landpage.png){ loading=lazy }
+![Página inicial](../images/landpage.png){ loading=lazy }
 
 Esa es la página principal. Cómo podrás observar hay dos acciones que puede hacer el usuario. Puede tanto **```Iniciar Sesión```** como **```Registrarse```**.
 
@@ -13,7 +13,7 @@ Esa es la página principal. Cómo podrás observar hay dos acciones que puede h
 Una vez entres dentro del apartado de registro encontraras un formulario con varios campos para rellenar con datos.
 Aquí un dato a destacar es la opción de **soy un estudiante** si das click en esa opción cambiarás a la de ser **profesor** como podrás ver aquí:
 
-![Registro](../../images/register.gif){ loading=lazy }
+![Registro](../images/register.gif){ loading=lazy }
 
 
 La opción que cambia cuando te registras como profesor o alumno es que en el alumno le pide la fecha de nacimiento mientras que en el profesor le pide el nombre de su centro educativo.
