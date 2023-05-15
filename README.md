@@ -2,4 +2,4 @@
 
 ## Z-Theory
 
-[Documentación](https://ssadrian.github.io/)
+[Documentación](https://ssadrian.github.io/Z-Theory)
