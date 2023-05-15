@@ -1,34 +1,36 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {ICreateStudent} from '../../models/create/create-student';
-import {ICreateTeacher} from '../../models/create/create-teacher';
-import {environment} from '../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ICreateStudent } from '../../models/create/create-student';
+import { ICreateTeacher } from '../../models/create/create-teacher';
+import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class RegistrationService {
-  #apiRegistrationUrl: string = `${environment.apiUrl}/register`;
+  #apiRegistrationUrl: string = `${environment.apiUrl}`;
 
-  constructor(private _http: HttpClient) {
-  }
+  constructor(private _http: HttpClient) {}
 
   registerStudent(student: ICreateStudent): Observable<any> {
-    return this.#register("/student", student);
+    return this.#register('/student/register', student);
   }
 
   registerTeacher(teacher: ICreateTeacher): Observable<any> {
-    return this.#register("/teacher", teacher);
+    return this.#register('/teacher/register', teacher);
   }
 
-  #register(endpoint: string, formUser: ICreateStudent | ICreateTeacher): Observable<any> {
+  #register(
+    endpoint: string,
+    formUser: ICreateStudent | ICreateTeacher
+  ): Observable<any> {
     const url: string = this.#apiRegistrationUrl + endpoint;
 
     return this._http.post(url, JSON.stringify(formUser), {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
   }
 }

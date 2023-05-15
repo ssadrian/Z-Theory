@@ -4,8 +4,6 @@
 
 export const environment = {
   production: false,
-  studentPass: false,
-  teacherPass: false,
   apiUrl: 'http://localhost:8000/api'
 };
 

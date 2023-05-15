@@ -18,13 +18,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
             $weeklyKudos = env('WEEKLY_KUDOS');
             $now = Carbon::now();
 
             DB::update("UPDATE ranking_student SET kudos = $weeklyKudos, updated_at = '$now'");
         })->weekly();
+
+        // Prune expired tokens every 24hrs
+        $schedule
+            ->command('sanctum:prune-expired --hours=24')
+            ->daily();
     }
 
     /**
@@ -34,7 +38,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

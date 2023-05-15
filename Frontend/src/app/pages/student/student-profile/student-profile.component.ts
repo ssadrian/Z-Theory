@@ -276,27 +276,37 @@ export class StudentProfileComponent implements OnInit {
       skill_id: Skill.Responsibility,
     };
 
-    this.evaluateStudent(evaluation);
+    if (responsibility && responsibility > 0) {
+      this.evaluateStudent(evaluation);
+    }
 
     evaluation.skill_id = Skill.Autonomy;
     evaluation.kudos = autonomyInitiative!;
 
-    this.evaluateStudent(evaluation);
+    if (autonomyInitiative && autonomyInitiative > 0) {
+      this.evaluateStudent(evaluation);
+    }
 
     evaluation.skill_id = Skill.Cooperation;
     evaluation.kudos = cooperation!;
 
-    this.evaluateStudent(evaluation);
+    if (cooperation && cooperation > 0) {
+      this.evaluateStudent(evaluation);
+    }
 
     evaluation.skill_id = Skill.Emotional;
     evaluation.kudos = emotionalManagment!;
 
-    this.evaluateStudent(evaluation);
+    if (emotionalManagment && emotionalManagment > 0) {
+      this.evaluateStudent(evaluation);
+    }
 
     evaluation.skill_id = Skill.Thinking;
     evaluation.kudos = thinkingSkills!;
 
-    this.evaluateStudent(evaluation);
+    if (thinkingSkills && thinkingSkills > 0) {
+      this.evaluateStudent(evaluation);
+    }
 
     this.hideDialog();
     this.messageService.add({
@@ -320,50 +330,30 @@ export class StudentProfileComponent implements OnInit {
     this.sidebarVisible = true;
   }
 
-  extractMedalToolTip(medalUrl?: string): string {
+  extractMedalToolTip(skill: ISkill): string {
+    const medalUrl: string = skill.pivot.image;
+
     if (!medalUrl) {
-      return 'Sin medalla';
+      return `Sin medalla - ${skill.pivot.kudos} kudos`;
     }
 
     const urlParts: string[] = medalUrl.split('/');
     const urlPartsLen: number = urlParts.length;
 
-    let skill: string = urlParts[urlPartsLen - 2];
     const level: string = urlParts[urlPartsLen - 1].split('.')[0];
 
-    switch (skill) {
-      case Skill[Skill.Autonomy]:
-        skill = 'Autonomia';
-        break;
-      case Skill[Skill.Cooperation]:
-        skill = 'Cooperación';
-        break;
-      case Skill[Skill.Emotional]:
-        skill = 'Emocional';
-        break;
-      case Skill[Skill.Responsibility]:
-        skill = 'Responsabilidad';
-        break;
-      case Skill[Skill.Thinking]:
-        skill = 'Pensamiento';
-        break;
-      default:
-        skill = '';
-    }
-
-    return `Nivel ${level} - ${skill}`;
+    return `Nivel ${level} - ${skill.name} - ${skill.pivot.kudos} kudos`;
   }
 
-  extractMedalAlt(medalUrl?: string): string {
-    if (!medalUrl) {
+  extractMedalAlt(skill: ISkill): string {
+    if (!(skill && skill.pivot.image)) {
       return 'Sin medalla';
     }
 
-    let medalParts: string[] = this.extractMedalToolTip(medalUrl).split(' ');
+    let medalParts: string[] = this.extractMedalToolTip(skill).split(' ');
     const level: string = medalParts[1];
-    const skill: string = medalParts[medalParts.length - 1];
 
-    const medalAlt: string = `Medalla ${skill} de nivel ${level}`;
+    const medalAlt: string = `Medalla ${skill.name} de nivel ${level}`;
     return medalAlt;
   }
 }

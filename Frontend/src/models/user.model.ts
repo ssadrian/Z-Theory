@@ -6,4 +6,5 @@ export interface IUser {
   name: string;
   surnames: string;
   avatar: string;
+  role: 'teacher' | 'student';
 }

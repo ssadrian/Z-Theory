@@ -9,6 +9,7 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Str;
 
 class EvaluationController extends Controller
 {
@@ -25,6 +26,14 @@ class EvaluationController extends Controller
      */
     public function store(Request $request)
     {
+        $user = $request->user();
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $user->tokens()->find($tokenId);
+
+        if (!$token->can('store:evaluation')) {
+            return $this->forbidden();
+        }
+
         $data = $request->validate([
             'evaluator' => 'required|exists:students,id',
             'subject' => 'required|different:evaluator|exists:students,id',
@@ -92,8 +101,15 @@ class EvaluationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($evaluationId)
+    public function destroy($evaluationId, Request $request)
     {
+        $tokenId = explode('|', $request->bearerToken())[0];
+        $token = $request->user()->tokens()->find($tokenId);
+
+        if (!$token->can('destroy:evaluation')) {
+            return $this->forbidden();
+        }
+
         Validator::validate(['evaluation_id' => $evaluationId], [
             'evaluation_id' => 'required|exists:evaluation_history,id'
         ]);
@@ -105,9 +121,17 @@ class EvaluationController extends Controller
 
         $targetSkill = $subject->skills()->find($evaluationHistory->skill_id);
 
-        // Remove the given points, these points will be lost forever
-        $targetSkill->pivot->kudos -= $evaluationHistory->kudos;
+        // Calculate the remaining kudos and don't subtract them
+        // and don't delete the evaluation history
+        $remainingKudos = $targetSkill->pivot->kudos - $evaluationHistory->kudos;
+        if ($remainingKudos < 0) {
+            return response(
+                status: Response::HTTP_BAD_REQUEST
+            );
+        }
 
+        // Remove the given points, these points will be lost forever
+        $targetSkill->pivot->kudos = $remainingKudos;
         $targetSkill->pivot->save();
 
         EvaluationHistory::destroy($evaluationId);
@@ -125,10 +149,10 @@ class EvaluationController extends Controller
             'skill_id' => $skillId,
             'ranking_id' => $rankingId
         ], [
-            'student_id' => 'required|exists:students,id',
-            'skill_id' => 'required|exists:skills,id',
-            'ranking_id' => 'required|exists:rankings,id'
-        ]);
+                'student_id' => 'required|exists:students,id',
+                'skill_id' => 'required|exists:skills,id',
+                'ranking_id' => 'required|exists:rankings,id'
+            ]);
 
         $apiUrl = env('APP_URL');
 
@@ -153,10 +177,11 @@ class EvaluationController extends Controller
             default => null
         };
 
+        $target->name = Str::lower($target->name);
         if (empty($level)) {
             $target->pivot->image = null;
         } else {
-            $target->pivot->image = "{$apiUrl}/storage/{$target->name}/{$level}.png";
+            $target->pivot->image = "{$apiUrl}/medals/{$target->name}/{$level}.png";
         }
 
         $target->pivot->save();

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\{Models\Student, Models\Teacher};
 use Illuminate\{Http\JsonResponse, Http\Request, Support\Facades\Hash};
+use Illuminate\Http\Response;
+use Illuminate\Queue\Failed\PrunableFailedJobProvider;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -21,7 +24,7 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $student,
                 'role' => 'student',
-                'token' => $student->createToken('token')->plainTextToken
+                'token' => $student->createToken('token', $student->abilities)->plainTextToken
             ]);
         }
 
@@ -44,12 +47,21 @@ class AuthController extends Controller
             return response()->json([
                 'user' => $teacher,
                 'role' => 'teacher',
-                'token' => $teacher->createToken('token')->plainTextToken
+                'token' => $teacher->createToken('token', $teacher->abilities)->plainTextToken
             ]);
         }
 
         return response()->json([
             'message' => 'Invalid credentials'
         ]);
+    }
+
+    public function logout(Request $request): Response
+    {
+        $request->user()->tokens()->delete();
+
+        return response(
+            status: Response::HTTP_OK
+        );
     }
 }
