@@ -34,7 +34,7 @@ export class TeacherGuard {
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
-    | UrlTree { debugger;
+    | UrlTree {
     if (studentPass()) {
       return false;
     }
