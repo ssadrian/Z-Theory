@@ -14,4 +14,20 @@ Pero no nos detenemos allí. Nuestra aplicación fomenta la colaboración y el t
 
 ## Herramientas usadas
 
-Para organizarnos con el proyecto y repartir la faena, usamos la herramienta de ![Notion](https://www.notion.so/es-es). Notion es una herramienta versátil de productividad y colaboración. Permite organizar tareas, proyectos y notas de manera personalizable. Su interfaz intuitiva y capacidades de colaboración en tiempo real lo hacen popular entre individuos y equipos.
+### Notion
+
+Para organizarnos con el proyecto y repartir la faena, usamos la herramienta de [Notion](https://www.notion.so/es-es).
+Notion es una herramienta versátil de productividad y colaboración. Permite organizar tareas, proyectos y notas de manera personalizable.
+Su interfaz intuitiva y capacidades de colaboración en tiempo real lo hacen popular entre individuos y equipos.
+
+### ChatGPT
+
+Al encontrar errores o dudas sobre las tecnologias usadas hemos utilizado ChatGPT para buscar, en su gran catalogo de, información sobre las funcionalidades necesarias para llevar al cabo los requisitos obligatorios.
+
+### MkDocs
+
+MkDocs es un generador de sitios web estatimos mediante paginas de markdown y utilizando el sistema de ficheros para definir rutas y paginas del web.
+
+### GitHub Actions && Pages
+
+Actions, en conjunto con Pages del GitHub, ofrece la solución perfecta para desplegar paginas estaticas mediante el comando [`gh-deploy`](https://www.mkdocs.org/user-guide/deploying-your-docs/) del `mkdocs`.
