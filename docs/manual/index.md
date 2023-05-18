@@ -15,7 +15,6 @@ Aquí un dato a destacar es la opción de **soy un estudiante** si das click en 
 
 ![Registro](../images/register.gif){ loading=lazy }
 
-
 La opción que cambia cuando te registras como profesor o alumno es que en el alumno le pide la fecha de nacimiento mientras que en el profesor le pide el nombre de su centro educativo.
 Si el usuario ya tiene cuenta, puede dar click en la opción de **```¿Ya tienes una cuenta?```** para que le lleve al formulario de iniciar sesión.
 
