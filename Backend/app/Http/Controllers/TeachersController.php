@@ -43,13 +43,6 @@ class TeachersController extends Controller
      */
     public function store(Request $request): Response
     {
-        $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
-
-        if (!$token->can('store:teachers')) {
-            return $this->forbidden();
-        }
-
         $data = $request->validate([
             'nickname' => 'required|unique:students|unique:teachers',
             'email' => 'required|email|unique:students|unique:teachers',

@@ -5,6 +5,7 @@ import {RegistrationService} from '../../services/registration.service';
 import {Base64Service} from '../../services/base64.service';
 import {ICreateStudent} from '../../../models/create/create-student';
 import {ICreateTeacher} from '../../../models/create/create-teacher';
+import { FileUploadEvent } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-registration-form',
@@ -39,7 +40,8 @@ export class RegistrationFormComponent {
     return this.form.controls;
   }
 
-  encodeAvatar(event: Event): void {
+  encodeAvatar(event: any): void {
+    // TODO: The image isn't changed to base 64 anymore
     this.b64.toBase64(event)
       .then((b64: string): void => {
         this.#b64Avatar = b64;
@@ -68,11 +70,11 @@ export class RegistrationFormComponent {
       email: formValue.email!,
       password: formValue.password!,
       password_confirmation: formValue.password_confirmation!,
-      birth_date: formValue.birth_date!
+      birth_date: formValue.birth_date!.toISOString().split('T')[0]
     };
 
     this.register.registerStudent(student)
-      .subscribe(response => {
+      .subscribe(() => {
         this.router.navigate(['/login']);
       });
   }

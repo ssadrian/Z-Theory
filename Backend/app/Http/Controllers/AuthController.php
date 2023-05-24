@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\{Models\Student, Models\Teacher};
 use Illuminate\{Http\JsonResponse, Http\Request, Support\Facades\Hash};
 use Illuminate\Http\Response;
-use Illuminate\Queue\Failed\PrunableFailedJobProvider;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {

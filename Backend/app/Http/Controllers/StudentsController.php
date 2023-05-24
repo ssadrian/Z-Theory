@@ -44,15 +44,6 @@ class StudentsController extends Controller
      */
     public function store(Request $request): Response
     {
-        $tokenId = explode('|', $request->bearerToken())[0];
-        $token = $request->user()->tokens()->find($tokenId);
-
-        if (!$token->can('store:students')) {
-            return response([
-                'message' => 'Access forbidden'
-            ], Response::HTTP_FORBIDDEN);
-        }
-
         $data = $request->validate([
             'nickname' => 'required|string|unique:students|unique:teachers',
             'email' => 'required|email|unique:students|unique:teachers',

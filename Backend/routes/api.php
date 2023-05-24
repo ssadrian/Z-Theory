@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')
 
 Route::middleware('auth:sanctum')->prefix('student')->group(function () {
     Route::post('login', [AuthController::class, 'loginStudent'])->withoutMiddleware('auth:sanctum');
-    Route::post('register', [StudentsController::class, 'store']);
+    Route::post('register', [StudentsController::class, 'store'])->withoutMiddleware('auth:sanctum');
 
     Route::post('password', [StudentsController::class, 'changePassword']);
     Route::post('give', [EvaluationController::class, 'store']);
