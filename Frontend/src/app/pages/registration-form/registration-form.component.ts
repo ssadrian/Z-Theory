@@ -5,7 +5,7 @@ import {RegistrationService} from '../../services/registration.service';
 import {Base64Service} from '../../services/base64.service';
 import {ICreateStudent} from '../../../models/create/create-student';
 import {ICreateTeacher} from '../../../models/create/create-teacher';
-import { FileUploadEvent } from 'primeng/fileupload';
+import { FileSelectEvent, FileUploadEvent } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-registration-form',
@@ -40,8 +40,7 @@ export class RegistrationFormComponent {
     return this.form.controls;
   }
 
-  encodeAvatar(event: any): void {
-    // TODO: The image isn't changed to base 64 anymore
+  encodeAvatar(event: FileSelectEvent): void {
     this.b64.toBase64(event)
       .then((b64: string): void => {
         this.#b64Avatar = b64;
