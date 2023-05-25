@@ -324,6 +324,15 @@ class RankingsController extends Controller
         $queue->push();
         $ranking->refresh();
 
+        $student = \App\Models\Student::with(['skills'])->find($data['student_id']);
+
+        $allSkills = \App\Models\Skill::all('id');
+        foreach ($allSkills as $skill) {
+            $student->skills()->syncWithoutDetaching([
+                $skill->id => ['kudos' => 0]
+            ]);
+        }
+
         return response(
             $ranking
         );

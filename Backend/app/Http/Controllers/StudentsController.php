@@ -54,21 +54,9 @@ class StudentsController extends Controller
             'avatar' => 'sometimes|nullable|string'
         ]);
 
-        // Default value for kudos required field
-        $data['kudos'] = 1_000;
         $data['password'] = Hash::make($data['password']);
-
         $student = Student::create($data);
-        $student = Student::with(['skills'])->find($student->id);
 
-        $allSkills = Skill::all('id');
-        foreach ($allSkills as $skill) {
-            $student->skills()->syncWithoutDetaching([
-                $skill->id => ['kudos' => 0]
-            ]);
-        }
-
-        $student->refresh();
         return response(
             $student
             , Response::HTTP_CREATED
